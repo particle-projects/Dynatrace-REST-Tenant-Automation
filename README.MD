@@ -1,74 +1,62 @@
 # 🤖🔃👩‍💻Dynatrace RTA Tenant Automation
 
-Pyhton program that create and automates environments via Dynatrace API and Amazon API. This small program will create for each entry in a CSV file an environment, user, user_group, an EC2 Instance with custom deployment, a custom dashboard and a synthetic test. It is highly expandable and modifiable. The results will be written in a JSON file and back into the CSV file. The rows can be controled with control-flags.
+Python program that creates and automates environments via the Dynatrace API. This small program reads a CSV file and will execute for each entry the command called (or a sequence of commands). Each entry in the file can be controled via flags `skiped=true` as well as the subcommands. The sequence of commands of an action like `create`, `remove` and `test` can be controled via flags defined in the `config.json` file. 
 
-## ⚠ TODO Documentation
-There has been quite some changes to the application. It has been renamed to RTA for REST Tenant Automation since it supports actions as checking the availability of EasyTravel as well as activating problem patterns via REST, connecting and managing instances on the cloud (via REST and SSH), automating SaaS and Managed tenants.
-Library added sudo py -m pip install pexpect
+The program will write the results in a log and in the CSV if needed, like if it creates an EC2 instance it will write the `instance-Id`, the public DNS and IP.
 
-sudo apt install python3-pip
+This programm is very powerful for creating environments for Workshops. It will set-up an environment as defined with everything preconfigured. A tenant with an user, preconfigured dashboard, ManagementZones, Request-attributes, Application-Rules and it's definitions. It can also create EC2 machines with an OneAgent and ActiveGate deployed in it and applications like EasyTravel preconfigured. 
 
-## Features in a Nutshell
+💡 The Idea is that the student gets everything configured so the only thing he needs to do is login to it's tenant.
 
-- Read and write in a CSV file
+## Overview of the Programm
 
-- Write results in JSON format
-
-- Write results back in the CSV file
-
-  - groupId
-
-  - tenantId
-
-  - ec2 instance id
-
-  - public dns of the ec2 instance
-
-  - tenant token
-
-- Logging
-
-- Create an environment, user and user_group
-
-- Create an EC2 Instance with custom deployment **linked to each tenant**
-
-  -  OneAgent bound to the tenant
-
-  - Private Synthetic (and its dependencies e.g. Chromium) also bound to the tenant
-
-  - Docker
-
-  - PolymerShop in Docker (80)
-
-  - BankJobs in Docker
-
-  - EasyTravel (8080/8079), Admin Console (8094) and Angular (9080) configured
-
-- Remove the EC2 Instance and deactivate and remove the tenant.
-
-- Write back in the CSV file (keeping an order and keeping custom rows not needed for the program)
-
-- Control RowFlags (true/false) for rows:
-
-  - skip - Skip the row for the actions
-  - isClusterAdmin - to add the User as a cluster admin
-
-- Validate function to read the configuration and print the users in the CSV file.
-  
 
 ## Prerequisites
 
 python 3
 
+aws account (optional for the ec2-actions) the program (boto3) will look into your `.aws` file for credentials.
+
+## Installing it
+This commands will get you python, pip and the dependencies installed in your system.
+```bash
+sudo apt install python3
+
+sudo apt install python3-pip
+
 pip install -r requirements.txt
+```
 
-aws account (optional for the ec2-actions)
+![](doc\rta_help.png)
 
+python3 rta.py validate
+
+
+## Features in a Nutshell
+
+- Read and write in a CSV file
+- Write results in JSON format
+- Write action results back in the CSV file
+  - results of the actions called
+  - tenantId
+  - ec2 instance id / publicIp / dns
+  - tenant token
+- Logging
+- Enable EasyTravel problem patterns via REST
+- Connect and execute commands via SSH
+- Create an environment, user and user_group
+- Create an EC2 Instance with custom deployment **linked to each tenant**
+  - OneAgent bound to the tenant
+  - EasyTravel (8080/8079), Admin Console (8094) and Angular (9080) configured
+
+- Remove the EC2 Instance and deactivate and remove the tenant.
+- Control RowFlags (true/false) for rows:
+  - skip - Skip the row for the actions
+  - isClusterAdmin - to add the User as a cluster admin
+- Validate function to read the configuration and print the users in the CSV file. 
 
 
 ## How does it work?
-
-
 
 The Config File:
 
@@ -140,12 +128,9 @@ py cmc.py validate
 
 ## Control Flags
 
-
-
 **skip** = empty and "false" equals false. Meaning the actions defined in the program (command and config file) will be applied to that user. If it contains True then the user will be skipped.
 
 **isClusterAdminGroup** =  empty and "false" equals false. True will set the user_group for the user to cluster_admin. This user will have access to the CMC and to all tenants.
-
 
 
 ## CSV Fields (mandatory and optional)

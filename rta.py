@@ -301,7 +301,7 @@ def save_json(directory, filename, data):
         check_create_dir(directory)
         fullpath = directory + '/' + filename + '-' + getNowAsString() + '.json'
     else:
-        # TODO : For later... save_json is necesary?
+        # TODO : Prio3: is saving_json really necesary? Control it via Debug?
         fullpath = filename + '-' + getNowAsString() + '.json'
     with open(fullpath, 'w') as f:
         json.dump(data, f)
@@ -373,7 +373,7 @@ def load_users_csv():
             # prepare fields for faster and better parsing
             tenantId = firstName + '-' + lastName
             # to small letters and replace emptyspace for dash
-            # TODO: For later... Parse/Validate Names with unsupported characters
+            # TODO: Prio3: Parse/Validate Names with unsupported characters
             tenantId = tenantId.lower().strip(' ').replace(' ', '-')
             row[key_tenantId] = tenantId
 
@@ -828,7 +828,6 @@ def delete_ec2_instance(data):
     instanceId = data['instanceId']
     ec2_client = boto3.client('ec2', region_name=AWS_REGION)
     action = 'delete_ec2_instance'
-    # TODO:  For later... Add delete-ec2-status when failed
     try:
         r = ec2_client.terminate_instances(InstanceIds=[instanceId])
         result = 'OK'
@@ -854,7 +853,7 @@ def create_ec2_instance(data):
     if not ACTION_CREATE_EC2INSTANCE:
         return True
 
-    # TODO: For later... Parametrize Image provitioning
+    # TODO: Prio2: Parameterize Image provitioning in JSON file.
     """  OREGON
     aws_region="us-west-2"
     ubuntu_image = "ami-06d51e91cea0dac8d"
@@ -1054,7 +1053,6 @@ def action_create():
     return
 
 
-
 def action_ssh():
 
     # Read Commands
@@ -1239,12 +1237,6 @@ def main():
                 action_ssh()
                 saveResults = True
 
-            elif command == 'config':
-                load_users_csv()
-                logging.info("====== Config  function called ======")
-                action_config()
-                saveResults = True
-
             elif command == 'help':
                 printUsage = True
 
@@ -1300,11 +1292,11 @@ Help Commands:
 Sequence Commands (subcommands controled via flags):
  create         Creates the tenants, resources and sets-up the environment. See 'action_create' in the config file
  remove         Removes the tenants and deletes the resources. See 'action_remove' in the config file
- test           Calls test functions like testing the Dynatrace API, pings EasyTravel REST interface or tests an SSH connection. See 'action_test' in the config file
+ test           Testing the Dynatrace API, EasyTravel REST interface or an SSH connection. See 'action_test' in the config file
 
 EasyTravel Commands:
  easytravel ping                    Pings EasyTravel REST -> :8091/ping
- easytravel plugin [name] [bool]    Enables/Disables EasyTravel Plugins via port 8091. For example: rta.py easytravel plugin CPULoadJourneyService true
+ easytravel plugin [name] [bool]    Enables/Disables EasyTravel Plugins. E.g: rta.py easytravel plugin CPULoadJourneyService true
 
 Other Commands:
  ssh            Executes remote commands via SSH. See the section 'ssh' in the config file.
