@@ -1,12 +1,12 @@
-# 🤖🔃👩‍💻Dynatrace RTA Tenant Automation
+# 🤖🔃👩‍💻Dynatrace RTA - REST Tenant Automation
 
-Python program that creates and automates environments via the Dynatrace API. This small program reads a CSV file and will execute for each entry the command called (or a sequence of commands). Each entry in the file can be controled via flags `skiped=true` as well as the subcommands. The sequence of commands of an action like `create`, `remove` and `test` can be controled via flags defined in the `config.json` file. 
+Python program that creates and automates environments via the Dynatrace API. This small program reads a CSV file and will execute for each entry the command called (or a sequence of commands). Each entry in the CSV file can be controled via flags `skiped=true` as well as the subcommands. The sequence of commands of an action like `create`, `remove` and `test` can be controled via flags defined in the `config.json` file. This program can work with a Managed Cluster and SaaS environments. For workshops is recommended to have a Managed Cluster since it will create every resource and assigns it to a student.
 
-The program will write the results in a log and in the CSV if needed, like if it creates an EC2 instance it will write the `instance-Id`, the public DNS and IP.
+The program will write the results in a log and in the CSV when needed, like if it creates an EC2 instance it will write the `instance-Id`, the `public DNS` and `IP`.
 
-This programm is very powerful for creating environments for Workshops. It will set-up an environment as defined with everything preconfigured. A tenant with an user, preconfigured dashboard, ManagementZones, Request-attributes, Application-Rules and it's definitions. It can also create EC2 machines with an OneAgent and ActiveGate deployed in it and applications like EasyTravel preconfigured. 
+This programm is very powerful for creating and automating environments for workshops. It will set-up an environment as defined with everything preconfigured. A tenant with an user, preconfigured dashboard linking it to the UI of the deployed applications, ManagementZones, Request-attributes, Application-Rules and it's definitions. It can also create EC2 machines with an OneAgent and ActiveGate deployed in it and preconfigure applications like EasyTravel. 
 
-💡 The Idea is that the student gets everything configured so the only thing he needs to do is login to it's tenant.
+#### 🦸‍♂️The Motivation and 💡 idea behind this, is that the 👨‍🎓 student gets everything configured so he spends **more time learning Dynatrace** and not configuring other things irrevelant to the Topic to learn.
 
 ## Overview of the Programm
 
@@ -17,7 +17,7 @@ python 3
 
 aws account (optional for the ec2-actions) the program (boto3) will look into your `.aws` file for credentials.
 
-## Installing it
+## Installing RTA
 This commands will get you python, pip and the dependencies installed in your system.
 ```bash
 sudo apt install python3
@@ -27,10 +27,13 @@ sudo apt install python3-pip
 pip install -r requirements.txt
 ```
 
+After you have installed them, just run `py rta.py help` for printing out the help.
+
 ![](doc\rta_help.png)
 
-python3 rta.py validate
+Before running any action is highly recommended that you run the `validate` function so you see the output of the configuration and the entries that will be executed in the CSV file.  
 
+`python3 rta.py validate`
 
 ## Features in a Nutshell
 
@@ -58,32 +61,35 @@ python3 rta.py validate
 
 ## How does it work?
 
-The Config File:
+The `config.json` file:
+
+about the status of the action as well as the id of the tenant, usergroup tenant token, ec2 instanceId, ec2 public dns, etc..<br />The file allows also other custom rows and will not modify them. when rewriting.
+
 
 This table represents the keys and subkeys of the program:
 
-| KEY           | SUB-KEY               | Value                                                        |
-| ------------- | --------------------- | ------------------------------------------------------------ |
-| cmc           | cmc_url               | The URL of the Tenant (with protocol and no leading slash)   |
-| cmc           | cmc_token             |                                                              |
-|               | csv_dir               | the csv directory. In here csv files will be written after an action. |
-|               | csv_file              | The csv file to read the information. The program will add rows with information about the status of the action as well as the id of the tenant, usergroup tenant token, ec2 instanceId, ec2 public dns, etc..<br />The file allows also other custom rows and will not modify them. when rewriting. |
-|               | log_dir               | The log directory                                            |
-|               | log_file              | The log file                                                 |
-| aws           | aws_dir               | The AWS directory                                            |
-| aws           | user_data             | The file containing the custom deployment. TenantID and TOKEN are variables which will be replaced for each tenant. |
-| action_create | create_tenant         | the create tenant action.                                    |
-| action_create | create_user_group     | will create a user_group (isClusterAdminGroup) flag will be set if found in the CSV file. |
-| action_create | create_user           | will create the user and bind it to the user-group.          |
-| action_create | create_allinone_token | A token that is allowed to install oneagents as well as read/write configuration and read environment information. |
-| action_create | create_ec2_instance   | Will create an EC2 instance for the tenant                   |
-| action_create | fetch_ec2_instance    | Will fetch the public dns name of the ec2 instance           |
+| KEY           | SUB-KEY               | Value                                                                                                                                                                                                                                                            |
+| ------------- | --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| cmc           | cmc_url               | The URL of the Tenant (with protocol and no leading slash)                                                                                                                                                                                                       |
+| cmc           | cmc_token             |                                                                                                                                                                                                                                                                  |
+|               | csv_dir               | the csv directory. In here csv files will be written after an action.                                                                                                                                                                                            |
+|               | csv_file              | The csv file to read the information. The program will add rows with information                                                                                                                                                                                 |
+|               | log_dir               | The log directory                                                                                                                                                                                                                                                |
+|               | log_file              | The log file                                                                                                                                                                                                                                                     |
+| aws           | aws_dir               | The AWS directory                                                                                                                                                                                                                                                |
+| aws           | user_data             | The file containing the custom deployment. TenantID and TOKEN are variables which will be replaced for each tenant.                                                                                                                                              |
+| action_create | create_tenant         | the create tenant action.                                                                                                                                                                                                                                        |
+| action_create | create_user_group     | will create a user_group (isClusterAdminGroup) flag will be set if found in the CSV file.                                                                                                                                                                        |
+| action_create | create_user           | will create the user and bind it to the user-group.                                                                                                                                                                                                              |
+| action_create | create_allinone_token | A token that is allowed to install oneagents as well as read/write configuration and read environment information.                                                                                                                                               |
+| action_create | create_ec2_instance   | Will create an EC2 instance for the tenant                                                                                                                                                                                                                       |
+| action_create | fetch_ec2_instance    | Will fetch the public dns name of the ec2 instance                                                                                                                                                                                                               |
 | action_create | set_up_env            | sets-up the environment. <br />- Modifies the default application<br />- Publish a custom dashboard pointing to the applications deployed in the ec2 instance<br />- Creates a synthetic test.<br />See set_up_environment function for expanding functionality. |
-| action_delete | deactivate_tenant     | deactivates tenant                                           |
-| action_delete | remove_tenant         | removes the tenant                                           |
-| action_delete | delete_user_group     | deletes the user_group                                       |
-| action_delete | delete_user           | deletes the user                                             |
-| action_delete | delete_ec2_instance   | deletes the ec2 instance                                     |
+| action_delete | deactivate_tenant     | deactivates tenant                                                                                                                                                                                                                                               |
+| action_delete | remove_tenant         | removes the tenant                                                                                                                                                                                                                                               |
+| action_delete | delete_user_group     | deletes the user_group                                                                                                                                                                                                                                           |
+| action_delete | delete_user           | deletes the user                                                                                                                                                                                                                                                 |
+| action_delete | delete_ec2_instance   | deletes the ec2 instance                                                                                                                                                                                                                                         |
 
 
 
@@ -139,14 +145,14 @@ The CSV is a semicolon ; separated file.
 
 The order of the fields is not important nevertheless the program will keep the order when rewriting the results of the actions created. The keys are case sensitive.
 
-| Key                 | Mandatory | default Value            | Description                                                  |
-| ------------------- | --------- | ------------------------ | ------------------------------------------------------------ |
-| email               | yes       |                          | the email of the person                                      |
-| firstName           | yes       |                          | the firstname                                                |
-| lastName            | yes       |                          | the lastname                                                 |
-| tenantId            | no        | firstName-LastName       | if found in the CSV file can be overwritten                  |
-| groupId             | no        | firstName-LastName-group |                                                              |
-| skip                | no        | FALSE                    | If found and if "true", the row will be skipped              |
+| Key                 | Mandatory | default Value            | Description                                                              |
+| ------------------- | --------- | ------------------------ | ------------------------------------------------------------------------ |
+| email               | yes       |                          | the email of the person                                                  |
+| firstName           | yes       |                          | the firstname                                                            |
+| lastName            | yes       |                          | the lastname                                                             |
+| tenantId            | no        | firstName-LastName       | if found in the CSV file can be overwritten                              |
+| groupId             | no        | firstName-LastName-group |                                                                          |
+| skip                | no        | FALSE                    | If found and if "true", the row will be skipped                          |
 | isClusterAdminGroup | no        | FALSE                    | If found and if "true", the userGroup will be added as an cluster admin. |
 
 
@@ -162,6 +168,13 @@ You can set them [programatically](https://boto3.amazonaws.com/v1/documentation/
 ## AWS concurrent running instances limit:
 
 By default AWS has a limit of 20 multiple instances running. You might want to check up that limit in the region before creating the EC2 instances.
+
+
+## How to collaborate
+
+Create branch with the improvement and a pull request. A tip to not forget pushin configuration is marking configuration files in your local repository not to be tracked. You can acomplish this by typing the following git command:
+`git update-index --assume-unchanged config.json`
+
 
 ## Ideas for Improvement
 
