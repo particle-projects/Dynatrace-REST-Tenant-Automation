@@ -1,0 +1,40 @@
+{
+	"cmc": {
+		"cmc_url": "https://XXX.dynatrace-managed.com",
+		"cmc_token": "XXXXXXX"
+	},
+	"csv_dir": "csv",
+	"csv_file": "attendees.csv",
+	"log_dir": "log",
+	"log_file": "rta.log",
+	"ssh": {
+		"ssh_dir": "ssh",
+		"cmd_file": "cmd.sh"
+	},
+	"aws": {
+		"aws_dir": "aws",
+		"user_data": "ubuntu-setup-easytravel.sh",
+		"aws_region": "eu-west-2"
+	},
+	"action_test": {
+		"tenant_api": true,
+		"ssh_connection": true,
+		"easytravel_ping": true
+	},
+	"action_create": {
+		"create_tenant": true,
+		"create_user_group": true,
+		"create_user": true,
+		"create_allinone_token": true,
+		"create_ec2_instance": true,
+		"fetch_ec2_instance": true,
+		"set_up_env": true
+	},
+	"action_remove": {
+		"deactivate_tenant": true,
+		"remove_tenant": true,
+		"delete_user_group": true,
+		"delete_user": true,
+		"delete_ec2_instance": true
+	}
+}

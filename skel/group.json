@@ -1,0 +1,28 @@
+{
+	"id": "",
+	"name": "",
+	"ldapGroupNames": [
+		""
+	],
+	"accessRight": {
+		"VIEWER": [
+			""
+		],
+		"MANAGE_SETTINGS": [
+			""
+		],
+		"AGENT_INSTALL": [
+			""
+		],
+		"LOG_VIEWER": [
+			""
+		],
+		"VIEW_SENSITIVE_REQUEST_DATA": [
+			""
+		],
+		"CONFIGURE_REQUEST_CAPTURE_DATA": [
+			""
+		]
+	},
+	"isClusterAdminGroup": false
+}

@@ -1,0 +1,42 @@
+{
+  "name": "BankName",
+  "enabled": true,
+  "dataType": "STRING",
+  "dataSources": [
+    {
+      "enabled": true,
+      "source": "METHOD_PARAM",
+      "valueProcessing": {
+        "splitAt": "",
+        "trim": false
+      },
+      "technology": "JAVA",
+      "methods": [
+        {
+          "method": {
+            "visibility": "PRIVATE",
+            "modifiers": [
+              "STATIC"
+            ],
+            "className": "com.dynatrace.se.bankjob.runner.BankTask",
+            "methodName": "executeJob",
+            "argumentTypes": [
+              "java.lang.String",
+              "java.lang.String"
+            ],
+            "returnType": "void"
+          },
+          "capture": "ARGUMENT",
+          "argumentIndex": 2
+        }
+      ],
+      "scope": {
+        "tagOfProcessGroup": "Application:Bankjob"
+      }
+    }
+  ],
+  "normalization": "ORIGINAL",
+  "aggregation": "FIRST",
+  "confidential": false,
+  "skipPersonalDataMasking": false
+}

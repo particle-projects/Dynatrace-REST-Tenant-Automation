@@ -1,0 +1,8 @@
+{
+    "applicationIdentifier": "application-1",
+    "filterConfig": {
+        "pattern": "compute",
+        "applicationMatchType": "CONTAINS",
+        "applicationMatchTarget": "DOMAIN"
+    }
+}

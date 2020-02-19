@@ -1,0 +1,47 @@
+{
+  "name": "Loyalty Status",
+  "enabled": true,
+  "dataType": "STRING",
+  "dataSources": [
+    {
+      "enabled": true,
+      "source": "QUERY_PARAMETER",
+      "valueProcessing": {
+        "splitAt": "",
+        "trim": false
+      },
+      "parameterName": "loyalty",
+      "capturingAndStorageLocation": "CAPTURE_AND_STORE_ON_SERVER"
+    },
+    {
+      "enabled": true,
+      "source": "METHOD_PARAM",
+      "valueProcessing": {
+        "splitAt": "",
+        "trim": false
+      },
+      "technology": "JAVA",
+      "methods": [
+        {
+          "method": {
+            "visibility": "PRIVATE",
+            "modifiers": [],
+            "className": "com.dynatrace.easytravel.business.webservice.BookingService",
+            "methodName": "checkLoyaltyStatus",
+            "argumentTypes": [
+              "java.lang.String",
+              "java.lang.String"
+            ],
+            "returnType": "void"
+          },
+          "capture": "ARGUMENT",
+          "argumentIndex": 2
+        }
+      ]
+    }
+  ],
+  "normalization": "ORIGINAL",
+  "aggregation": "FIRST",
+  "confidential": false,
+  "skipPersonalDataMasking": false
+}

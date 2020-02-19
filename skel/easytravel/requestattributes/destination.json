@@ -1,0 +1,145 @@
+{
+  "name": "Destination",
+  "enabled": true,
+  "dataType": "STRING",
+  "dataSources": [
+    {
+      "enabled": true,
+      "source": "METHOD_PARAM",
+      "valueProcessing": {
+        "splitAt": "",
+        "trim": false
+      },
+      "technology": "JAVA",
+      "methods": [
+        {
+          "method": {
+            "visibility": "PUBLIC",
+            "modifiers": [
+              "ABSTRACT"
+            ],
+            "className": "com.dynatrace.easytravel.frontend.data.DataProviderInterface",
+            "methodName": "findJourneys",
+            "argumentTypes": [
+              "java.lang.String",
+              "java.util.Date",
+              "java.util.Date"
+            ],
+            "returnType": "com.dynatrace.easytravel.frontend.data.JourneyDO[]"
+          },
+          "capture": "ARGUMENT",
+          "argumentIndex": 1
+        },
+        {
+          "method": {
+            "visibility": "PUBLIC",
+            "modifiers": [
+              "ABSTRACT"
+            ],
+            "className": "com.dynatrace.easytravel.frontend.data.DataProviderInterface",
+            "methodName": "findLocations",
+            "argumentTypes": [
+              "java.lang.String",
+              "int"
+            ],
+            "returnType": "com.dynatrace.easytravel.frontend.data.LocationDO[]"
+          },
+          "capture": "ARGUMENT",
+          "argumentIndex": 1
+        }
+      ]
+    },
+    {
+      "enabled": true,
+      "source": "METHOD_PARAM",
+      "valueProcessing": {
+        "splitAt": "",
+        "trim": false
+      },
+      "technology": "JAVA",
+      "methods": [
+        {
+          "method": {
+            "visibility": "PUBLIC",
+            "modifiers": [],
+            "className": "com.dynatrace.easytravel.business.webservice.JourneyService",
+            "methodName": "addLocation",
+            "argumentTypes": [
+              "java.lang.String"
+            ],
+            "returnType": "boolean"
+          },
+          "capture": "ARGUMENT",
+          "argumentIndex": 1
+        },
+        {
+          "method": {
+            "visibility": "PUBLIC",
+            "modifiers": [],
+            "className": "com.dynatrace.easytravel.business.webservice.JourneyService",
+            "methodName": "checkDestination",
+            "argumentTypes": [
+              "java.lang.String"
+            ],
+            "returnType": "boolean"
+          },
+          "capture": "ARGUMENT",
+          "argumentIndex": 1
+        }
+      ]
+    },
+    {
+      "enabled": true,
+      "source": "METHOD_PARAM",
+      "valueProcessing": {
+        "splitAt": "",
+        "trim": false
+      },
+      "technology": "JAVA",
+      "methods": [
+        {
+          "method": {
+            "visibility": "PRIVATE",
+            "modifiers": [],
+            "className": "com.dynatrace.easytravel.business.webservice.BookingService",
+            "methodName": "callPaymentService",
+            "argumentTypes": [
+              "java.lang.String",
+              "java.lang.String",
+              "java.lang.String",
+              "double",
+              "java.lang.String",
+              "java.lang.String"
+            ],
+            "returnType": "java.lang.String"
+          },
+          "capture": "ARGUMENT",
+          "argumentIndex": 5
+        }
+      ]
+    },
+    {
+      "enabled": true,
+      "source": "QUERY_PARAMETER",
+      "valueProcessing": {
+        "splitAt": "",
+        "trim": false
+      },
+      "parameterName": "destination",
+      "capturingAndStorageLocation": "CAPTURE_AND_STORE_ON_BOTH"
+    },
+    {
+      "enabled": true,
+      "source": "POST_PARAMETER",
+      "valueProcessing": {
+        "splitAt": "",
+        "trim": false
+      },
+      "parameterName": "iceform:destination"
+    }
+  ],
+  "normalization": "ORIGINAL",
+  "aggregation": "FIRST",
+  "confidential": false,
+  "skipPersonalDataMasking": true
+}

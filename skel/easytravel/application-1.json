@@ -1,0 +1,218 @@
+{
+  "name": "EasyTravel Angular",
+  "type": "AUTO_INJECTED",
+  "realUserMonitoringEnabled": true,
+  "costControlUserSessionPercentage": 100.000,
+  "loadActionKeyPerformanceMetric": "VISUALLY_COMPLETE",
+  "xhrActionKeyPerformanceMetric": "VISUALLY_COMPLETE",
+  "loadActionApdexSettings": {
+    "threshold": 3.0,
+    "toleratedThreshold": 3000,
+    "frustratingThreshold": 12000,
+    "toleratedFallbackThreshold": 3000,
+    "frustratingFallbackThreshold": 12000,
+    "considerJavaScriptErrors": true
+  },
+  "xhrActionApdexSettings": {
+    "threshold": 3.0,
+    "toleratedThreshold": 3000,
+    "frustratingThreshold": 12000,
+    "toleratedFallbackThreshold": 3000,
+    "frustratingFallbackThreshold": 12000,
+    "considerJavaScriptErrors": true
+  },
+  "customActionApdexSettings": {
+    "threshold": 3.0,
+    "toleratedThreshold": 3000,
+    "frustratingThreshold": 12000,
+    "toleratedFallbackThreshold": 3000,
+    "frustratingFallbackThreshold": 12000,
+    "considerJavaScriptErrors": true
+  },
+  "waterfallSettings": {
+    "uncompressedResourcesThreshold": 860,
+    "resourcesThreshold": 100000,
+    "resourceBrowserCachingThreshold": 50,
+    "slowFirstPartyResourcesThreshold": 200000,
+    "slowThirdPartyResourcesThreshold": 200000,
+    "slowCdnResourcesThreshold": 200000,
+    "speedIndexVisuallyCompleteRatioThreshold": 50
+  },
+  "monitoringSettings": {
+    "fetchRequests": false,
+    "xmlHttpRequest": true,
+    "javaScriptFrameworkSupport": {
+      "angular": true,
+      "dojo": false,
+      "extJS": false,
+      "icefaces": false,
+      "jQuery": false,
+      "mooTools": false,
+      "prototype": false,
+      "activeXObject": false
+    },
+    "contentCapture": {
+      "resourceTimingSettings": {
+        "w3cResourceTimings": true,
+        "nonW3cResourceTimings": false,
+        "nonW3cResourceTimingsInstrumentationDelay": 50,
+        "resourceTimingCaptureType": "CAPTURE_FULL_DETAILS",
+        "resourceTimingsDomainLimit": 10
+      },
+      "javaScriptErrors": true,
+      "timeoutSettings": {
+        "timedActionSupport": false,
+        "temporaryActionLimit": 0,
+        "temporaryActionTotalTimeout": 100
+      },
+      "visuallyCompleteAndSpeedIndex": true
+    },
+    "excludeXhrRegex": "",
+    "injectionMode": "JAVASCRIPT_TAG",
+    "addCrossOriginAnonymousAttribute": true,
+    "scriptTagCacheDurationInHours": 1,
+    "libraryFileLocation": "",
+    "monitoringDataPath": "",
+    "customConfigurationProperties": "",
+    "serverRequestPathId": "",
+    "secureCookieAttribute": false,
+    "cookiePlacementDomain": "",
+    "cacheControlHeaderOptimizations": true,
+    "advancedJavaScriptTagSettings": {
+      "syncBeaconFirefox": false,
+      "syncBeaconInternetExplorer": false,
+      "instrumentUnsupportedAjaxFrameworks": false,
+      "specialCharactersToEscape": "",
+      "maxActionNameLength": 100,
+      "maxErrorsToCapture": 10,
+      "additionalEventHandlers": {
+        "userMouseupEventForClicks": false,
+        "clickEventHandler": false,
+        "mouseupEventHandler": false,
+        "blurEventHandler": false,
+        "changeEventHandler": false,
+        "toStringMethod": false,
+        "maxDomNodesToInstrument": 5000
+      },
+      "eventWrapperSettings": {
+        "click": false,
+        "mouseUp": false,
+        "change": false,
+        "blur": false,
+        "touchStart": false,
+        "touchEnd": false
+      },
+      "globalEventCaptureSettings": {
+        "mouseUp": true,
+        "mouseDown": true,
+        "click": true,
+        "doubleClick": true,
+        "keyUp": true,
+        "keyDown": true,
+        "scroll": true,
+        "additionalEventCapturedAsUserInput": ""
+      }
+    }
+  },
+  "userActionNamingSettings": {
+    "placeholders": [
+      {
+        "name": "elementId_book",
+        "input": "ELEMENT_IDENTIFIER",
+        "processingPart": "ALL",
+        "processingSteps": [
+          {
+            "type": "SUBSTRING",
+            "patternBefore": "",
+            "patternBeforeSearchType": "FIRST",
+            "patternAfter": "FOR",
+            "patternAfterSearchType": "LAST",
+            "replacement": ""
+          }
+        ],
+        "metadataId": null,
+        "useGuessedElementIdentifier": false
+      },
+      {
+        "name": "xhrUrl_parm_clean",
+        "input": "XHR_URL",
+        "processingPart": "ALL",
+        "processingSteps": [
+          {
+            "type": "REPLACEMENT",
+            "patternBefore": "journeys",
+            "patternBeforeSearchType": "FIRST",
+            "patternAfter": "",
+            "patternAfterSearchType": "LAST",
+            "replacement": "/"
+          },
+          {
+            "type": "REPLACEMENT",
+            "patternBefore": "locations",
+            "patternBeforeSearchType": "FIRST",
+            "patternAfter": "",
+            "patternAfterSearchType": "LAST",
+            "replacement": "?"
+          }
+        ],
+        "metadataId": null,
+        "useGuessedElementIdentifier": false
+      },
+      {
+        "name": "pageUrlPath_clean",
+        "input": "PAGE_URL",
+        "processingPart": "PATH",
+        "processingSteps": [
+          {
+            "type": "REPLACEMENT",
+            "patternBefore": "journeys/",
+            "patternBeforeSearchType": "FIRST",
+            "patternAfter": "/book",
+            "patternAfterSearchType": "LAST",
+            "replacement": "[id]"
+          }
+        ],
+        "metadataId": null,
+        "useGuessedElementIdentifier": false
+      }
+    ],
+    "loadActionNamingRules": [
+      {
+        "template": "loading of page {pageUrlPath_clean}",
+        "conditions": []
+      }
+    ],
+    "xhrActionNamingRules": [
+      {
+        "template": "{userInteraction} on {elementId_book} (xhr: {xhrUrl_parm_clean})",
+        "conditions": [
+          {
+            "operand1": "{userInteraction}",
+            "operand2": "scroll",
+            "operator": "NOT_CONTAINS"
+          }
+        ]
+      },
+      {
+        "template": "{xhrUrl_parm_clean}",
+        "conditions": []
+      }
+    ],
+    "ignoreCase": true,
+    "splitUserActionsByDomain": true
+  },
+  "metaDataCaptureSettings": [],
+  "conversionGoals": [
+    {
+      "name": "Credit card validated",
+      "type": "UserAction",
+      "userActionDetails": {
+        "value": "easytravel/rest/validate-creditcard",
+        "caseSensitive": false,
+        "matchType": "Contains",
+        "matchEntity": "PageUrl",
+        "actionType": "Xhr"
+      }
+    }
+  ]
+}

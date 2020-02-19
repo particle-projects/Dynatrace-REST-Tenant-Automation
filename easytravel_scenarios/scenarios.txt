@@ -1,0 +1,47 @@
+
+https://dev-wiki.dynatrace.org/pages/viewpage.action?spaceKey=DEV&title=easyTravel+REST+interfaces
+
+https://community.dynatrace.com/community/pages/viewpage.action?title=Available+easyTravel+Problem+Patterns&spaceKey=DL
+
+Scenario:
+UEM/Standard with REST Service and Angular2
+http://localhost:8091/services/ConfigurationService/setPluginEnabled?name=CPULoadJourneyService&enabled=true
+
+
+Plugins to Enable/Disable:
+py rta.py easytravel plugin WebPageRequestSpamming true
+py rta.py easytravel plugin WebPageRequestSpamming false
+py rta.py easytravel plugin LoginProblems true
+py rta.py easytravel plugin LoginProblems false
+py rta.py easytravel plugin AngularBookingError500 true
+py rta.py easytravel plugin AngularBookingError500 false
+py rta.py easytravel plugin UsabilityIssue true
+py rta.py easytravel plugin UsabilityIssue false
+
+WebPageRequestSpamming
+LoginProblems
+AngularBookingError500
+UsabilityIssue
+
+
+py rta.py easytravel plugin CPULoadJourneyService true
+
+Patterns to use:
+
+CPULoadJourneyService
+DBSpammingAuthWithAppDeployment
+JourneyUpdateSlow
+
+
+############# crontab -e
+
+* m = The minute when the cron job will run. (0 to 59)
+* h = A integer determining the hour when the tasks will run. (0 to 23)
+* dom = Day of the Month when the cron job will run. (1 to 31).
+* mon = The month when the cron job will run. (1 to 12)
+* dow = Day of the Week from 0-6 with Sunday at 0. (0 to 6)
+* user = The name of the User under which the cron will run.
+* command = The linux command you wish to execute.
+
+30 23 * * 0 sh /home/dynatrace/rta/problem-sun.sh >> /home/dynatrace/rta/log/cron-sun.log 2>&1
+30 13 * * 6 sh /home/dynatrace/rta/problem-sat.sh >> /home/dynatrace/rta/log/cron-sat.log 2>&1

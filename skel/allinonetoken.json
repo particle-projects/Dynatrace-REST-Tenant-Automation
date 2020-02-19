@@ -1,0 +1,24 @@
+{
+	"scopes": [
+		"UserSessionAnonymization",
+		"DataPrivacy",
+		"LogImport",
+		"DssFileManagement",
+		"CaptureRequestData",
+		"LogExport",
+		"MemoryDump",
+		"ActiveGateCertManagement",
+		"DataExport",
+		"MaintenanceWindows",
+		"RumJavaScriptTagManagement",
+		"DataImport",
+		"InstallerDownload",
+		"ReadSyntheticData",
+		"ReadConfig",
+		"TenantTokenManagement",
+		"DTAQLAccess",
+		"ExternalSyntheticIntegration",
+		"WriteConfig"
+	],
+	"label": "allinone"
+}

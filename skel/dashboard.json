@@ -1,0 +1,956 @@
+{
+    "dashboardMetadata": {
+      "name": "Perform 2020 - 🩺💻 Hello firstName lastName! Welcome to Advanced Diagnostics HotDay 🔬",
+      "shared": true,
+      "sharingDetails": {
+        "linkShared": true,
+        "published": true
+      },
+      "dashboardFilter": {
+        "timeframe": "l_2_HOURS",
+        "managementZone": null
+      }
+    },
+    "tiles": [
+      {
+        "name": "",
+        "tileType": "OPEN_PROBLEMS",
+        "configured": true,
+        "bounds": {
+          "top": 0,
+          "left": 1140,
+          "width": 152,
+          "height": 152
+        },
+        "tileFilter": {
+          "timeframe": null,
+          "managementZone": null
+        }
+      },
+      {
+        "name": "",
+        "tileType": "DATABASES_OVERVIEW",
+        "configured": true,
+        "bounds": {
+          "top": 342,
+          "left": 1482,
+          "width": 152,
+          "height": 152
+        },
+        "tileFilter": {
+          "timeframe": null,
+          "managementZone": null
+        },
+        "filterConfig": null,
+        "chartVisible": true
+      },
+      {
+        "name": "",
+        "tileType": "NETWORK_MEDIUM",
+        "configured": true,
+        "bounds": {
+          "top": 494,
+          "left": 1330,
+          "width": 304,
+          "height": 152
+        },
+        "tileFilter": {
+          "timeframe": null,
+          "managementZone": null
+        }
+      },
+      {
+        "name": "Custom chart",
+        "tileType": "CUSTOM_CHARTING",
+        "configured": true,
+        "bounds": {
+          "top": 304,
+          "left": 0,
+          "width": 190,
+          "height": 304
+        },
+        "tileFilter": {
+          "timeframe": null,
+          "managementZone": null
+        },
+        "filterConfig": {
+          "type": "MIXED",
+          "customName": "Slowest Services",
+          "defaultName": "Custom chart",
+          "chartConfig": {
+            "legendShown": true,
+            "type": "TOP_LIST",
+            "series": [
+              {
+                "metric": "CTS_SERVICE_RESPONSE_TIME",
+                "aggregation": "AVG",
+                "percentile": null,
+                "type": "LINE",
+                "entityType": "SERVICE",
+                "dimensions": [],
+                "sortAscending": false,
+                "sortColumn": true,
+                "aggregationRate": "TOTAL"
+              }
+            ],
+            "resultMetadata": {}
+          },
+          "filtersPerEntityType": {}
+        }
+      },
+      {
+        "name": "Custom chart",
+        "tileType": "CUSTOM_CHARTING",
+        "configured": true,
+        "bounds": {
+          "top": 608,
+          "left": 0,
+          "width": 190,
+          "height": 342
+        },
+        "tileFilter": {
+          "timeframe": null,
+          "managementZone": null
+        },
+        "filterConfig": {
+          "type": "MIXED",
+          "customName": "Most failing services",
+          "defaultName": "Custom chart",
+          "chartConfig": {
+            "legendShown": true,
+            "type": "TOP_LIST",
+            "series": [
+              {
+                "metric": "CTS_FAILURE_RATE",
+                "aggregation": "AVG",
+                "percentile": null,
+                "type": "LINE",
+                "entityType": "SERVICE",
+                "dimensions": [],
+                "sortAscending": false,
+                "sortColumn": true,
+                "aggregationRate": "TOTAL"
+              }
+            ],
+            "resultMetadata": {}
+          },
+          "filtersPerEntityType": {}
+        }
+      },
+      {
+        "name": "Custom chart",
+        "tileType": "CUSTOM_CHARTING",
+        "configured": true,
+        "bounds": {
+          "top": 38,
+          "left": 190,
+          "width": 494,
+          "height": 228
+        },
+        "tileFilter": {
+          "timeframe": null,
+          "managementZone": null
+        },
+        "filterConfig": {
+          "type": "MIXED",
+          "customName": "HTTP 5xx errors and failed transactions",
+          "defaultName": "Custom chart",
+          "chartConfig": {
+            "legendShown": true,
+            "type": "TIMESERIES",
+            "series": [
+              {
+                "metric": "CTS_SERVICE_HTTP_5XX_ERRORS",
+                "aggregation": "NONE",
+                "percentile": null,
+                "type": "BAR",
+                "entityType": "SERVICE",
+                "dimensions": [],
+                "sortAscending": false,
+                "sortColumn": true,
+                "aggregationRate": "TOTAL"
+              },
+              {
+                "metric": "builtin:service.errors.total.count",
+                "aggregation": "NONE",
+                "percentile": null,
+                "type": "LINE",
+                "entityType": "SERVICE",
+                "dimensions": [
+                  {
+                    "id": "0",
+                    "name": "Service",
+                    "values": [],
+                    "entityDimension": true
+                  }
+                ],
+                "sortAscending": false,
+                "sortColumn": true,
+                "aggregationRate": "TOTAL"
+              }
+            ],
+            "resultMetadata": {
+              "SERVICE-3B5771F0C7E60C0C": {
+                "lastModified": 1560862510831,
+                "customColor": "#ff0000"
+              },
+              "SERVICE-AB5A46345C552135": {
+                "lastModified": 1560862493500,
+                "customColor": "#8B0000"
+              }
+            }
+          },
+          "filtersPerEntityType": {}
+        }
+      },
+      {
+        "name": "Custom chart",
+        "tileType": "CUSTOM_CHARTING",
+        "configured": true,
+        "bounds": {
+          "top": 494,
+          "left": 190,
+          "width": 494,
+          "height": 228
+        },
+        "tileFilter": {
+          "timeframe": null,
+          "managementZone": null
+        },
+        "filterConfig": {
+          "type": "MIXED",
+          "customName": "Response time",
+          "defaultName": "Custom chart",
+          "chartConfig": {
+            "legendShown": true,
+            "type": "TIMESERIES",
+            "series": [
+              {
+                "metric": "CTS_SERVICE_RESPONSE_TIME",
+                "aggregation": "AVG",
+                "percentile": null,
+                "type": "LINE",
+                "entityType": "SERVICE",
+                "dimensions": [],
+                "sortAscending": false,
+                "sortColumn": true,
+                "aggregationRate": "TOTAL"
+              }
+            ],
+            "resultMetadata": {}
+          },
+          "filtersPerEntityType": {}
+        }
+      },
+      {
+        "name": "Custom chart",
+        "tileType": "CUSTOM_CHARTING",
+        "configured": true,
+        "bounds": {
+          "top": 266,
+          "left": 190,
+          "width": 494,
+          "height": 228
+        },
+        "tileFilter": {
+          "timeframe": null,
+          "managementZone": null
+        },
+        "filterConfig": {
+          "type": "MIXED",
+          "customName": "Requests",
+          "defaultName": "Custom chart",
+          "chartConfig": {
+            "legendShown": true,
+            "type": "TIMESERIES",
+            "series": [
+              {
+                "metric": "CTS_SERVICE_LOAD",
+                "aggregation": "NONE",
+                "percentile": null,
+                "type": "LINE",
+                "entityType": "SERVICE",
+                "dimensions": [],
+                "sortAscending": false,
+                "sortColumn": true,
+                "aggregationRate": "TOTAL"
+              }
+            ],
+            "resultMetadata": {}
+          },
+          "filtersPerEntityType": {}
+        }
+      },
+      {
+        "name": "Markdown",
+        "tileType": "MARKDOWN",
+        "configured": true,
+        "bounds": {
+          "top": 38,
+          "left": 0,
+          "width": 190,
+          "height": 266
+        },
+        "tileFilter": {
+          "timeframe": null,
+          "managementZone": null
+        },
+        "markdown": "**[🔬 Diagnostic Tools](#diagnostictools;)**\n\n- [🕸Smartscape](#smartscape;)\n- [Top WebRequests](#topglobalwebrequests;)\n- [Exceptions](#exceptionsoverview;)\n- [Process Crashes](#processcrashesglobal;)\n- [CPU Analysis](#codelevel;)\n- [Memory Dumps](#memorydumpsglobal;)\n- [Log Analytics](#loganalytics;)\n- [Technologies](#newprocessessummary;)\n- [Database Statements](#topdbstatements;)"
+      },
+      {
+        "name": "",
+        "tileType": "CUSTOM_CHARTING",
+        "configured": true,
+        "bounds": {
+          "top": 722,
+          "left": 190,
+          "width": 494,
+          "height": 228
+        },
+        "tileFilter": {
+          "timeframe": null,
+          "managementZone": null
+        },
+        "filterConfig": {
+          "type": "DATABASE",
+          "customName": "DB Requests",
+          "defaultName": "Databases",
+          "chartConfig": {
+            "legendShown": true,
+            "type": "TIMESERIES",
+            "series": [
+              {
+                "metric": "CTS_SERVICE_LOAD",
+                "aggregation": "COUNT",
+                "percentile": null,
+                "type": "BAR",
+                "entityType": "DATABASE",
+                "dimensions": [],
+                "sortAscending": false,
+                "sortColumn": true,
+                "aggregationRate": "TOTAL"
+              }
+            ],
+            "resultMetadata": {}
+          },
+          "filtersPerEntityType": {}
+        }
+      },
+      {
+        "name": "Markdown",
+        "tileType": "MARKDOWN",
+        "configured": true,
+        "bounds": {
+          "top": 494,
+          "left": 684,
+          "width": 152,
+          "height": 38
+        },
+        "tileFilter": {
+          "timeframe": null,
+          "managementZone": null
+        },
+        "markdown": "💸 BankService Health"
+      },
+      {
+        "name": "Markdown",
+        "tileType": "MARKDOWN",
+        "configured": true,
+        "bounds": {
+          "top": 0,
+          "left": 190,
+          "width": 494,
+          "height": 38
+        },
+        "tileFilter": {
+          "timeframe": null,
+          "managementZone": null
+        },
+        "markdown": "[❗Failed requests](#topglobalwebrequests;servicefilter=0%1E3%110) \n - [❗HTTP 4XX](#topglobalwebrequests;servicefilter=0%1E2%11400-499) - [❗HTTP 5XX](#topglobalwebrequests;servicefilter=0%1E2%11500-599) - [🐢 TX > 10 Sec](#topglobalwebrequests;servicefilter=0%1E0%1110000000%144611686018427387) [🐌 >30 Sec](#topglobalwebrequests;servicefilter=0%1E0%1130000000%144611686018427387)"
+      },
+      {
+        "name": "Markdown",
+        "tileType": "MARKDOWN",
+        "configured": true,
+        "bounds": {
+          "top": 0,
+          "left": 1292,
+          "width": 494,
+          "height": 38
+        },
+        "tileFilter": {
+          "timeframe": null,
+          "managementZone": null
+        },
+        "markdown": "Booking Portals: [👴 EasyTravel Classic](http://publicIpAddress:8080) | [✈ EasyTravel Angular](http://publicIpAddress)"
+      },
+      {
+        "name": "Application health",
+        "tileType": "APPLICATIONS",
+        "configured": true,
+        "bounds": {
+          "top": 38,
+          "left": 1330,
+          "width": 152,
+          "height": 152
+        },
+        "tileFilter": {
+          "timeframe": null,
+          "managementZone": null
+        },
+        "filterConfig": null,
+        "chartVisible": true
+      },
+      {
+        "name": "Custom chart",
+        "tileType": "CUSTOM_CHARTING",
+        "configured": true,
+        "bounds": {
+          "top": 646,
+          "left": 1330,
+          "width": 304,
+          "height": 152
+        },
+        "tileFilter": {
+          "timeframe": null,
+          "managementZone": null
+        },
+        "filterConfig": {
+          "type": "MIXED",
+          "customName": "Hosts traffic Mbit/s",
+          "defaultName": "Custom chart",
+          "chartConfig": {
+            "legendShown": true,
+            "type": "TIMESERIES",
+            "series": [
+              {
+                "metric": "CTS_HOST_NETWORK_TRAFFIC",
+                "aggregation": "NONE",
+                "percentile": null,
+                "type": "LINE",
+                "entityType": "HOST",
+                "dimensions": [
+                  {
+                    "id": "NETWORK_INTERFACE",
+                    "name": null,
+                    "values": [],
+                    "entityDimension": true
+                  }
+                ],
+                "sortAscending": false,
+                "sortColumn": true,
+                "aggregationRate": "TOTAL"
+              }
+            ],
+            "resultMetadata": {}
+          },
+          "filtersPerEntityType": {}
+        }
+      },
+      {
+        "name": "Smartscape",
+        "tileType": "PURE_MODEL",
+        "configured": true,
+        "bounds": {
+          "top": 190,
+          "left": 1330,
+          "width": 304,
+          "height": 152
+        },
+        "tileFilter": {
+          "timeframe": null,
+          "managementZone": null
+        }
+      },
+      {
+        "name": "Service health",
+        "tileType": "SERVICES",
+        "configured": true,
+        "bounds": {
+          "top": 38,
+          "left": 1482,
+          "width": 152,
+          "height": 152
+        },
+        "tileFilter": {
+          "timeframe": null,
+          "managementZone": null
+        },
+        "filterConfig": null,
+        "chartVisible": true
+      },
+      {
+        "name": "Host health",
+        "tileType": "HOSTS",
+        "configured": true,
+        "bounds": {
+          "top": 342,
+          "left": 1330,
+          "width": 152,
+          "height": 152
+        },
+        "tileFilter": {
+          "timeframe": null,
+          "managementZone": null
+        },
+        "filterConfig": null,
+        "chartVisible": true
+      },
+      {
+        "name": "Markdown",
+        "tileType": "MARKDOWN",
+        "configured": true,
+        "bounds": {
+          "top": 38,
+          "left": 1634,
+          "width": 190,
+          "height": 152
+        },
+        "tileFilter": {
+          "timeframe": null,
+          "managementZone": null
+        },
+        "markdown": "- [👨‍💻 EasyTravel Admin](http://publicIpAddress:8094)\n- [📗 Dynatrace University](https://university.dynatrace.com/)\n- [🤘 Perform GitHub Repository](https://github.com/Dynatrace/perform-2020-hotday/)\n"
+      },
+      {
+        "name": "Markdown",
+        "tileType": "MARKDOWN",
+        "configured": true,
+        "bounds": {
+          "top": 798,
+          "left": 1330,
+          "width": 304,
+          "height": 152
+        },
+        "tileFilter": {
+          "timeframe": null,
+          "managementZone": null
+        },
+        "markdown": "💻*How to connect to your AWS EC2* \n\n`ssh dtu.training@publicIpAddress`\n\nPassword🔑: `@perform2020`"
+      },
+      {
+        "name": "World map",
+        "tileType": "APPLICATION_WORLDMAP",
+        "configured": true,
+        "bounds": {
+          "top": 190,
+          "left": 988,
+          "width": 304,
+          "height": 304
+        },
+        "tileFilter": {
+          "timeframe": null,
+          "managementZone": null
+        },
+        "assignedEntities": [],
+        "metric": "APDEX"
+      },
+      {
+        "name": "Live user activity",
+        "tileType": "UEM_ACTIVE_SESSIONS",
+        "configured": true,
+        "bounds": {
+          "top": 190,
+          "left": 684,
+          "width": 304,
+          "height": 304
+        },
+        "tileFilter": {
+          "timeframe": null,
+          "managementZone": null
+        }
+      },
+      {
+        "name": "Markdown",
+        "tileType": "MARKDOWN",
+        "configured": true,
+        "bounds": {
+          "top": 0,
+          "left": 0,
+          "width": 190,
+          "height": 38
+        },
+        "tileFilter": {
+          "timeframe": null,
+          "managementZone": null
+        },
+        "markdown": "[🙋‍♂️ LiveHelp 📞](http://livehelp-perform-rocks-34-221-7-176.nip.io/p/perform2020)"
+      },
+      {
+        "name": "Markdown",
+        "tileType": "MARKDOWN",
+        "configured": true,
+        "bounds": {
+          "top": 152,
+          "left": 798,
+          "width": 418,
+          "height": 38
+        },
+        "tileFilter": {
+          "timeframe": null,
+          "managementZone": null
+        },
+        "markdown": "[Happy users 😄](#usersearchoverview;filtrfilterUXScore=3) [Tolerated users 😏](#usersearchoverview;filtrfilterUXScore=2) [Frustated Users 😡](#usersearchoverview;filtrfilterUXScore=1) "
+      },
+      {
+        "name": "",
+        "tileType": "SERVICES",
+        "configured": true,
+        "bounds": {
+          "top": 0,
+          "left": 684,
+          "width": 152,
+          "height": 152
+        },
+        "tileFilter": {
+          "timeframe": null,
+          "managementZone": null
+        },
+        "filterConfig": {
+          "type": "NON_DATABASE_SERVICE",
+          "customName": "EasyTravel Frontend",
+          "defaultName": "EasyTravel Frontend",
+          "chartConfig": {
+            "legendShown": true,
+            "type": "TIMESERIES",
+            "series": [],
+            "resultMetadata": {}
+          },
+          "filtersPerEntityType": {
+            "NON_DATABASE_SERVICE": {
+              "AUTO_TAGS": [
+                "EasyTravel:FrontEnd"
+              ]
+            }
+          }
+        },
+        "chartVisible": true
+      },
+      {
+        "name": "",
+        "tileType": "SERVICES",
+        "configured": true,
+        "bounds": {
+          "top": 0,
+          "left": 836,
+          "width": 152,
+          "height": 152
+        },
+        "tileFilter": {
+          "timeframe": null,
+          "managementZone": null
+        },
+        "filterConfig": {
+          "type": "NON_DATABASE_SERVICE",
+          "customName": "EasyTravel Backend",
+          "defaultName": "EasyTravel Backend",
+          "chartConfig": {
+            "legendShown": true,
+            "type": "TIMESERIES",
+            "series": [],
+            "resultMetadata": {}
+          },
+          "filtersPerEntityType": {
+            "NON_DATABASE_SERVICE": {
+              "AUTO_TAGS": [
+                "EasyTravel:BackEnd"
+              ]
+            }
+          }
+        },
+        "chartVisible": true
+      },
+      {
+        "name": "",
+        "tileType": "SERVICES",
+        "configured": true,
+        "bounds": {
+          "top": 532,
+          "left": 684,
+          "width": 152,
+          "height": 152
+        },
+        "tileFilter": {
+          "timeframe": null,
+          "managementZone": null
+        },
+        "filterConfig": {
+          "type": "NON_DATABASE_SERVICE",
+          "customName": "BankServices",
+          "defaultName": "BankServices",
+          "chartConfig": {
+            "legendShown": true,
+            "type": "TIMESERIES",
+            "series": [],
+            "resultMetadata": {}
+          },
+          "filtersPerEntityType": {
+            "NON_DATABASE_SERVICE": {
+              "AUTO_TAGS": [
+                "Application:Bankjob"
+              ]
+            }
+          }
+        },
+        "chartVisible": true
+      },
+      {
+        "name": "",
+        "tileType": "SERVICES",
+        "configured": true,
+        "bounds": {
+          "top": 0,
+          "left": 988,
+          "width": 152,
+          "height": 152
+        },
+        "tileFilter": {
+          "timeframe": null,
+          "managementZone": null
+        },
+        "filterConfig": {
+          "type": "NON_DATABASE_SERVICE",
+          "customName": "ET Conf & Load",
+          "defaultName": "ET Conf & Load",
+          "chartConfig": {
+            "legendShown": true,
+            "type": "TIMESERIES",
+            "series": [],
+            "resultMetadata": {}
+          },
+          "filtersPerEntityType": {
+            "NON_DATABASE_SERVICE": {
+              "AUTO_TAGS": [
+                "Application:EasyTravel Configuration and Load"
+              ]
+            }
+          }
+        },
+        "chartVisible": true
+      },
+      {
+        "name": "",
+        "tileType": "CUSTOM_CHARTING",
+        "configured": true,
+        "bounds": {
+          "top": 722,
+          "left": 684,
+          "width": 152,
+          "height": 152
+        },
+        "tileFilter": {
+          "timeframe": null,
+          "managementZone": null
+        },
+        "filterConfig": {
+          "type": "MIXED",
+          "customName": "Bank Threads",
+          "defaultName": "Databases",
+          "chartConfig": {
+            "legendShown": true,
+            "type": "SINGLE_VALUE",
+            "series": [
+              {
+                "metric": "builtin:tech.jvm.threads.count",
+                "aggregation": "AVG",
+                "percentile": null,
+                "type": "BAR",
+                "entityType": "PROCESS_GROUP_INSTANCE",
+                "dimensions": [
+                  {
+                    "id": "0",
+                    "name": "Process",
+                    "values": [],
+                    "entityDimension": true
+                  }
+                ],
+                "sortAscending": false,
+                "sortColumn": true,
+                "aggregationRate": "TOTAL"
+              }
+            ],
+            "resultMetadata": {}
+          },
+          "filtersPerEntityType": {
+            "PROCESS_GROUP_INSTANCE": {
+              "AUTO_TAGS": [
+                "Application:Bankjob"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "name": "",
+        "tileType": "CUSTOM_CHARTING",
+        "configured": true,
+        "bounds": {
+          "top": 494,
+          "left": 1064,
+          "width": 228,
+          "height": 228
+        },
+        "tileFilter": {
+          "timeframe": null,
+          "managementZone": null
+        },
+        "filterConfig": {
+          "type": "MIXED",
+          "customName": "Bank Transactions per min",
+          "defaultName": "Databases",
+          "chartConfig": {
+            "legendShown": true,
+            "type": "SINGLE_VALUE",
+            "series": [
+              {
+                "metric": "builtin:service.requestCount.total",
+                "aggregation": "NONE",
+                "percentile": null,
+                "type": "LINE",
+                "entityType": "SERVICE",
+                "dimensions": [
+                  {
+                    "id": "0",
+                    "name": "Service",
+                    "values": [],
+                    "entityDimension": true
+                  }
+                ],
+                "sortAscending": false,
+                "sortColumn": true,
+                "aggregationRate": "MINUTE"
+              }
+            ],
+            "resultMetadata": {}
+          },
+          "filtersPerEntityType": {
+            "SERVICE": {
+              "AUTO_TAGS": [
+                "Application:Bankjob"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "name": "",
+        "tileType": "CUSTOM_CHARTING",
+        "configured": true,
+        "bounds": {
+          "top": 722,
+          "left": 836,
+          "width": 456,
+          "height": 228
+        },
+        "tileFilter": {
+          "timeframe": null,
+          "managementZone": null
+        },
+        "filterConfig": {
+          "type": "MIXED",
+          "customName": "Bank Transactions RT",
+          "defaultName": "Databases",
+          "chartConfig": {
+            "legendShown": true,
+            "type": "SINGLE_VALUE",
+            "series": [
+              {
+                "metric": "builtin:service.response.time",
+                "aggregation": "AVG",
+                "percentile": null,
+                "type": "LINE",
+                "entityType": "SERVICE",
+                "dimensions": [
+                  {
+                    "id": "0",
+                    "name": "Service",
+                    "values": [],
+                    "entityDimension": true
+                  }
+                ],
+                "sortAscending": false,
+                "sortColumn": true,
+                "aggregationRate": "TOTAL"
+              }
+            ],
+            "resultMetadata": {}
+          },
+          "filtersPerEntityType": {
+            "SERVICE": {
+              "AUTO_TAGS": [
+                "Application:Bankjob"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "name": "",
+        "tileType": "CUSTOM_CHARTING",
+        "configured": true,
+        "bounds": {
+          "top": 494,
+          "left": 836,
+          "width": 228,
+          "height": 228
+        },
+        "tileFilter": {
+          "timeframe": null,
+          "managementZone": null
+        },
+        "filterConfig": {
+          "type": "MIXED",
+          "customName": "Bank Transactions FailureRate",
+          "defaultName": "Databases",
+          "chartConfig": {
+            "legendShown": true,
+            "type": "SINGLE_VALUE",
+            "series": [
+              {
+                "metric": "builtin:service.errors.total.rate",
+                "aggregation": "AVG",
+                "percentile": null,
+                "type": "LINE",
+                "entityType": "SERVICE",
+                "dimensions": [
+                  {
+                    "id": "0",
+                    "name": "Service",
+                    "values": [],
+                    "entityDimension": true
+                  }
+                ],
+                "sortAscending": false,
+                "sortColumn": true,
+                "aggregationRate": "TOTAL"
+              }
+            ],
+            "resultMetadata": {}
+          },
+          "filtersPerEntityType": {
+            "SERVICE": {
+              "AUTO_TAGS": [
+                "Application:Bankjob"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "name": "Markdown",
+        "tileType": "MARKDOWN",
+        "configured": true,
+        "bounds": {
+          "top": 190,
+          "left": 1634,
+          "width": 190,
+          "height": 380
+        },
+        "tileFilter": {
+          "timeframe": null,
+          "managementZone": null
+        },
+      "markdown": "- [🛠 Settings](#settings;)\n- [API DetectionRules](#settings/apinaming)\n- [Tagging rules](#settings/taggingoverview/autotags;)\n- [Request Attributes](#settings/requestattributes;)\n- [Management zones](#settings/preferences/mzoverview;)\n- [Custom Services](#settings/newcustomservices;)\n- [Deep Monitoring](#settings/deepmonitoring;gf=all;)\n"
+      }
+    ]
+  }

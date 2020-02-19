@@ -1,0 +1,18 @@
+log/*
+data/*
+csv/*-*
+csv/temp/*-*
+env*
+# We dont want to add files nor folders with a -
+*-*
+*-*/*
+*mine*
+# Dont add test files
+*test*
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+# config.json ommited so its not accidentally commited 
+config.json
+# Ignore webautomation
+webautomation/*

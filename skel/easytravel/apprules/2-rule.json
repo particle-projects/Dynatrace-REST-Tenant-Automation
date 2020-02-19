@@ -1,0 +1,8 @@
+{
+    "applicationIdentifier": "application-1",
+    "filterConfig": {
+        "pattern": "/easytravel/",
+        "applicationMatchType": "CONTAINS",
+        "applicationMatchTarget": "URL"
+    }
+}

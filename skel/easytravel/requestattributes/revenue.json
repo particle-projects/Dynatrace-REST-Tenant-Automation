@@ -1,0 +1,69 @@
+{
+  "name": "Revenue",
+  "enabled": true,
+  "dataType": "DOUBLE",
+  "dataSources": [
+    {
+      "enabled": true,
+      "source": "METHOD_PARAM",
+      "valueProcessing": {
+        "splitAt": "",
+        "trim": false
+      },
+      "technology": "JAVA",
+      "methods": [
+        {
+          "method": {
+            "visibility": "PUBLIC",
+            "modifiers": [],
+            "className": "com.dynatrace.easytravel.business.webservice.BookingService",
+            "methodName": "storeBooking",
+            "argumentTypes": [
+              "java.lang.Integer",
+              "java.lang.String",
+              "java.lang.String",
+              "java.lang.Double"
+            ],
+            "returnType": "java.lang.String"
+          },
+          "capture": "ARGUMENT",
+          "argumentIndex": 4
+        }
+      ]
+    },
+    {
+      "enabled": true,
+      "source": "METHOD_PARAM",
+      "valueProcessing": {
+        "splitAt": "",
+        "trim": false
+      },
+      "technology": "JAVA",
+      "methods": [
+        {
+          "method": {
+            "visibility": "PUBLIC",
+            "modifiers": [
+              "ABSTRACT"
+            ],
+            "className": "com.dynatrace.easytravel.frontend.data.DataProviderInterface",
+            "methodName": "storeBooking",
+            "argumentTypes": [
+              "java.lang.Integer",
+              "java.lang.String",
+              "java.lang.String",
+              "java.lang.Double"
+            ],
+            "returnType": "java.lang.String"
+          },
+          "capture": "ARGUMENT",
+          "argumentIndex": 4
+        }
+      ]
+    }
+  ],
+  "normalization": "ORIGINAL",
+  "aggregation": "SUM",
+  "confidential": false,
+  "skipPersonalDataMasking": true
+}

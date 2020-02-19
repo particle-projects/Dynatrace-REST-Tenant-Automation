@@ -1,0 +1,62 @@
+{
+    "name": "💃 PolymerShop",
+    "frequencyMin": 15,
+    "enabled": true,
+    "type": "BROWSER",
+    "createdFrom": "GUI",
+    "script": {
+        "type": "availability",
+        "version": "1.0",
+        "configuration": {
+            "device": {
+                "deviceName": "Desktop",
+                "orientation": "landscape"
+            }
+        },
+        "events": [
+            {
+                "type": "navigate",
+                "description": "Loading of PolymerShop",
+                "url": "http://publicDnsName:8881",
+                "wait": {
+                    "waitFor": "page_complete"
+                }
+            }
+        ]
+    },
+    "locations": [
+        "GEOLOCATION-924D253001531722",
+		"GEOLOCATION-45AB48D9D6925ECC",
+		"GEOLOCATION-2340C2C253B92657"
+    ],
+    "anomalyDetection": {
+        "outageHandling": {
+            "globalOutage": true,
+            "localOutage": false,
+            "localOutagePolicy": {
+                "affectedLocations": 1,
+                "consecutiveRuns": 3
+            }
+        },
+        "loadingTimeThresholds": {
+            "enabled": false,
+            "thresholds": []
+        }
+    },
+    "tags": [],
+    "managementZones": [],
+    "automaticallyAssignedApps": [
+        ""
+    ],
+    "manuallyAssignedApps": [],
+    "keyPerformanceMetrics": {
+        "loadActionKpm": "VISUALLY_COMPLETE",
+        "xhrActionKpm": "VISUALLY_COMPLETE"
+    },
+    "events": [
+        {
+            "name": "Loading of PolymerShop",
+            "sequenceNumber": 1
+        }
+    ]
+}

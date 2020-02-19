@@ -1,0 +1,38 @@
+{
+    "name": "FibonacciNr",
+    "enabled": true,
+    "dataType": "INTEGER",
+    "dataSources": [
+      {
+        "enabled": true,
+        "source": "METHOD_PARAM",
+        "valueProcessing": {
+          "splitAt": "",
+          "trim": false
+        },
+        "technology": "JAVA",
+        "methods": [
+          {
+            "method": {
+              "visibility": "PRIVATE",
+              "modifiers": [
+                "STATIC"
+              ],
+              "className": "com.dynatrace.se.bankjob.runner.BankTask",
+              "methodName": "doHeavyCalculation",
+              "argumentTypes": [
+                "int"
+              ],
+              "returnType": "void"
+            },
+            "capture": "ARGUMENT",
+            "argumentIndex": 1
+          }
+        ]
+      }
+    ],
+    "normalization": "ORIGINAL",
+    "aggregation": "FIRST",
+    "confidential": false,
+    "skipPersonalDataMasking": false
+  }

@@ -1,0 +1,91 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+
+
+
+
+        {
+            "name": "Python: RTA 'DEV'",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/rta.py",
+            "args": ["dev"],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Python: RTA 'test'",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/rta.py",
+            "args": ["test"],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Python: RTA 'ssh'",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/rta.py",
+            "args": ["ssh"],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Python: RTA 'config'",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/rta.py",
+            "args": ["config"],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Python: RTA 'easytravel ping'",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/rta.py",
+            "args": ["easytravel", "ping"],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Python: RTA 'easytravel plugin CPULoadJourneyService true'",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/rta.py",
+            "args": ["easytravel", "plugin", "CPULoadJourneyService", "true"],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Python: RTA 'validate'",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/rta.py",
+            "args": ["validate"],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Python: RTA 'create'",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/rta.py",
+            "args": ["create"],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Python: RTA 'remove'",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/rta.py",
+            "args": ["remove"],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal"
+        }
+    ]
+}
