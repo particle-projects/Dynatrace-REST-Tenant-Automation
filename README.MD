@@ -29,7 +29,7 @@ pip install -r requirements.txt
 
 After you have installed them, just run `py rta.py help` for printing out the help.
 
-![](doc\rta_help.png)
+![](doc/rta_help.png)
 
 Before running any action is highly recommended that you run the `validate` function so you see the output of the configuration and the entries that will be executed in the CSV file.  
 
@@ -97,7 +97,7 @@ This table represents the keys and subkeys of the program:
 
 Each tenant will end up with its own tenant preconfigured. For expanding the configuration of the tenant take a look at the function *set_up_environment*. This will set up a custom dashboard ponting out to the deployed applications and resources for the session, a custom dashboard, a synthetic test etc.. l. For modifying the template like the dashboard just go to the skel directory and modify the dashboard.json file. 
 
-![](doc\custom-dashboard.png)
+![](doc/custom-dashboard.png)
 
 
 
