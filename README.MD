@@ -1,15 +1,18 @@
+> **DISCLAIMER**: This project was developed for educational purpouses only and is not complete, nor supported. It's publishment is only intended for helping others automate environments for delivering workshops with Dynatrace.
+
 # 🤖🔃👩‍💻Dynatrace RTA - REST Tenant Automation
 
-Python program that creates and automates environments via the Dynatrace API. This small program reads a CSV file and will execute for each entry the command called (or a sequence of commands). Each entry in the CSV file can be controled via flags `skiped=true` as well as the subcommands. The sequence of commands of an action like `create`, `remove` and `test` can be controled via flags defined in the `config.json` file. This program can work with a Managed Cluster and SaaS environments. For workshops is recommended to have a Managed Cluster since it will create every resource and assigns it to a student.
+Python program that creates and automates environments via the Dynatrace API. This small program reads a CSV file and will execute for each entry the command called (or a sequence of commands). Each entry in the CSV file can be controled via flags `skiped=true` as well as the subcommands. The subcommands of the actions `create`, `remove` and `test` can be controled via flags defined in the `config.json` file. This program can work with a Managed Cluster and SaaS environments. 
 
-The program will write the results in a log and in the CSV when needed, like if it creates an EC2 instance it will write the `instance-Id`, the `public DNS` and `IP`.
+The program will log the results and write it in the CSV when needed, like if it creates an EC2 instance it will write the `instance-Id`, the `public DNS` and `IP`.
 
-This programm is very powerful for creating and automating environments for workshops. It will set-up an environment as defined with everything preconfigured. A tenant with an user, preconfigured dashboard linking it to the UI of the deployed applications, ManagementZones, Request-attributes, Application-Rules and it's definitions. It can also create EC2 machines with an OneAgent and ActiveGate deployed in it and preconfigure applications like EasyTravel. 
+This programm is very powerful for creating and automating environments for workshops. It will set-up an environment as defined with everything preconfigured such as custom dashboards linking them to the user-interface of the deployed applications of the created EC2 machines bein monitored by the OneAgent, ManagementZones, Request-Attributes, Application-Rules and it's definitions. 
 
-#### 🦸‍♂️The Motivation and 💡 idea behind this, is that the 👨‍🎓 student gets everything configured so he spends **more time learning Dynatrace** and not configuring other things irrevelant to the Topic to learn.
+#### 🦸‍♂️The Motivation and 💡 idea behind this, is that the 👨‍🎓 student gets everything configured so he spends **more time learning Dynatrace** and not configuring other things trivial to the Topic to learn.
 
-## Overview of the Programm
+## Overview of a sample workshop setup
 
+![](doc/rta_diagramm.gif)
 
 ## Prerequisites
 
@@ -66,7 +69,50 @@ The `config.json` file:
 about the status of the action as well as the id of the tenant, usergroup tenant token, ec2 instanceId, ec2 public dns, etc..<br />The file allows also other custom rows and will not modify them. when rewriting.
 
 
-This table represents the keys and subkeys of the program:
+
+====== [RTA] Rest Tenant Automation Configuration ======
+cmc:
+ |-cmc_url             : https://xxxxx.dynatrace-managed.com The url of the cluster (when using Managed)
+ |-cmc_token           : XXXXYYYYYZZZZ      The API Token of the Cluster. Needed for creating tenants.
+
+csv_dir   : csv
+csv_file  : attendees.csv
+log_dir   : log
+log_file  : rta.log
+ssh:
+ |-ssh_dir             : ssh
+ |-cmd_file            : cmd.sh
+
+aws:
+ |-aws_dir             : aws
+ |-user_data           : ubuntu-setup-easytravel.sh
+ |-aws_region          : eu-west-2
+
+
+action_test:
+ |-tenant_api          : True
+ |-ssh_connection      : True
+ |-easytravel_ping     : True
+
+
+action_create:
+ |-create_tenant       : True
+ |-create_user_group   : True
+ |-create_user         : True
+ |-create_allinone_token: True
+ |-create_ec2_instance : True
+ |-fetch_ec2_instance  : True
+ |-set_up_env          : True
+
+
+action_remove:
+ |-deactivate_tenant   : True
+ |-remove_tenant       : True
+ |-delete_user_group   : True
+ |-delete_user         : True
+ |-delete_ec2_instance : True
+
+
 
 | KEY           | SUB-KEY               | Value                                                                                                                                                                                                                                                            |
 | ------------- | --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
