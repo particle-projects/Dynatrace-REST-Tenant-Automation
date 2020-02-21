@@ -25,9 +25,12 @@ key_skip = 'skip'
 key_tenantLogin = 'tenantLogin'
 key_tenantPassword = 'tenantPassword'
 key_tenantUrl = 'tenantUrl'
-key_tenantToken = 'tenantToken'
+key_tokenMgmt = 'tokenMgmt'
+key_apiToken = 'apiToken'
+key_paasToken = 'paasToken'
 key_firstName = 'firstName'
 key_lastName = 'lastName'
+key_tenantName = 'tenantName'
 key_groupId = 'groupId'
 key_email = 'email'
 key_id = 'id'
@@ -42,11 +45,13 @@ regex_valid_chars = "^[A-Za-z0-9\s\._-]*$"
 API_EP_CM_TENANTCONFIGS = "/api/v1.0/control/tenantManagement/tenantConfigs/?active=true"
 API_EP_CM_GROUPS = "/api/v1.0/onpremise/groups/"
 API_EP_CM_USERS = "/api/v1.0/onpremise/users/"
-API_EP_CM_CREATE_TENANT = "/api/v1.0/control/tenantManagement/createTenant/"
+API_EP_CM_ENVIRONMENTS = "/api/cluster/v1/environments/"
+API_EP_CM_CREATE_TENANT = "/api/cluster/v1/environments/"
 API_EP_CM_DEACTIVATE_TENANT = "/api/v1.0/control/tenantManagement/deactivateTenant/"
 API_EP_CM_REMOVE_TENANT = "/api/v1.0/control/tenantManagement/removeTenant/"
 API_EP_CM_CREATETOKEN_TENANT = "/api/v1.0/control/tenantManagement/tokens/"
 
+API_EP_TENANT_TOKENS = "/api/v1/tokens/"
 API_EP_TENANT_SVC_DETECTION_RULES = "/api/config/v1/service/detectionRules/"
 API_EP_TENANT_DASHBOARDS = "/api/config/v1/dashboards/"
 API_EP_TENANT_APP = "/api/config/v1/applications/web/"
@@ -202,11 +207,19 @@ def do_cmc_post(endpoint, data):
     return response
 
 
+def do_cmc_put(endpoint, data):
+    response = requests.put(
+        CMC_URL + endpoint, json=data, headers=getHeader(), verify=verifyRequest())
+    logging.debug('PUT Reponse content: ' +
+                  str(response.content) + '-' + endpoint)
+    return response
+
+
 def do_tenant_put(endpoint, data, put_data):
     tenantUrl = data[key_tenantUrl]
-    tenantToken = data[key_tenantToken]
+    apiToken = data[key_apiToken]
     response = requests.put(tenantUrl + endpoint, json=put_data,
-                            headers=getHeaderToken(tenantToken), verify=verifyRequest())
+                            headers=getHeaderToken(apiToken), verify=verifyRequest())
     logging.debug('PUT Reponse content: ' +
                   str(response.content) + '-' + endpoint)
     return response
@@ -226,11 +239,12 @@ def do_tenant_put_list(endpoint, data, put_data_list):
     return responses
 
 
-def do_tenant_post(endpoint, data, post_data):
+def do_tenant_post(endpoint, data, post_data, token=None):
     tenantUrl = data[key_tenantUrl]
-    tenantToken = data[key_tenantToken]
+    if not token:
+        token = data[key_apiToken]
     response = requests.post(tenantUrl + endpoint, json=post_data,
-                             headers=getHeaderToken(tenantToken), verify=verifyRequest())
+                             headers=getHeaderToken(token), verify=verifyRequest())
     logging.debug('POST Reponse content: ' +
                   str(response.content) + '-' + endpoint)
     return response
@@ -238,9 +252,9 @@ def do_tenant_post(endpoint, data, post_data):
 
 def do_tenant_get(endpoint, data):
     tenantUrl = data[key_tenantUrl]
-    tenantToken = data[key_tenantToken]
+    apiToken = data[key_apiToken]
     response = requests.get(
-        tenantUrl + endpoint, headers=getHeaderToken(tenantToken), verify=verifyRequest())
+        tenantUrl + endpoint, headers=getHeaderToken(apiToken), verify=verifyRequest())
     logging.debug('GET Reponse content: ' +
                   str(response.content) + '-' + endpoint)
     return response
@@ -307,16 +321,6 @@ def save_json(directory, filename, data):
         json.dump(data, f)
 
 
-def replace_tenant_ids(json_data, data):
-    tenantId = data[key_tenantId]
-    json_data['tenantConfigDto']['tenantUUID'] = tenantId
-    json_data['tenantConfigDto']['alias'] = tenantId
-    json_data['tenantConfigDto']['internalAlias'] = tenantId
-    json_data['tenantConfigDto']['displayName'] = data[key_firstName] + \
-        ' ' + data[key_lastName]
-    return
-
-
 def replace_user_ids(json_data, data):
     # Select 'id' as userId if found on the CSV, otherwise the email
     userId = data.get(key_id)
@@ -328,17 +332,20 @@ def replace_user_ids(json_data, data):
     json_data[key_email] = data[key_email]
     json_data[key_firstName] = data[key_firstName]
     json_data[key_lastName] = data[key_lastName]
-    json_data['groups'] = [data[key_groupId]]
+    json_data['groups'] = [get_groupname(data)]
     return
 
 
 def replace_group_ids(json_data, data):
-    groupId = data[key_groupId]
+
+    # Add tenantId to the rights
     tenantId = data[key_tenantId]
+    # to small letters and replace emptyspace for dash
+    groupName = get_groupname(data)
 
     isClusterAdminGroup = str_bool(data.get(key_isClusterAdminGroup))
 
-    json_data['name'] = groupId
+    json_data['name'] = groupName
     json_data['accessRight']['VIEWER'] = [tenantId]
     json_data['accessRight']['MANAGE_SETTINGS'] = [tenantId]
     json_data['accessRight']['AGENT_INSTALL'] = [tenantId]
@@ -365,6 +372,8 @@ def load_users_csv():
         if not user_id:
             user_id = row[key_email]
 
+        # TODO Remove tenantId from parsing
+        """
         tenantId = row.get(key_tenantId)
         if not tenantId:
             firstName = row.get(key_firstName)
@@ -386,15 +395,15 @@ def load_users_csv():
             continue
 
         # Functionality for parsing Perform URL adds protocol if tenantId contains .com and not a protocol
+        # TODO do not generate tenantUrl nor tenantId nor protocol nor groupId
         if 'http' not in tenantId and '.com' in tenantId and not row.get(key_tenantUrl):
             row[key_tenantUrl] = 'https://' + tenantId
-
         elif not row.get(key_tenantUrl):
             row[key_tenantUrl] = CMC_URL + '/e/' + tenantId
 
         if not row.get(key_groupId):
             row[key_groupId] = tenantId + '-group'
-
+        """
         CSV_DATA[user_id] = row
     return
 
@@ -437,11 +446,13 @@ def create_allinone_token(data):
     if not ACTION_CREATE_ALLINONETOKEN:
         return True
     post_data = SKEL_TOKEN
-    response = do_cmc_post(API_EP_CM_CREATETOKEN_TENANT +
-                           data[key_tenantId], post_data)
+    # We overwrite the API token, since there is none, for later requests we use the created one
+    response = do_tenant_post(API_EP_TENANT_TOKENS,
+                              data, post_data, data[key_tokenMgmt])
 
     if 200 <= response.status_code <= 300:
-        data[key_tenantToken] = json.loads(response.text)['tokenId']
+        data[key_apiToken] = json.loads(response.text)['token']
+        data[key_paasToken] = json.loads(response.text)['token']
 
     return validate_set_action_status(response, data, 'create_token')
 
@@ -591,14 +602,39 @@ def copy_array_and_replace_key_values_in_dict(json_array, replacement_dictionary
     return NEW_JSON_ARRAY
 
 
+def get_groupname(data):
+    """
+    Will get the GroupName based on the Tenantname 
+    """
+    name = get_tenantname(data)
+    groupName = name.lower().strip(' ').replace(' ', '-')
+    groupName = groupName + '-group'
+    return groupName
+
+
+def get_tenantname(data):
+    """
+    Will generate the Tenant Name based on the Firstname and Lastname
+    """
+    return data[key_firstName] + ' ' + data[key_lastName]
+
+
 def create_tenant(data):
     if not ACTION_CREATE_TENANT:
         return True
 
     post_data = copy.deepcopy(SKEL_TENANT)
-    # Set tenant_id fields
-    replace_tenant_ids(post_data, data)
-    response = do_cmc_post(API_EP_CM_CREATE_TENANT, post_data)
+    # Set tenant Name
+    tenantName = get_tenantname(data)
+    post_data['name'] = tenantName
+
+    createtenant_and_token = API_EP_CM_ENVIRONMENTS + '?createToken=true'
+    response = do_cmc_post(createtenant_and_token, post_data)
+    json_payload = json.loads(response.text)
+    tenantId = json_payload['id']
+    data[key_tenantId] = tenantId
+    data[key_tokenMgmt] = json_payload['tokenManagementToken']
+    data[key_tenantUrl] = CMC_URL + '/e/' + tenantId
     return validate_set_action_status(response, data, 'create_tenant')
 
 
@@ -633,12 +669,12 @@ def do_save_cmc_data():
     return
 
 
-def get_ec2_user_data(tenantUrl, tenantToken):
+def get_ec2_user_data(tenantUrl, paasToken):
     user_data = copy.copy(SKEL_AWS_USERDATA)
     # Set Tenant
     user_data = user_data.replace('TENANT=', 'TENANT=' + tenantUrl, 1)
     # Set API-Token
-    user_data = user_data.replace('PAASTOKEN=', 'PAASTOKEN=' + tenantToken, 1)
+    user_data = user_data.replace('PAASTOKEN=', 'PAASTOKEN=' + paasToken, 1)
     return user_data
 
 
@@ -885,21 +921,17 @@ def create_ec2_instance(data):
     instance_type = "t2.large"
     "NoteToSelf: Security Group by Name and not by ID."
 
-    ec2Name = data[key_tenantId]
+    ec2Name = get_tenantname(data)
     owner = data[key_email]
-    tenantToken = str(data.get(key_tenantToken))
+    paasToken = str(data.get(key_paasToken))
     # Functionality for overriding the allInOneToken for SaaS installers
-    paasToken = str(data.get('paasToken'))
-    if paasToken not in (None, ''):
-        paasToken = tenantToken
     tenantUrl = str(data.get(key_tenantUrl))
     ec2_user_data = get_ec2_user_data(tenantUrl, paasToken)
 
     tags = [{'Key': 'Name', 'Value': ec2Name},
             {'Key': 'Perform', 'Value': '2020'},
             {'Key': key_tenantUrl, 'Value': tenantUrl},
-            {'Key': key_tenantToken, 'Value': tenantToken},
-            {'Key': 'paasToken', 'Value': paasToken},
+            {'Key': key_paasToken, 'Value': paasToken},
             {'Key': 'Customer', 'Value': owner},
             {'Key': 'Owner', 'Value': owner}]
     tag_specification = [{'ResourceType': 'instance', 'Tags': tags}]
