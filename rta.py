@@ -42,14 +42,9 @@ key_sshPassword = 'sshPassword'
 
 regex_valid_chars = "^[A-Za-z0-9\s\._-]*$"
 
-API_EP_CM_TENANTCONFIGS = "/api/v1.0/control/tenantManagement/tenantConfigs/?active=true"
 API_EP_CM_GROUPS = "/api/v1.0/onpremise/groups/"
 API_EP_CM_USERS = "/api/v1.0/onpremise/users/"
 API_EP_CM_ENVIRONMENTS = "/api/cluster/v1/environments/"
-API_EP_CM_CREATE_TENANT = "/api/cluster/v1/environments/"
-API_EP_CM_DEACTIVATE_TENANT = "/api/v1.0/control/tenantManagement/deactivateTenant/"
-API_EP_CM_REMOVE_TENANT = "/api/v1.0/control/tenantManagement/removeTenant/"
-API_EP_CM_CREATETOKEN_TENANT = "/api/v1.0/control/tenantManagement/tokens/"
 
 API_EP_TENANT_TOKENS = "/api/v1/tokens/"
 API_EP_TENANT_SVC_DETECTION_RULES = "/api/config/v1/service/detectionRules/"
