@@ -1,0 +1,55 @@
+{
+	"aws_region": "eu-west-2",
+	"instanceDetails": {
+		"userData": "ubuntu-setup-easytravel.sh",
+		"imageId": "ami-0fab23d0250b9a47e",
+		"keyName": "bc19-lon.pem",
+		"instanceType": "t2.large",
+		"securityGroups": [
+			"launch-wizard-3"
+		],
+		"securityGroupIds": [
+			"launch-wizard-3"
+		],
+		"blockDeviceMappings": [
+			{
+				"DeviceName": "/dev/sda1",
+				"Ebs": {
+					"VolumeSize": 30,
+					"DeleteOnTermination": true
+				}
+			}
+		],
+		"tagSpecifications": [
+			{
+				"ResourceType": "instance",
+				"Tags": [
+					{
+						"Key": "Name",
+						"Value": ""
+					},
+					{
+						"Key": "Workshop",
+						"Value": "Dynatrace"
+					},
+					{
+						"Key": "tenantUrl",
+						"Value": ""
+					},
+					{
+						"Key": "paasToken",
+						"Value": ""
+					},
+					{
+						"Key": "Attendee",
+						"Value": ""
+					},
+					{
+						"Key": "email",
+						"Value": ""
+					}
+				]
+			}
+		]
+	}
+}
