@@ -105,8 +105,13 @@ check all checkboxes and action_create a new token.
 '''
 CMC_TOKEN = config['cmc']['cmc_token']
 
-AWS_USERDATA_FILE = config['aws']['aws_dir'] + '/' + config['aws']['user_data']
-AWS_REGION = config['aws']['aws_region']
+
+# Aws information
+AWS_CONFIG_FILE = config['aws']['aws_dir'] + '/' + config['aws']['aws_config']
+AWS_CONFIG = json.load(open(AWS_CONFIG_FILE))
+AWS_REGION = AWS_CONFIG['aws_region']
+AWS_USERDATA_FILE = config['aws']['aws_dir'] + \
+    '/' + AWS_CONFIG['instanceDetails']['userData']
 
 SSH_FILE = config['ssh']['ssh_dir'] + '/' + config['ssh']['cmd_file']
 
@@ -332,20 +337,18 @@ def replace_user_ids(json_data, data):
     json_data[key_email] = data[key_email]
     json_data[key_firstName] = data[key_firstName]
     json_data[key_lastName] = data[key_lastName]
-    json_data['groups'] = [get_groupname(data)]
+    json_data['groups'] = [data[key_groupId]]
     return
 
 
-def replace_group_ids(json_data, data):
+def replace_group_ids(json_data, data, group_name):
 
     # Add tenantId to the rights
     tenantId = data[key_tenantId]
-    # to small letters and replace emptyspace for dash
-    groupName = get_groupname(data)
 
     isClusterAdminGroup = str_bool(data.get(key_isClusterAdminGroup))
 
-    json_data['name'] = groupName
+    json_data['name'] = group_name
     json_data['accessRight']['VIEWER'] = [tenantId]
     json_data['accessRight']['MANAGE_SETTINGS'] = [tenantId]
     json_data['accessRight']['AGENT_INSTALL'] = [tenantId]
@@ -372,38 +375,6 @@ def load_users_csv():
         if not user_id:
             user_id = row[key_email]
 
-        # TODO Remove tenantId from parsing
-        """
-        tenantId = row.get(key_tenantId)
-        if not tenantId:
-            firstName = row.get(key_firstName)
-            lastName = row.get(key_lastName)
-
-            # prepare fields for faster and better parsing
-            tenantId = firstName + '-' + lastName
-            # to small letters and replace emptyspace for dash
-            # TODO: Prio3: Parse/Validate Names with unsupported characters
-            tenantId = tenantId.lower().strip(' ').replace(' ', '-')
-            row[key_tenantId] = tenantId
-
-        if not bool(re.match(regex_valid_chars, tenantId)):
-            logging.warning("TenantID is not valid for " + user_id +
-                            " - " + tenantId + "\t row will be skipped")
-            row['skip'] = 'true'
-            # add data as it is
-            CSV_DATA[user_id] = row
-            continue
-
-        # Functionality for parsing Perform URL adds protocol if tenantId contains .com and not a protocol
-        # TODO do not generate tenantUrl nor tenantId nor protocol nor groupId
-        if 'http' not in tenantId and '.com' in tenantId and not row.get(key_tenantUrl):
-            row[key_tenantUrl] = 'https://' + tenantId
-        elif not row.get(key_tenantUrl):
-            row[key_tenantUrl] = CMC_URL + '/e/' + tenantId
-
-        if not row.get(key_groupId):
-            row[key_groupId] = tenantId + '-group'
-        """
         CSV_DATA[user_id] = row
     return
 
@@ -461,7 +432,12 @@ def create_user_group(data):
     if not ACTION_CREATE_USERGROUP:
         return True
     post_data = copy.deepcopy(SKEL_GROUP)
-    replace_group_ids(post_data, data)
+
+    # to small letters and replace emptyspace for dash
+    groupName = get_groupname(data)
+    replace_group_ids(post_data, data, groupName)
+    data[key_groupId] = groupName
+
     response = do_cmc_post(API_EP_CM_GROUPS, post_data)
     return validate_set_action_status(response, data, 'create_user_group')
 
@@ -503,9 +479,8 @@ def environment_create_dashboards(data):
     # First all other Dashboards
     responses = do_tenant_post_list(
         API_EP_TENANT_DASHBOARDS, data, APP_DASHBOARDS)
-    logging.info('Dashboards rules:\t' +
+    logging.info('Dashboards:\t' +
                  data[key_email] + ':' + str(responses))
-
     validate_set_action_status(response, data, 'create_dashboards')
 
     return
@@ -625,33 +600,41 @@ def create_tenant(data):
 
     post_data = copy.deepcopy(SKEL_TENANT)
     # Set tenant Name
-    tenantName = get_tenantname(data)
-    post_data['name'] = tenantName
+    post_data['name'] = get_tenantname(data)
 
     createtenant_and_token = API_EP_CM_ENVIRONMENTS + '?createToken=true'
     response = do_cmc_post(createtenant_and_token, post_data)
-    json_payload = json.loads(response.text)
-    tenantId = json_payload['id']
-    data[key_tenantId] = tenantId
-    data[key_tokenMgmt] = json_payload['tokenManagementToken']
-    data[key_tenantUrl] = CMC_URL + '/e/' + tenantId
-    return validate_set_action_status(response, data, 'create_tenant')
+
+    response_valid = validate_set_action_status(response, data, 'create_tenant')
+    if response_valid:
+        json_payload = json.loads(response.text)
+        tenantId = json_payload.get('id')
+        data[key_tenantId] = tenantId
+        data[key_tokenMgmt] = json_payload.get('tokenManagementToken')
+        data[key_tenantUrl] = CMC_URL + '/e/' + tenantId
+
+    return response_valid
 
 
-def remove_tenant(data):
+def delete_tenant(data):
     if not ACTION_REMOVE_TENANT:
         return True
     tenantId = data[key_tenantId]
-    response = do_cmc_delete(API_EP_CM_REMOVE_TENANT + tenantId)
-    return validate_set_action_status(response, data, 'remove_tenant')
+    response = do_cmc_delete(API_EP_CM_ENVIRONMENTS + tenantId)
+    return validate_set_action_status(response, data, 'delete_tenant')
 
 
-def deactivate_tenant(data):
+def disable_tenant(data):
     if not ACTION_DEACTIVATE_TENANT:
         return True
     tenantId = data[key_tenantId]
-    response = do_cmc_post(API_EP_CM_DEACTIVATE_TENANT + tenantId, "")
-    return validate_set_action_status(response, data, 'deactivate_tenant')
+
+    post_data = copy.deepcopy(SKEL_TENANT)
+    # Set tenant Name
+    post_data['name'] = get_tenantname(data)
+    post_data['state'] = "DISABLED"
+    response = do_cmc_put(API_EP_CM_ENVIRONMENTS + tenantId, post_data)
+    return validate_set_action_status(response, data, 'disable_tenant')
 
 
 def do_save_cmc_data():
@@ -669,11 +652,11 @@ def do_save_cmc_data():
     return
 
 
-def get_ec2_user_data(tenantUrl, paasToken):
+def customize_ec2_user_data(tenantUrl, paasToken):
     user_data = copy.copy(SKEL_AWS_USERDATA)
     # Set Tenant
     user_data = user_data.replace('TENANT=', 'TENANT=' + tenantUrl, 1)
-    # Set API-Token
+    # Set Paas-Token
     user_data = user_data.replace('PAASTOKEN=', 'PAASTOKEN=' + paasToken, 1)
     return user_data
 
@@ -888,56 +871,28 @@ def create_ec2_instance(data):
     """
     if not ACTION_CREATE_EC2INSTANCE:
         return True
-
-    # TODO: Prio2: Parameterize Image provitioning in JSON file.
-    """  OREGON
-    aws_region="us-west-2"
-    ubuntu_image = "ami-06d51e91cea0dac8d"
-    keypair_name = "perform"
-    security_groups = ["perform"]
-    securityGroupId = 'perform'
-    """
-
-    """  LONDON
-    aws_region="eu-west-2"
-    ubuntu_image = "ami-0fab23d0250b9a47e"
-    keypair_name = "bc19-lon.pem"
-    security_groups = ["launch-wizard-3"]
-    securityGroupId = 'launch-wizard-3'
-    """
-    ubuntu_image = "ami-0fab23d0250b9a47e"
-    keypair_name = "bc19-lon.pem"
-    security_groups = ["launch-wizard-3"]
-    securityGroupId = 'launch-wizard-3'
-
-    """  IRLAND 
-    aws_region="eu-west-1"
-    ubuntu_image = "ami-03ef731cc103c9f09"
-    keypair_name = "bootcamp-19"
-    security_groups = ["BootcampOpen"]
-    securityGroupId = 'BootcampOpen'
-    """
-
-    instance_type = "t2.large"
     "NoteToSelf: Security Group by Name and not by ID."
 
-    ec2Name = get_tenantname(data)
-    owner = data[key_email]
+    name = get_tenantname(data)
+    email = data[key_email]
     paasToken = str(data.get(key_paasToken))
     # Functionality for overriding the allInOneToken for SaaS installers
     tenantUrl = str(data.get(key_tenantUrl))
-    ec2_user_data = get_ec2_user_data(tenantUrl, paasToken)
+    userData = customize_ec2_user_data(tenantUrl, paasToken)
 
-    tags = [{'Key': 'Name', 'Value': ec2Name},
-            {'Key': 'Perform', 'Value': '2020'},
-            {'Key': key_tenantUrl, 'Value': tenantUrl},
-            {'Key': key_paasToken, 'Value': paasToken},
-            {'Key': 'Customer', 'Value': owner},
-            {'Key': 'Owner', 'Value': owner}]
-    tag_specification = [{'ResourceType': 'instance', 'Tags': tags}]
+    i = AWS_CONFIG['instanceDetails']
+    blockDeviceMappings = i['blockDeviceMappings']
+    # TODO Replace Tags
+    tagSpecifications = i['tagSpecifications']
+    toReplace = {"Name": name, key_tenantUrl: tenantUrl,
+                 key_paasToken: paasToken, key_email: email}
+    customize_tags(tagSpecifications[0]['Tags'], toReplace)
 
-    block_device_mappings = [{'DeviceName': '/dev/sda1',
-                              'Ebs': {'VolumeSize': 30, 'DeleteOnTermination': True}}]
+    securityGroupIds = i['securityGroupIds']
+    securityGroups = i['securityGroups']
+    instanceType = i['instanceType']
+    keyName = i['keyName']
+    imageId = i['imageId']
 
     # Provision and launch the EC2 instance
     ec2_client = boto3.client('ec2', region_name=AWS_REGION)
@@ -945,15 +900,16 @@ def create_ec2_instance(data):
     instanceId = ''
     content = ''
     try:
-        r = ec2_client.run_instances(ImageId=ubuntu_image,
-                                     InstanceType=instance_type,
-                                     KeyName=keypair_name,
+        r = ec2_client.run_instances(ImageId=imageId,
+                                     InstanceType=instanceType,
+                                     KeyName=keyName,
                                      MinCount=1,
                                      MaxCount=1,
-                                     SecurityGroups=security_groups,
-                                     TagSpecifications=tag_specification,
-                                     BlockDeviceMappings=block_device_mappings,
-                                     UserData=ec2_user_data, SecurityGroupIds=[securityGroupId])
+                                     SecurityGroups=securityGroups,
+                                     TagSpecifications=tagSpecifications,
+                                     BlockDeviceMappings=blockDeviceMappings,
+                                     UserData=userData,
+                                     SecurityGroupIds=securityGroupIds)
 
         instanceId = r['Instances'][0]['InstanceId']
         content = r['Instances'][0]
@@ -968,6 +924,14 @@ def create_ec2_instance(data):
         logging.error(action + ':\t' + data[key_email] + str(e) + str(content))
         return False
     return True
+
+
+def customize_tags(tags, toReplace):
+    for t in tags:
+        # TODO Replace Dic
+        if t['Key'] in 'Name':
+            t['Value'] = toReplace['Name']
+    return
 
 
 def str_bool(s):
@@ -1113,8 +1077,8 @@ def action_remove():
         if skip_in_data(data):
             continue
 
-        deactivate_tenant(data)
-        remove_tenant(data)
+        disable_tenant(data)
+        delete_tenant(data)
         delete_user_group(data)
         delete_user(data)
         delete_ec2_instance(data)
@@ -1195,9 +1159,9 @@ def do_validate():
         logging.info("\n====== [RTA] Rest Tenant Automation Users ======")
 
         # Print Headers
-        print_layout = "[%-2d] %-40s %-20s %-8s %-8s"
+        print_layout = "[%-2d] %-40s %-8s %-8s"
         logging.info(print_layout %
-                     (0, "USER-ID", "TENANT-ID", "SKIP", "IS_ADMIN"))
+                     (0, "USER-ID", "SKIP", "IS_ADMIN"))
         i = 0
         for id in CSV_DATA:
             data = CSV_DATA[id]
@@ -1207,7 +1171,7 @@ def do_validate():
             # If skip is declared, we go to the next row
             i = i + 1
             logging.info(print_layout %
-                         (i, id, data.get(key_tenantId), is_skip, is_admin))
+                         (i, id, is_skip, is_admin))
 
     except Exception as e:  # catch all exceptions
         exc_type, exc_value, exc_traceback = sys.exc_info()
