@@ -26,7 +26,7 @@ This programm is very powerful for creating and automating environments for work
 
 ## Features in a Nutshell
 
-```bash
+```properties
 - Create and set-up environments with user and user_groups (Managed)
 	- Create customized Dashboards for single users
 	- Configure Applications and AppRules
