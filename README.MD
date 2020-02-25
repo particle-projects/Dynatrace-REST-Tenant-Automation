@@ -89,11 +89,11 @@ about the status of the action as well as the id of the tenant, usergroup tenant
 ```bash
 ====== [RTA] Rest Tenant Automation Configuration ======
 cmc:
- |-cmc_url             : https://xxxxx.dynatrace-managed.com The url of the cluster (when using Managed) with no leading slash
- |-cmc_token           : XXXXYYYYYZZZZ      The API Token of the Cluster. Needed for creating tenants.
+ |-cmc_url     : https://xxxxx.dynatrace-managed.com 	The url of the cluster (when using Managed) with no leading slash
+ |-cmc_token   : XXXXYYYYYZZZZ     		 	The API Token of the Cluster. Needed for creating tenants.
 
 csv_dir   : csv					The csv directory to read/write files.
-csv_file  : attendees.csv		The file to read for the actions called.
+csv_file  : attendees.csv			The file to read for the actions called.
 log_dir   : log					The log dir 
 log_file  : rta.log				The log file
 ssh:
@@ -102,7 +102,7 @@ ssh:
 
 aws:
  |-aws_dir             : aws			The AWS directory
- |-aws_config          : instance.json	The AWS configuration for creating EC2
+ |-aws_config          : instance.json		The AWS configuration for creating EC2
 
 action_test:
  |-tenant_api          : True			Will validate the tenant API with the apiToken
