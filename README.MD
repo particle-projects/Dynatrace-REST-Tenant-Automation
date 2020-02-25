@@ -16,9 +16,44 @@ This programm is very powerful for creating and automating environments for work
 
 ## Prerequisites
 
-python 3
+- [python 3](https://www.python.org/downloads/)
 
-aws account (optional for the ec2-actions) the program (boto3) will look into your `.aws` file for credentials.
+- [A Dynatrace Tenant](https://www.dynatrace.com/trial/?gclid=Cj0KCQiAqNPyBRCjARIsAKA-WFzFj8-YaXYjzaY7uVGj0klG2KnGTs2WaQ8Wg3AI_Z8dX2Fzy9-fOy4aAu5IEALw_wcB)
+
+- AWS account 
+  
+  > (optional for the ec2-actions) the program (boto3) will look into your `.aws` file for credentials. [Here you can get a free account](https://aws.amazon.com/free/)
+
+## Features in a Nutshell
+
+```bash
+- Create and set-up environments with user and user_groups (Managed)
+	- Create customized Dashboards for single users
+	- Configure Applications and AppRules
+	- Auto Tagging rules
+	- Management Zones
+	- Request Attributes
+	- Custom Services
+- Connect and execute commands via SSH 
+- Enable EasyTravel problem patterns via REST
+- Read and write entries in a CSV file
+- Write results in JSON format
+- Write action results back in the CSV file
+	- results of the actions called
+	- tenantId
+	- ec2 instance id / publicIp / dns
+	- tenant token
+	- others...
+- Logging
+- Create an EC2 Instance with custom deployment 🔗 linked to each tenant
+	- OneAgent bound to the tenant
+  	- EasyTravel (8080/8079), Admin Console (8094) and Angular (9080) configured
+- Remove the EC2 Instance and deactivate and remove the tenant.
+- Manage the execution with commands via Control RowFlags (true/false) for each row:
+	- skip - Skip the row for the actions
+  	- isClusterAdmin - to add the User as a cluster admin
+- Validate function to read the configuration and print the users in the CSV file. 
+```
 
 ## Installing RTA
 
@@ -39,28 +74,6 @@ Before running any action is highly recommended that you run the `validate` func
 
 `python3 rta.py validate`
 
-## Features in a Nutshell
-
-- Read and write in a CSV file
-- Write results in JSON format
-- Write action results back in the CSV file
-  - results of the actions called
-  - tenantId
-  - ec2 instance id / publicIp / dns
-  - tenant token
-- Logging
-- Enable EasyTravel problem patterns via REST
-- Connect and execute commands via SSH
-- Create an environment, user and user_group
-- Create an EC2 Instance with custom deployment **linked to each tenant**
-  - OneAgent bound to the tenant
-  - EasyTravel (8080/8079), Admin Console (8094) and Angular (9080) configured
-
-- Remove the EC2 Instance and deactivate and remove the tenant.
-- Control RowFlags (true/false) for rows:
-  - skip - Skip the row for the actions
-  - isClusterAdmin - to add the User as a cluster admin
-- Validate function to read the configuration and print the users in the CSV file. 
 
 
 ## How does it work?
@@ -68,7 +81,6 @@ Before running any action is highly recommended that you run the `validate` func
 The `config.json` file:
 
 about the status of the action as well as the id of the tenant, usergroup tenant token, ec2 instanceId, ec2 public dns, etc..<br />The file allows also other custom rows and will not modify them. when rewriting.
-
 
 
 ```bash
@@ -87,8 +99,7 @@ ssh:
 
 aws:
  |-aws_dir             : aws
- |-user_data           : ubuntu-setup-easytravel.sh
- |-aws_region          : eu-west-2
+ |-aws_config          : instance.json
 
 
 action_test:
@@ -114,6 +125,9 @@ action_remove:
  |-delete_user         : True
  |-delete_ec2_instance : True
 ```
+
+
+## TBD List of  CSV keys which are required for SaaS and/or managed
 
 | KEY           | SUB-KEY               | Value                                                                                                                                                                                                                                                            |
 | ------------- | --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
