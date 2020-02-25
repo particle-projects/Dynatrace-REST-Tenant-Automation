@@ -607,7 +607,7 @@
           "managementZone": null
         },
         "filterConfig": {
-          "type": "NON_DATABASE_SERVICE",
+          "type": "SERVICE",
           "customName": "EasyTravel Frontend",
           "defaultName": "EasyTravel Frontend",
           "chartConfig": {
@@ -641,7 +641,7 @@
           "managementZone": null
         },
         "filterConfig": {
-          "type": "NON_DATABASE_SERVICE",
+          "type": "SERVICE",
           "customName": "EasyTravel Backend",
           "defaultName": "EasyTravel Backend",
           "chartConfig": {
@@ -675,7 +675,7 @@
           "managementZone": null
         },
         "filterConfig": {
-          "type": "NON_DATABASE_SERVICE",
+          "type": "SERVICE",
           "customName": "BankServices",
           "defaultName": "BankServices",
           "chartConfig": {
@@ -709,7 +709,7 @@
           "managementZone": null
         },
         "filterConfig": {
-          "type": "NON_DATABASE_SERVICE",
+          "type": "SERVICE",
           "customName": "ET Conf & Load",
           "defaultName": "ET Conf & Load",
           "chartConfig": {
@@ -719,7 +719,7 @@
             "resultMetadata": {}
           },
           "filtersPerEntityType": {
-            "NON_DATABASE_SERVICE": {
+            "SERVICE": {
               "AUTO_TAGS": [
                 "Application:EasyTravel Configuration and Load"
               ]

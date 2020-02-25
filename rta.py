@@ -600,7 +600,8 @@ def create_tenant(data):
     createtenant_and_token = API_EP_CM_ENVIRONMENTS + '?createToken=true'
     response = do_cmc_post(createtenant_and_token, post_data)
 
-    response_valid = validate_set_action_status(response, data, 'create_tenant')
+    response_valid = validate_set_action_status(
+        response, data, 'create_tenant')
     if response_valid:
         json_payload = json.loads(response.text)
         tenantId = json_payload.get('id')
@@ -1112,7 +1113,8 @@ def save_results(file):
 
 def do_dev():
 
-    do_bas_sprint_invitation()
+    data = CSV_DATA['sergio.hinojosa@gmail.com']
+    environment_create_dashboards(data)
 
     return
     data = CSV_DATA['sergio@dynatrace.com']
