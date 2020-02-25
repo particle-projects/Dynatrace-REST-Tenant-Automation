@@ -21,6 +21,7 @@ python 3
 aws account (optional for the ec2-actions) the program (boto3) will look into your `.aws` file for credentials.
 
 ## Installing RTA
+
 This commands will get you python, pip and the dependencies installed in your system.
 ```bash
 sudo apt install python3
