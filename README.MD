@@ -1,6 +1,8 @@
 > **DISCLAIMER**: This project was developed for educational purpouses only and is not complete, nor supported. It's publishment is only intended for helping others automate environments for delivering workshops with Dynatrace.
 
-# 🤖🔃👩‍💻Dynatrace RTA - REST Tenant Automation
+# 🤖Dynatrace RTA 🔃- REST Tenant Automation
+
+#### Spend more time innovating and less time configuring
 
 Python program that creates and automates environments via the Dynatrace API. This small program reads a CSV file and will execute for each entry the command called (or a sequence of commands). Each entry in the CSV file can be controled via flags `skiped=true` as well as the subcommands. The subcommands of the actions `create`, `remove` and `test` can be controled via flags defined in the `config.json` file. This program can work with a Managed Cluster and SaaS environments. 
 
@@ -27,7 +29,8 @@ This programm is very powerful for creating and automating environments for work
 ## Features in a Nutshell
 
 ```properties
-- Create and set-up environments with user and user_groups (Managed)
+- Create environments with user and user_groups (Managed)
+- Configure Dynatrace environments 
 	- Create customized Dashboards for single users
 	- Configure Applications and AppRules
 	- Auto Tagging rules
@@ -86,72 +89,42 @@ about the status of the action as well as the id of the tenant, usergroup tenant
 ```bash
 ====== [RTA] Rest Tenant Automation Configuration ======
 cmc:
- |-cmc_url             : https://xxxxx.dynatrace-managed.com The url of the cluster (when using Managed)
+ |-cmc_url             : https://xxxxx.dynatrace-managed.com The url of the cluster (when using Managed) with no leading slash
  |-cmc_token           : XXXXYYYYYZZZZ      The API Token of the Cluster. Needed for creating tenants.
 
-csv_dir   : csv
-csv_file  : attendees.csv
-log_dir   : log
-log_file  : rta.log
+csv_dir   : csv					The csv directory to read/write files.
+csv_file  : attendees.csv		The file to read for the actions called.
+log_dir   : log					The log dir 
+log_file  : rta.log				The log file
 ssh:
- |-ssh_dir             : ssh
- |-cmd_file            : cmd.sh
+ |-ssh_dir             : ssh		The SSH dir
+ |-cmd_file            : cmd.sh		The shell file containing the commands to execute
 
 aws:
- |-aws_dir             : aws
- |-aws_config          : instance.json
-
+ |-aws_dir             : aws			The AWS directory
+ |-aws_config          : instance.json	The AWS configuration for creating EC2
 
 action_test:
- |-tenant_api          : True
- |-ssh_connection      : True
- |-easytravel_ping     : True
-
+ |-tenant_api          : True			Will validate the tenant API with the apiToken
+ |-ssh_connection      : True			Will validate the SSH connection
+ |-easytravel_ping     : True			Will ping the REST Services of EasyTravel
 
 action_create:
- |-create_tenant       : True
- |-create_user_group   : True
- |-create_user         : True
- |-create_allinone_token: True
- |-create_ec2_instance : True
- |-fetch_ec2_instance  : True
- |-set_up_env          : True
-
+ |-create_tenant       : True			Will create the tenant on the Managed Cluster
+ |-create_user_group   : True			Will create the userGroup (managed)
+ |-create_user         : True			Will create the user (managed)
+ |-create_allinone_token: True			Will create a paas and api token (managed/saas)
+ |-create_ec2_instance : True			Will create an EC2 and install OneAgent
+ |-fetch_ec2_instance  : True			Fetches the DNS/public IP of the EC2
+ |-set_up_env          : True			Sets up the environment (See def set_up_environment(data) )
 
 action_remove:
- |-deactivate_tenant   : True
- |-remove_tenant       : True
- |-delete_user_group   : True
- |-delete_user         : True
- |-delete_ec2_instance : True
+ |-deactivate_tenant   : True			Deactivates the tenant (managed)
+ |-remove_tenant       : True			Removes the tenant (managed)
+ |-delete_user_group   : True			Deletes the user group (managed)
+ |-delete_user         : True			Deletes the user
+ |-delete_ec2_instance : True			Terminates the EC2 instance
 ```
-
-
-## TBD List of  CSV keys which are required for SaaS and/or managed
-
-| KEY           | SUB-KEY               | Value                                                                                                                                                                                                                                                            |
-| ------------- | --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| cmc           | cmc_url               | The URL of the Tenant (with protocol and no leading slash)                                                                                                                                                                                                       |
-| cmc           | cmc_token             |                                                                                                                                                                                                                                                                  |
-|               | csv_dir               | the csv directory. In here csv files will be written after an action.                                                                                                                                                                                            |
-|               | csv_file              | The csv file to read the information. The program will add rows with information                                                                                                                                                                                 |
-|               | log_dir               | The log directory                                                                                                                                                                                                                                                |
-|               | log_file              | The log file                                                                                                                                                                                                                                                     |
-| aws           | aws_dir               | The AWS directory                                                                                                                                                                                                                                                |
-| aws           | user_data             | The file containing the custom deployment. TenantID and TOKEN are variables which will be replaced for each tenant.                                                                                                                                              |
-| action_create | create_tenant         | the create tenant action.                                                                                                                                                                                                                                        |
-| action_create | create_user_group     | will create a user_group (isClusterAdminGroup) flag will be set if found in the CSV file.                                                                                                                                                                        |
-| action_create | create_user           | will create the user and bind it to the user-group.                                                                                                                                                                                                              |
-| action_create | create_allinone_token | A token that is allowed to install oneagents as well as read/write configuration and read environment information.                                                                                                                                               |
-| action_create | create_ec2_instance   | Will create an EC2 instance for the tenant                                                                                                                                                                                                                       |
-| action_create | fetch_ec2_instance    | Will fetch the public dns name of the ec2 instance                                                                                                                                                                                                               |
-| action_create | set_up_env            | sets-up the environment. <br />- Modifies the default application<br />- Publish a custom dashboard pointing to the applications deployed in the ec2 instance<br />- Creates a synthetic test.<br />See set_up_environment function for expanding functionality. |
-| action_delete | deactivate_tenant     | deactivates tenant                                                                                                                                                                                                                                               |
-| action_delete | remove_tenant         | removes the tenant                                                                                                                                                                                                                                               |
-| action_delete | delete_user_group     | deletes the user_group                                                                                                                                                                                                                                           |
-| action_delete | delete_user           | deletes the user                                                                                                                                                                                                                                                 |
-| action_delete | delete_ec2_instance   | deletes the ec2 instance                                                                                                                                                                                                                                         |
-
 
 
 ## Tenant configuration
@@ -166,28 +139,7 @@ Each tenant will end up with its own tenant preconfigured. For expanding the con
 
 The templates are in the **skel** directory. 
 
-## Get it running
-
-Just type:
-
-```bash
-λ py cmc.py help
-----------------------------------------------
-Starting Dynatrace CMC Tenant Automation
-
-
-Dynatrace CMC Tenant Automation
-=======================================================
-Usage: cmc.py <command>
-commands: help     = Prints this options
-commands: validate = Validates and prints the config file, reads the CSV file and prints the users and control flags
-commands: create   = Creates the tenants, resources and sets-up the environment
-commands: remove   = Removes the tenants and deletes the resources
-** For more information read the README.md file **
-=======================================================
-
-```
-and prints out the help or to validate and print the config and the users with their control flags type: 
+To validate and print the config and the users with their control flags type: 
 
 ```bash
 py cmc.py validate
@@ -200,7 +152,7 @@ py cmc.py validate
 **isClusterAdminGroup** =  empty and "false" equals false. True will set the user_group for the user to cluster_admin. This user will have access to the CMC and to all tenants.
 
 
-## CSV Fields (mandatory and optional)
+## CSV Fields (mandatory and optional for Managed and SaaS)
 
 The CSV is a semicolon ; separated file.
 
@@ -240,10 +192,7 @@ Create branch with the improvement and a pull request. A tip to not forget pushi
 ## Ideas for Improvement
 
 - Document the flow of the program.
-
 - make a more generic template to add more actions
-- parametrize the creation of EC2 instances in its own JSON file. Most part (except from the user-data) is hard-coded.
-- The EC2 instaces due the technical requirements are quite large (size large) and have a 30Gig disk due the installing an ActiveGate with Private Monitors capabilities.
 
 ## Author
 sergio.hinojosa@dynatrace.com
