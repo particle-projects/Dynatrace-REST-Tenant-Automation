@@ -15,4 +15,7 @@ __pycache__/
 # config.json ommited so its not accidentally commited 
 config.json
 # Ignore webautomation
+webautomation
 webautomation/*
+# ignore temp files
+.~*

@@ -71,6 +71,7 @@ about the status of the action as well as the id of the tenant, usergroup tenant
 
 
 
+```bash
 ====== [RTA] Rest Tenant Automation Configuration ======
 cmc:
  |-cmc_url             : https://xxxxx.dynatrace-managed.com The url of the cluster (when using Managed)
@@ -112,8 +113,7 @@ action_remove:
  |-delete_user_group   : True
  |-delete_user         : True
  |-delete_ec2_instance : True
-
-
+```
 
 | KEY           | SUB-KEY               | Value                                                                                                                                                                                                                                                            |
 | ------------- | --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
