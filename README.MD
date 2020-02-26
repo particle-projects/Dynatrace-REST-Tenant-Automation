@@ -2,7 +2,7 @@
 
 # 🤖Dynatrace RTA 🔃- REST Tenant Automation
 
-<p style="font-style: italic;font-family: Georgia, serif;font-size: 24px;text-align: center;color: #6600cc;"> Spend more time innovating and less time configuring </p>
+> ## ***🥼⚗ Spend more time innovating and less time configuring***
 
 Python program that creates and automates environments via the Dynatrace API. This small program reads a CSV file and will execute for each entry the command called (or a sequence of commands). Each entry in the CSV file can be controled via flags `skiped=true` as well as the subcommands. The subcommands of the actions `create`, `remove` and `test` can be controled via flags defined in the `config.json` file. This program can work with a Managed Cluster and SaaS environments. 
 
