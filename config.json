@@ -13,8 +13,7 @@
 	},
 	"aws": {
 		"aws_dir": "aws",
-		"user_data": "ubuntu-setup-easytravel.sh",
-		"aws_region": "eu-west-2"
+		"aws_config": "instance.json"
 	},
 	"action_test": {
 		"tenant_api": true,

@@ -1,0 +1,3 @@
+email;firstName;lastName;comments;skip;isClusterAdminGroup;tenantUrl;apiToken;paasToken;publicDnsName;publicIpAddress;sshUser;sshPassword
+luke.skywalker@dynatrace.com;Luke;Skywalker;this is a sample entry for Managed actions;TRUE;TRUE;;;;;;;
+darth.vader@dynatrace.com;Darth;Vader;this is a sample entry for SaaS environments;TRUE;;https://yourtenantid.live.dynatrace.com;yourApiToken;yourPaasToken;;;"";""
