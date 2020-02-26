@@ -66,24 +66,24 @@ sudo apt install python3
 
 sudo apt install python3-pip
 
-pip install -r requirements.txt
+pip3 install -r requirements.txt
 ```
 
-After you have installed them, just run `py rta.py help` for printing out the help.
+After you have installed them, just run `python3 rta.py help` for printing out the help.
 
-![](doc/rta_help.png)
+![](doc/py_rta_help.png)
 
 Before running any action is highly recommended that you run the `validate` function so you see the output of the configuration and the entries that will be executed in the CSV file.  
 
 `python3 rta.py validate`
 
-
-
 ## How does it work?
 
 The `config.json` file:
 
-about the status of the action as well as the id of the tenant, usergroup tenant token, ec2 instanceId, ec2 public dns, etc..<br />The file allows also other custom rows and will not modify them. when rewriting.
+about the status of the action as well as the id of the tenant, usergroup tenant token, ec2 instanceId, ec2 public dns, etc..
+
+The file allows also other custom rows and will not modify them. when rewriting.
 
 
 ```bash
@@ -116,7 +116,7 @@ action_create:
  |-create_allinone_token: True			Will create a paas and api token (managed/saas)
  |-create_ec2_instance : True			Will create an EC2 and install OneAgent
  |-fetch_ec2_instance  : True			Fetches the DNS/public IP of the EC2
- |-set_up_env          : True			Sets up the environment (See def set_up_environment(data) )
+ |-set_up_env          : True			Sets up the environment (See def set_up_environment(data))
 
 action_remove:
  |-deactivate_tenant   : True			Deactivates the tenant (managed)
@@ -127,72 +127,116 @@ action_remove:
 ```
 
 
-## Tenant configuration
 
-Each tenant will end up with its own tenant preconfigured. For expanding the configuration of the tenant take a look at the function *set_up_environment*. This will set up a custom dashboard ponting out to the deployed applications and resources for the session, a custom dashboard, a synthetic test etc.. l. For modifying the template like the dashboard just go to the skel directory and modify the dashboard.json file. 
+## Environment creation
 
-![](doc/custom-dashboard.png)
+The enviroment creation applies only for Managed instances and consists of the actions `create_tenant` , `create_user_group`, `create_user` and `create_allinonetoken`. The tenant name is the `firstName` and the `lastName` of the attendee.  The JSON definitions (templates) can be found in the `skel` directory. 
+
+## Environment configuration
+
+In the function `set_up_environment` a tenant will be configured via the [Dynatrace Environment API](https://www.dynatrace.com/support/help/extend-dynatrace/dynatrace-api/) . A series of JSON definitions will be imported through different endpoints. The set-up of the environment is optimized for [EasyTravel](https://community.dynatrace.com/community/display/DL/easyTravel) defining two applications, EasyTravel Classic (`application-1.json`) and EasyTravel Angular (`application-2.json`) and its application rules ate in the folder  `apprules`. The other folders found inside the easytravel folder: `autotagging`, `customservices`, `dashboards`, `managementzones`,  `frequentissues`and  `requestattributes` work with the dragndrop principle. All the JSON definitions found in each folder will be configured in the environment for the respective API endpoint..  
+
+### Custom Dashboard
+
+The depicted dashboard below  `dashboard.json` is customized for each environment. With a basic string replacement before posting the Dashboard on the API the attendees will get a highly customized Dashboard. The idea behind this is to deliver a good customer experience and optimize the flow of the class so that every resource that the user needs is placed in the dashboard such as:
+
+- The credentials and information to log-in to their own EC2 instance
+- Links to the applications deployed on the EC2 instance (EasyTravel Angular and Classic) 
+- Link to a [live help plattform](https://etherpad.org/) deployed in a masters server, where the users can collaborate, chat and get help.
+- Agenda 
+- Links to the Repository
+- Link to any other needed resource (inside and outside of the Dynatrace tenant)
+
+> for modifying the string replacement of the custom dashboard take a look at the `def environment_create_dashboards`
+
+![](doc/dashboard.png)
 
 
-
-## Templates
-
-The templates are in the **skel** directory. 
-
-To validate and print the config and the users with their control flags type: 
-
-```bash
-py cmc.py validate
-```
 
 ## Control Flags
 
-**skip** = empty and "false" equals false. Meaning the actions defined in the program (command and config file) will be applied to that user. If it contains True then the user will be skipped.
+You can easily control for which entry to execute the actions called. You can controll this with the column `skip`
 
-**isClusterAdminGroup** =  empty and "false" equals false. True will set the user_group for the user to cluster_admin. This user will have access to the CMC and to all tenants.
+**skip** = empty and `false` equals `false`. Meaning the actions defined in the program (command and `config.json`) will be applied to that user. If it contains `True` then the user will be skipped.
 
-
-## CSV Fields (mandatory and optional for Managed and SaaS)
-
-The CSV is a semicolon ; separated file.
-
-The order of the fields is not important nevertheless the program will keep the order when rewriting the results of the actions created. The keys are case sensitive.
-
-| Key                 | Mandatory | default Value            | Description                                                              |
-| ------------------- | --------- | ------------------------ | ------------------------------------------------------------------------ |
-| email               | yes       |                          | the email of the person                                                  |
-| firstName           | yes       |                          | the firstname                                                            |
-| lastName            | yes       |                          | the lastname                                                             |
-| tenantId            | no        | firstName-LastName       | if found in the CSV file can be overwritten                              |
-| groupId             | no        | firstName-LastName-group |                                                                          |
-| skip                | no        | FALSE                    | If found and if "true", the row will be skipped                          |
-| isClusterAdminGroup | no        | FALSE                    | If found and if "true", the userGroup will be added as an cluster admin. |
+**isClusterAdminGroup** = empty and `false` equals `false`. True will set the user_group for the user to cluster_admin in the creation of the environment. This user will have access to the CMC and to all tenants. This only applies for Managed.
 
 
+## The CSV File (mandatory and optional fields for Managed and SaaS)
 
-## AWS Account
+- ***The CSV is a semicolon ; separated file.***
+- The **keys** are case **sensitive**
+- The order of the fields is not important
+- The program will keep the order when rewriting the results of the actions created. 
+- The CSV may include as many other columns/key as necessary. 
 
-The program uses boto3, which is a library for managing aws resources. This will work automatically if you have AWS cli set up in your environment so you dont have to code it or enter it everytime.
+After calling an action, rows with the result of the action will be added to the CSV file. For redundancy (for example if the CSV is opened in Excel or another program and can't be written) inside the `temp` folder a copy of the CSV file with the results will be written. The files will have as name the timestamp and `error` as prefix if an error occurred.  
 
+| Key                 | Mandatory | default Value     | Description                                                  |
+| ------------------- | --------- | ----------------- | ------------------------------------------------------------ |
+| email               | yes       |                   | the Email of the person                                      |
+| firstName           | yes       |                   | the firstname of the person (part of the tenant name)        |
+| lastName            | yes       |                   | the lastname of the person (part of the tenant name)         |
+| tenantId            | no        | will be generated | applies only for Managed                                     |
+| skip                | no        | FALSE             | If found and if "true", the row will be skipped              |
+| isClusterAdminGroup | no        | FALSE             | If found and if "true", the userGroup will be added as an cluster admin. |
+| tenantId            | generated |                   | the tenantId for Managed                                     |
+| tenantUrl           | yes       | generated         | for Managed it will be generated, for SaaS is mandatory with https protocol and no leading slash |
+| tokenMmgt           | generated |                   | when creating an environment is the token for creation of API and PaaS tokens |
+| apiToken            | yes       | generated         | for Managed it will be generated, for SaaS is mandatory when talking to the API. |
+| paasToken           | yes       | generated         | for Managed it will be generated, for SaaS is mandatory when creating an EC2 instance where the OneAgent (or ActiveGate) should be installed. |
+| publicDnsName       | no        |                   | when creating an EC2 instance this will be fetched.          |
+| publicIpAddress     | no        |                   | when creating an EC2 instance this will be fetched.          |
+| sshUser             | no        |                   | a DNS or IP address is needed.  The user for trying to connect via SSH (port 22) and execute remote commands |
+| sshPassword         | no        |                   | a DNS or IP address is needed.  The password for trying to connect via SSH (port 22) and execute remote commands. Execute as `sudo` is also possible. |
+
+
+
+## AWS 
+The configuration of AWS is defined in a folder and in a JSON file specified in the `config.json` properties. In there you specify in which AWS region to create resources and the instance details for the creation.
+
+### AWS Credentials
+The program uses boto3, which is a library for managing aws resources. This will work automatically if you have AWS cli set up in your environment so you don't have to code it or enter it everytime.
 [Here is how to set up your environment credentials](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html)
+You can set them [programatically](https://boto3.amazonaws.com/v1/documentation/api/latest/guide/configuration.html), but I strongly advice to set them in your environment. 
 
-You can set them [programatically](https://boto3.amazonaws.com/v1/documentation/api/latest/guide/configuration.html), but I strongly advice to set them in your environment. Be aware that the AMI instance IDs difer from one region to another, meaning an ubuntu has a different AMI ID for "Europe West" than "Europe East". 
+### Creating Elastic Cloud Compute instances (EC2):
 
-## AWS concurrent running instances limit:
+Be aware that the AMI instance IDs differ from one region to another, meaning an ubuntu has a different AMI ID for "Europe West" than "Europe East". 
 
-By default AWS has a limit of 20 multiple instances running. You might want to check up that limit in the region before creating the EC2 instances.
+```python
+def customize_tags(tags, toReplace):
+```
+By default AWS has a limit of 20 multiple instances running. You might want to check up that limit in the region if you want to instantiate more than 20 ec2's.
+
+## ✅Tips from the Field
+
+### Improving performance
+If you want to create multiple environments with their respective EC2's a the same time, I highly recommend to do it in two separate runs since the action `fetch_ec2_instance` and `set_up_env` depends on the creation of the `create_ec2_instance`and waits until a public IP has been assigned to the instance. This can take a couple of seconds for each instance but waiting for 50+ may take multiple minutes. You can drastically reduce this if in the 1st run you execute the following actions: 
+
+```properties
+"create_tenant": true,
+"create_user_group": true,
+"create_user": true,
+"create_allinone_token": true,
+"create_ec2_instance": true,
+```
+and in the 2nd you execute the last two (fetch the public IP and set_up the environments). You can easily control this with the action control flags.
+
+```properties
+"fetch_ec2_instance": true,
+"set_up_env": true
+```
 
 
 ## How to collaborate
 
-Create branch with the improvement and a pull request. A tip to not forget pushin configuration is marking configuration files in your local repository not to be tracked. You can acomplish this by typing the following git command:
-`git update-index --assume-unchanged config.json`
+Do your changes/improvements and create a pull request. A tip for not forgetting pushing private configuration including tokens is marking those configuration files in your local repository not to be tracked. You can acomplish this by typing the following git command:
+```bash
+git update-index --assume-unchanged config.json
+```
 
 
-## Ideas for Improvement
-
-- Document the flow of the program.
-- make a more generic template to add more actions
 
 ## Author
 sergio.hinojosa@dynatrace.com
