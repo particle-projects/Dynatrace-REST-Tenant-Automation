@@ -3,7 +3,6 @@
 	"email": "",
 	"firstName": "",
 	"lastName": "",
-	"passwordClearText":"dynatrace",
 	"groups": [
 		""
 	]
