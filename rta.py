@@ -120,26 +120,27 @@ SKEL_TOKEN = json.load(open('skel/allinonetoken.json', 'r'))
 
 SKEL_APPLICATION1 = json.load(open('skel/easytravel/application-1.json', 'r'))
 SKEL_APPLICATION2 = json.load(open('skel/easytravel/application-2.json', 'r'))
+
 SKEL_TXT_APP_DEFINITIONS = lib.helper.load_jsons_as_text(
-    'skel/easytravel/apprules')
+    'skel/keptn/apprules')
 
 APP_REQUESTATTRIBUTES = lib.helper.load_jsons(
-    'skel/easytravel/requestattributes')
+    'skel/keptn/requestattributes')
 
 APP_AUTOTAGGING = lib.helper.load_jsons(
-    'skel/easytravel/autotagging')
+    'skel/keptn/autotagging')
 
-APP_DASHBOARDS = lib.helper.load_jsons(
-    'skel/easytravel/dashboards')
+SKEL_TXT_APP_DASHBOARDS = lib.helper.load_jsons_as_text(
+    'skel/keptn/dashboards')
 
 APP_MANAGEMENTZONES = lib.helper.load_jsons(
-    'skel/easytravel/managementzones')
+    'skel/keptn/managementzones')
 
 APP_FREQUENTISSUE = lib.helper.load_jsons(
-    'skel/easytravel/frequentissue')
+    'skel/keptn/frequentissue')
 
 APP_CUSTOMSERVICES = lib.helper.load_jsons(
-    'skel/easytravel/customservices')
+    'skel/keptn/customservices')
 
 SKEL_AWS_USERDATA = (open(AWS_USERDATA_FILE, 'r')).read()
 
@@ -473,7 +474,28 @@ def environment_create_dashboards(data):
 
     # First all other Dashboards
     responses = do_tenant_post_list(
-        API_EP_TENANT_DASHBOARDS, data, APP_DASHBOARDS)
+        API_EP_TENANT_DASHBOARDS, data, SKEL_TXT_APP_DASHBOARDS)
+
+    publicIp = data.get(key_publicIpAddress).replace('.', '-')
+    domain = publicIp + '.nip.io'
+
+    values_to_replace = {'domain.placeholder': domain, 'user.placeholder': 'dynatrace',
+                         'collaboration.placeholder': 'keptn-rocks.3-10-234-30.nip.io'}
+
+    """
+    PUBLIC_IP_AS_DOM=$(echo $PUBLIC_IP | sed 's~\.~-~g')
+    export DOMAIN="${PUBLIC_IP_AS_DOM}.nip.io"
+
+    printf  "Entering this domain $DOMAIN for the Keptn ConfigMap \n"
+
+    # Fix ConfigMap - Configure the App Domain
+    cat cm-keptn.yaml | \
+    sed 's~domain.placeholder~'"$DOMAIN"'~' > ./gen/cm-keptn.yaml
+    """
+
+    APP_DEFINITIONS = copy_array_and_replace_key_values_in_dict(
+        SKEL_TXT_APP_DEFINITIONS, values_to_replace)
+
     logging.info('Dashboards:\t' +
                  data[key_email] + ':' + str(responses))
     validate_set_action_status(response, data, 'create_dashboards')
@@ -489,14 +511,10 @@ def set_up_environment(data):
     response = do_tenant_put(API_EP_TENANT_DEFAULTAPP, data, SKEL_DEFAULTAPP)
     validate_set_action_status(response, data, 'rename_defaultapp')
 
+    """ This is not needed for Keptn """
+    """
     app1_key = 'application-1'
     app2_key = 'application-2'
-
-    # Create EasyTravel Angular
-    response = do_tenant_post(API_EP_TENANT_APP, data, SKEL_APPLICATION1)
-    validate_set_action_status(
-        response, data, app1_key, json.loads(response.text)['id'])
-
     # Create EasyTravel Classic
     response = do_tenant_post(API_EP_TENANT_APP, data, SKEL_APPLICATION2)
     validate_set_action_status(
@@ -508,10 +526,16 @@ def set_up_environment(data):
     APP_DEFINITIONS = copy_array_and_replace_key_values_in_dict(
         SKEL_TXT_APP_DEFINITIONS, values_to_replace)
 
+    # Create EasyTravel Angular
+    response = do_tenant_post(API_EP_TENANT_APP, data, SKEL_APPLICATION1)
+    validate_set_action_status(
+        response, data, app1_key, json.loads(response.text)['id'])
+
     responses = do_tenant_post_list(
         API_EP_TENANT_APPDETECTION_RULES, data, APP_DEFINITIONS)
     logging.info('AppDetectionRules:\t' +
                  data[key_email] + ':' + str(responses))
+    """
 
     # Add RequestAttributes
     responses = do_tenant_post_list(
@@ -648,12 +672,14 @@ def do_save_cmc_data():
     return
 
 
-def customize_ec2_user_data(tenantUrl, paasToken):
+def customize_ec2_user_data(tenantUrl, paasToken, apiToken):
     user_data = copy.copy(SKEL_AWS_USERDATA)
     # Set Tenant
     user_data = user_data.replace('TENANT=', 'TENANT=' + tenantUrl, 1)
     # Set Paas-Token
     user_data = user_data.replace('PAASTOKEN=', 'PAASTOKEN=' + paasToken, 1)
+    # Set API-Token
+    user_data = user_data.replace('APITOKEN=', 'APITOKEN=' + apiToken, 1)
     return user_data
 
 
@@ -871,10 +897,10 @@ def create_ec2_instance(data):
 
     name = get_tenantname(data)
     email = data[key_email]
+    apiToken = str(data.get(key_apiToken))
     paasToken = str(data.get(key_paasToken))
-    # Functionality for overriding the allInOneToken for SaaS installers
     tenantUrl = str(data.get(key_tenantUrl))
-    userData = customize_ec2_user_data(tenantUrl, paasToken)
+    userData = customize_ec2_user_data(tenantUrl, paasToken, apiToken)
 
     i = AWS_CONFIG['instanceDetails']
     blockDeviceMappings = i['blockDeviceMappings']

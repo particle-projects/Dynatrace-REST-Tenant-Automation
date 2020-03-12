@@ -1,0 +1,49 @@
+{
+  "name": "EasyTravel BackEnd",
+  "rules": [
+    {
+      "type": "SERVICE",
+      "enabled": true,
+      "propagationTypes": [],
+      "conditions": [
+        {
+          "key": {
+            "attribute": "SERVICE_TAGS"
+          },
+          "comparisonInfo": {
+            "type": "TAG",
+            "operator": "EQUALS",
+            "value": {
+              "context": "CONTEXTLESS",
+              "key": "EasyTravel",
+              "value": "BackEnd"
+            },
+            "negate": false
+          }
+        }
+      ]
+    },
+    {
+      "type": "SERVICE",
+      "enabled": true,
+      "propagationTypes": [],
+      "conditions": [
+        {
+          "key": {
+            "attribute": "SERVICE_TAGS"
+          },
+          "comparisonInfo": {
+            "type": "TAG",
+            "operator": "EQUALS",
+            "value": {
+              "context": "CONTEXTLESS",
+              "key": "EasyTravel",
+              "value": "Database"
+            },
+            "negate": false
+          }
+        }
+      ]
+    }
+  ]
+}

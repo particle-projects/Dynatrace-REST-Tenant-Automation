@@ -1,0 +1,125 @@
+{
+  "name": "EasyTravel",
+  "rules": [
+    {
+      "type": "PROCESS_GROUP",
+      "enabled": true,
+      "valueFormat": "FrontEnd",
+      "propagationTypes": [
+        "PROCESS_GROUP_TO_SERVICE"
+      ],
+      "conditions": [
+        {
+          "key": {
+            "attribute": "PROCESS_GROUP_PREDEFINED_METADATA",
+            "dynamicKey": "JAVA_JAR_FILE",
+            "type": "PROCESS_PREDEFINED_METADATA_KEY"
+          },
+          "comparisonInfo": {
+            "type": "STRING",
+            "operator": "CONTAINS",
+            "value": "easytravel.customer.frontend",
+            "negate": false,
+            "caseSensitive": true
+          }
+        }
+      ]
+    },
+    {
+      "type": "PROCESS_GROUP",
+      "enabled": true,
+      "valueFormat": "BackEnd",
+      "propagationTypes": [
+        "PROCESS_GROUP_TO_HOST",
+        "PROCESS_GROUP_TO_SERVICE"
+      ],
+      "conditions": [
+        {
+          "key": {
+            "attribute": "PROCESS_GROUP_PREDEFINED_METADATA",
+            "dynamicKey": "JAVA_JAR_FILE",
+            "type": "PROCESS_PREDEFINED_METADATA_KEY"
+          },
+          "comparisonInfo": {
+            "type": "STRING",
+            "operator": "CONTAINS",
+            "value": "easytravel.business.backend",
+            "negate": false,
+            "caseSensitive": true
+          }
+        }
+      ]
+    },
+    {
+      "type": "PROCESS_GROUP",
+      "enabled": true,
+      "valueFormat": "FrontEnd",
+      "propagationTypes": [
+        "PROCESS_GROUP_TO_SERVICE"
+      ],
+      "conditions": [
+        {
+          "key": {
+            "attribute": "PROCESS_GROUP_PREDEFINED_METADATA",
+            "dynamicKey": "APACHE_CONFIG_PATH",
+            "type": "PROCESS_PREDEFINED_METADATA_KEY"
+          },
+          "comparisonInfo": {
+            "type": "STRING",
+            "operator": "CONTAINS",
+            "value": "easytravel",
+            "negate": false,
+            "caseSensitive": false
+          }
+        }
+      ]
+    },
+    {
+      "type": "PROCESS_GROUP",
+      "enabled": true,
+      "valueFormat": "BackEnd",
+      "propagationTypes": [
+        "PROCESS_GROUP_TO_SERVICE"
+      ],
+      "conditions": [
+        {
+          "key": {
+            "attribute": "PROCESS_GROUP_PREDEFINED_METADATA",
+            "dynamicKey": "EXE_PATH",
+            "type": "PROCESS_PREDEFINED_METADATA_KEY"
+          },
+          "comparisonInfo": {
+            "type": "STRING",
+            "operator": "CONTAINS",
+            "value": "CreditCardAuthor",
+            "negate": false,
+            "caseSensitive": false
+          }
+        }
+      ]
+    },
+    {
+      "type": "SERVICE",
+      "enabled": true,
+      "valueFormat": "Database",
+      "propagationTypes": [
+        "SERVICE_TO_PROCESS_GROUP_LIKE",
+        "SERVICE_TO_HOST_LIKE"
+      ],
+      "conditions": [
+        {
+          "key": {
+            "attribute": "SERVICE_NAME"
+          },
+          "comparisonInfo": {
+            "type": "STRING",
+            "operator": "CONTAINS",
+            "value": "easyTravelBusiness",
+            "negate": false,
+            "caseSensitive": false
+          }
+        }
+      ]
+    }
+  ]
+}

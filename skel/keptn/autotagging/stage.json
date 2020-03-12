@@ -1,0 +1,28 @@
+{
+  "name": "Stage",
+  "rules": [
+    {
+      "type": "PROCESS_GROUP",
+      "enabled": true,
+      "valueFormat": "Production",
+      "propagationTypes": [
+        "PROCESS_GROUP_TO_SERVICE",
+        "PROCESS_GROUP_TO_HOST"
+      ],
+      "conditions": [
+        {
+          "key": {
+            "attribute": "EC2_INSTANCE_PUBLIC_HOST_NAME"
+          },
+          "comparisonInfo": {
+            "type": "STRING",
+            "operator": "CONTAINS",
+            "value": "amazona",
+            "negate": false,
+            "caseSensitive": false
+          }
+        }
+      ]
+    }
+  ]
+}

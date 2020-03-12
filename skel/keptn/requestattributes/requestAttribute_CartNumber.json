@@ -1,0 +1,21 @@
+{
+    "name": "CartNumber",
+    "enabled": true,
+    "dataType": "INTEGER",
+    "dataSources": [
+        {
+            "enabled": true,
+            "source": "URI",
+            "valueProcessing": {
+                "valueExtractorRegex": "/carts/([0-9]*+)",
+                "splitAt": "",
+                "trim": false
+            },
+            "capturingAndStorageLocation": "CAPTURE_AND_STORE_ON_SERVER"
+        }
+    ],
+    "normalization": "ORIGINAL",
+    "aggregation": "FIRST",
+    "confidential": false,
+    "skipPersonalDataMasking": true
+}

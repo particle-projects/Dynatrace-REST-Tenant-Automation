@@ -1,0 +1,497 @@
+{
+  "dashboardMetadata": {
+    "name": "💵🎯 BizDevOps Dashboard",
+    "shared": true,
+    "sharingDetails": {
+      "linkShared": true,
+      "published": true
+    },
+    "dashboardFilter": {
+      "timeframe": "l_24_HOURS",
+      "managementZone": null
+    }
+  },
+  "tiles": [
+    {
+      "name": "User Sessions Query",
+      "tileType": "DTAQL",
+      "configured": true,
+      "bounds": {
+        "top": 38,
+        "left": 38,
+        "width": 304,
+        "height": 152
+      },
+      "tileFilter": {
+        "timeframe": null,
+        "managementZone": null
+      },
+      "customName": "💲 Total revenue",
+      "query": "select sum (doubleProperties.booking) as Revenue from usersession",
+      "type": "SINGLE_VALUE",
+      "timeFrameShift": "-24h"
+    },
+    {
+      "name": "DTAQL",
+      "tileType": "DTAQL",
+      "configured": true,
+      "bounds": {
+        "top": 190,
+        "left": 342,
+        "width": 874,
+        "height": 152
+      },
+      "tileFilter": {
+        "timeframe": null,
+        "managementZone": null
+      },
+      "customName": "Revenue over time",
+      "query": "select DATETIME(starttime, \"E HH:mm\", \"1h\"), sum (doubleProperties.booking) as Revenue from usersession group by datetime(starttime,\"E HH:mm\",\"1h\")",
+      "type": "COLUMN_CHART"
+    },
+    {
+      "name": "DTAQL",
+      "tileType": "DTAQL",
+      "configured": true,
+      "bounds": {
+        "top": 190,
+        "left": 38,
+        "width": 228,
+        "height": 152
+      },
+      "tileFilter": {
+        "timeframe": null,
+        "managementZone": null
+      },
+      "customName": "❌ Abandoned cart totals",
+      "query": "SELECT sum (doubleProperties.tripcost) as \"Revenue abandoned\" FROM usersession where doubleProperties.booking is null and doubleProperties.tripcost > 0",
+      "type": "SINGLE_VALUE",
+      "timeFrameShift": "-24h"
+    },
+    {
+      "name": "💰 Revenue",
+      "tileType": "HEADER",
+      "configured": true,
+      "bounds": {
+        "top": 0,
+        "left": 0,
+        "width": 304,
+        "height": 38
+      },
+      "tileFilter": {
+        "timeframe": null,
+        "managementZone": null
+      }
+    },
+    {
+      "name": "😢Lost revenue",
+      "tileType": "HEADER",
+      "configured": true,
+      "bounds": {
+        "top": 1026,
+        "left": 0,
+        "width": 342,
+        "height": 38
+      },
+      "tileFilter": {
+        "timeframe": null,
+        "managementZone": null
+      }
+    },
+    {
+      "name": "DTAQL",
+      "tileType": "DTAQL",
+      "configured": true,
+      "bounds": {
+        "top": 1064,
+        "left": 38,
+        "width": 228,
+        "height": 380
+      },
+      "tileFilter": {
+        "timeframe": null,
+        "managementZone": null
+      },
+      "customName": "Frustrated abandonment totals",
+      "query": "SELECT sum (doubleProperties.tripcost) as \"Revenue Lost\" FROM usersession where doubleProperties.booking is null and doubleProperties.tripcost > 0 and (useraction.httpRequestsWithErrors>0 OR useraction.apdexCategory<> \"SATISFIED\" OR numberOfRageClicks>0) ",
+      "type": "SINGLE_VALUE",
+      "timeFrameShift": "-24h"
+    },
+    {
+      "name": "DTAQL",
+      "tileType": "DTAQL",
+      "configured": true,
+      "bounds": {
+        "top": 1254,
+        "left": 266,
+        "width": 836,
+        "height": 190
+      },
+      "tileFilter": {
+        "timeframe": null,
+        "managementZone": null
+      },
+      "customName": "Frustrated abandoned cart values over time ",
+      "query": "SELECT DATETIME(startTime, \"MM-dd-HH:mm\", 5), sum (doubleProperties.tripcost) as \"Revenue Lost\" FROM usersession where doubleProperties.booking is null and doubleProperties.tripcost > 0 and (useraction.httpRequestsWithErrors>0 OR useraction.apdexCategory<> \"SATISFIED\" OR numberOfRageClicks>0) group by datetime(startTime,\"MM-dd-HH:mm\",5)",
+      "type": "COLUMN_CHART"
+    },
+    {
+      "name": "DTAQL",
+      "tileType": "DTAQL",
+      "configured": true,
+      "bounds": {
+        "top": 1064,
+        "left": 1216,
+        "width": 228,
+        "height": 228
+      },
+      "tileFilter": {
+        "timeframe": null,
+        "managementZone": null
+      },
+      "customName": "Number of sessions affected",
+      "query": "SELECT count (*) from usersession where useraction.name = \"click on book journey  (xhr: /easytravel/rest/validate-creditcard)\" and doubleProperties.booking is null",
+      "type": "SINGLE_VALUE"
+    },
+    {
+      "name": "DTAQL",
+      "tileType": "DTAQL",
+      "configured": true,
+      "bounds": {
+        "top": 1064,
+        "left": 1444,
+        "width": 342,
+        "height": 228
+      },
+      "tileFilter": {
+        "timeframe": null,
+        "managementZone": null
+      },
+      "customName": "Users affected",
+      "query": "SELECT userid from usersession where useraction.name = \"click on book journey  (xhr: /easytravel/rest/validate-creditcard)\" and doubleProperties.booking is null",
+      "type": "TABLE"
+    },
+    {
+      "name": "DTAQL",
+      "tileType": "DTAQL",
+      "configured": true,
+      "bounds": {
+        "top": 38,
+        "left": 1216,
+        "width": 646,
+        "height": 304
+      },
+      "tileFilter": {
+        "timeframe": null,
+        "managementZone": null
+      },
+      "customName": "Payment Funnel",
+      "query": "SELECT FUNNEL(useraction.name like \"*journeys*\" AS \"Journey Search\", useraction.name = \"click on book now (xhr: /easytravel/rest/journeys/)\" AS \"Click on Book Now\", useraction.name = \"click on sign in (xhr: /easytravel/rest/login)\" AS \"Login\", useraction.name=\"click on book journey  (xhr: /easytravel/rest/validate-creditcard)\" AS \"Submit Payment\") FROM usersession",
+      "type": "FUNNEL",
+      "timeFrameShift": "-24h"
+    },
+    {
+      "name": "User Sessions Query",
+      "tileType": "DTAQL",
+      "configured": true,
+      "bounds": {
+        "top": 418,
+        "left": 532,
+        "width": 494,
+        "height": 266
+      },
+      "tileFilter": {
+        "timeframe": null,
+        "managementZone": null
+      },
+      "customName": "Revenue by journey destination",
+      "query": "select stringProperties.destination, sum (doubleProperties.booking) as Revenue from usersession group by stringProperties.destination order by sum(doubleProperties.booking) DESC\n",
+      "type": "PIE_CHART"
+    },
+    {
+      "name": "User Sessions Query",
+      "tileType": "DTAQL",
+      "configured": true,
+      "bounds": {
+        "top": 418,
+        "left": 1026,
+        "width": 418,
+        "height": 266
+      },
+      "tileFilter": {
+        "timeframe": null,
+        "managementZone": null
+      },
+      "customName": "Revenue by channel / browser",
+      "query": "select browserFamily, COUNT(*) as Bookings from usersession where doubleProperties.booking > 0 group by browserFamily",
+      "type": "PIE_CHART"
+    },
+    {
+      "name": "User Sessions Query",
+      "tileType": "DTAQL",
+      "configured": true,
+      "bounds": {
+        "top": 418,
+        "left": 38,
+        "width": 494,
+        "height": 266
+      },
+      "tileFilter": {
+        "timeframe": null,
+        "managementZone": null
+      },
+      "customName": "Revenue by member status",
+      "query": "select stringProperties.memberstatus, sum (doubleProperties.booking) as Revenue from usersession where stringProperties.memberstatus IS NOT NULL group by stringProperties.memberstatus order by sum(doubleProperties.booking) DESC",
+      "type": "PIE_CHART"
+    },
+    {
+      "name": "User Sessions Query",
+      "tileType": "DTAQL",
+      "configured": true,
+      "bounds": {
+        "top": 722,
+        "left": 266,
+        "width": 494,
+        "height": 266
+      },
+      "tileFilter": {
+        "timeframe": null,
+        "managementZone": null
+      },
+      "customName": "Revenue by user satisfaction",
+      "query": "select userExperienceScore, sum (doubleProperties.booking) as Revenue from usersession group by userExperienceScore order by sum(doubleProperties.booking) DESC",
+      "type": "PIE_CHART"
+    },
+    {
+      "name": "User Sessions Query",
+      "tileType": "DTAQL",
+      "configured": true,
+      "bounds": {
+        "top": 722,
+        "left": 760,
+        "width": 342,
+        "height": 266
+      },
+      "tileFilter": {
+        "timeframe": null,
+        "managementZone": null
+      },
+      "customName": "Sessions by user experience",
+      "query": "select userExperienceScore, count(*) from usersession group by userExperienceScore ",
+      "type": "TABLE"
+    },
+    {
+      "name": "📊 Revenue demographics",
+      "tileType": "HEADER",
+      "configured": true,
+      "bounds": {
+        "top": 380,
+        "left": 0,
+        "width": 380,
+        "height": 38
+      },
+      "tileFilter": {
+        "timeframe": null,
+        "managementZone": null
+      }
+    },
+    {
+      "name": ".",
+      "tileType": "HEADER",
+      "configured": true,
+      "bounds": {
+        "top": 1444,
+        "left": 0,
+        "width": 304,
+        "height": 38
+      },
+      "tileFilter": {
+        "timeframe": null,
+        "managementZone": null
+      }
+    },
+    {
+      "name": "Custom chart",
+      "tileType": "CUSTOM_CHARTING",
+      "configured": true,
+      "bounds": {
+        "top": 1064,
+        "left": 266,
+        "width": 836,
+        "height": 190
+      },
+      "tileFilter": {
+        "timeframe": null,
+        "managementZone": null
+      },
+      "filterConfig": {
+        "type": "MIXED",
+        "customName": "Action count (by Apdex category)",
+        "defaultName": "Custom chart",
+        "chartConfig": {
+          "legendShown": true,
+          "type": "TIMESERIES",
+          "series": [
+            {
+              "metric": "builtin:apps.web.actionCount.category",
+              "aggregation": "NONE",
+              "percentile": null,
+              "type": "BAR",
+              "entityType": "APPLICATION",
+              "dimensions": [
+                {
+                  "id": "0",
+                  "name": "Application",
+                  "values": [],
+                  "entityDimension": true
+                },
+                {
+                  "id": "1",
+                  "name": "Apdex category",
+                  "values": [
+                    "FRUSTRATED",
+                    "SATISFIED",
+                    "TOLERATING"
+                  ],
+                  "entityDimension": false
+                }
+              ],
+              "sortAscending": false,
+              "sortColumn": true,
+              "aggregationRate": "TOTAL"
+            }
+          ],
+          "resultMetadata": {
+            "APPLICATION-80CF0133D9A2BA2A¦APPLICATION»APPLICATION-80CF0133D9A2BA2A»true¦Apdex category»FRUSTRATED»falsebuiltin:apps.web.actionCount.category|NONE|TOTAL|BAR|APPLICATION": {
+              "lastModified": 1580436640279,
+              "customColor": "#ef651f"
+            },
+            "APPLICATION-80CF0133D9A2BA2A¦APPLICATION»APPLICATION-80CF0133D9A2BA2A»true¦Apdex category»TOLERATING»falsebuiltin:apps.web.actionCount.category|NONE|TOTAL|BAR|APPLICATION": {
+              "lastModified": 1580436637932,
+              "customColor": "#ffd0ab"
+            },
+            "APPLICATION-80CF0133D9A2BA2A¦APPLICATION»APPLICATION-80CF0133D9A2BA2A»true¦Apdex category»SATISFIED»falsebuiltin:apps.web.actionCount.category|NONE|TOTAL|BAR|APPLICATION": {
+              "lastModified": 1580436632278,
+              "customColor": "#4fd5e0"
+            },
+            "APPLICATION-80CF0133D9A2BA2A¦APPLICATION»APPLICATION-80CF0133D9A2BA2A»true¦Apdex category»UNKNOWN»falsebuiltin:apps.web.actionCount.category|NONE|TOTAL|BAR|APPLICATION": {
+              "lastModified": 1580436647205,
+              "customColor": "#debbf3"
+            }
+          }
+        },
+        "filtersPerEntityType": {
+          "APPLICATION": {
+            "SPECIFIC_ENTITIES": [
+              "APPLICATION-80CF0133D9A2BA2A"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "User Sessions Query",
+      "tileType": "DTAQL",
+      "configured": true,
+      "bounds": {
+        "top": 722,
+        "left": 1444,
+        "width": 380,
+        "height": 266
+      },
+      "tileFilter": {
+        "timeframe": null,
+        "managementZone": null
+      },
+      "customName": "Frustated visits - last action",
+      "query": "select name, count(*) from useraction where usersession.userExperienceScore=\"FRUSTRATED\" and isExitAction=true group by name",
+      "type": "TABLE"
+    },
+    {
+      "name": "User Sessions Query",
+      "tileType": "DTAQL",
+      "configured": true,
+      "bounds": {
+        "top": 722,
+        "left": 1102,
+        "width": 342,
+        "height": 266
+      },
+      "tileFilter": {
+        "timeframe": null,
+        "managementZone": null
+      },
+      "customName": "Frustrated users",
+      "query": "select userid from usersession where userExperienceScore=\"FRUSTRATED\" order by userid asc",
+      "type": "TABLE"
+    },
+    {
+      "name": "DTAQL",
+      "tileType": "DTAQL",
+      "configured": true,
+      "bounds": {
+        "top": 38,
+        "left": 342,
+        "width": 874,
+        "height": 152
+      },
+      "tileFilter": {
+        "timeframe": null,
+        "managementZone": null
+      },
+      "customName": "Conversions over time",
+      "query": "select datetime(starttime, \"E HH:mm\", \"1h\"), count(*) as \"Conversions\" from usersession where useraction.matchingConversionGoals=\"Credit card validated\" group by datetime(starttime,\"E HH:mm\",\"1h\")",
+      "type": "LINE_CHART"
+    },
+    {
+      "name": "User Sessions Query",
+      "tileType": "DTAQL",
+      "configured": true,
+      "bounds": {
+        "top": 418,
+        "left": 1444,
+        "width": 418,
+        "height": 266
+      },
+      "tileFilter": {
+        "timeframe": null,
+        "managementZone": null
+      },
+      "customName": "Revenue by user's geography (Top10)",
+      "query": "select Top (country, 10), COUNT(*) as Bookings from usersession where doubleProperties.booking > 0 group by country",
+      "type": "PIE_CHART"
+    },
+    {
+      "name": "Markdown",
+      "tileType": "MARKDOWN",
+      "configured": true,
+      "bounds": {
+        "top": 760,
+        "left": 76,
+        "width": 190,
+        "height": 114
+      },
+      "tileFilter": {
+        "timeframe": null,
+        "managementZone": null
+      },
+      "markdown": "### Impact of user experience on Revenue\n"
+    },
+    {
+      "name": "Markdown",
+      "tileType": "MARKDOWN",
+      "configured": true,
+      "bounds": {
+        "top": 1026,
+        "left": 1216,
+        "width": 456,
+        "height": 38
+      },
+      "tileFilter": {
+        "timeframe": null,
+        "managementZone": null
+      },
+      "markdown": "###Book Journey Completed ✅ -----> No revenue ❌"
+    }
+  ]
+}
