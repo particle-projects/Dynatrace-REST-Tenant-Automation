@@ -472,29 +472,18 @@ def environment_create_dashboards(data):
     # At last the Home Dashboard?
     response = do_tenant_post(API_EP_TENANT_DASHBOARDS, data, post_data)
 
-    # First all other Dashboards
-    responses = do_tenant_post_list(
-        API_EP_TENANT_DASHBOARDS, data, SKEL_TXT_APP_DASHBOARDS)
-
     publicIp = data.get(key_publicIpAddress).replace('.', '-')
     domain = publicIp + '.nip.io'
 
     values_to_replace = {'domain.placeholder': domain, 'user.placeholder': 'dynatrace',
                          'collaboration.placeholder': 'keptn-rocks.3-10-234-30.nip.io'}
 
-    """
-    PUBLIC_IP_AS_DOM=$(echo $PUBLIC_IP | sed 's~\.~-~g')
-    export DOMAIN="${PUBLIC_IP_AS_DOM}.nip.io"
-
-    printf  "Entering this domain $DOMAIN for the Keptn ConfigMap \n"
-
-    # Fix ConfigMap - Configure the App Domain
-    cat cm-keptn.yaml | \
-    sed 's~domain.placeholder~'"$DOMAIN"'~' > ./gen/cm-keptn.yaml
-    """
-
-    APP_DEFINITIONS = copy_array_and_replace_key_values_in_dict(
-        SKEL_TXT_APP_DEFINITIONS, values_to_replace)
+    APP_DASHBOARDS = copy_array_and_replace_key_values_in_dict(
+        SKEL_TXT_APP_DASHBOARDS, values_to_replace)
+        
+    # Post Dashboards
+    responses = do_tenant_post_list(
+        API_EP_TENANT_DASHBOARDS, data, APP_DASHBOARDS)
 
     logging.info('Dashboards:\t' +
                  data[key_email] + ':' + str(responses))
@@ -1139,7 +1128,7 @@ def save_results(file):
 
 def do_dev():
 
-    data = CSV_DATA['sergio.hinojosa@gmail.com']
+    data = CSV_DATA['keptntest@dynatrace.com']
     environment_create_dashboards(data)
 
     return
