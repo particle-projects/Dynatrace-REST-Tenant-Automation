@@ -134,7 +134,7 @@
                 "managementZone": null
             },
             "filterConfig": {
-                "type": "NON_DATABASE_SERVICE",
+                "type": "SERVICE",
                 "customName": "Sockshop Development services",
                 "defaultName": "Sockshop Development services",
                 "chartConfig": {
@@ -143,7 +143,7 @@
                     "resultMetadata": {}
                 },
                 "filtersPerEntityType": {
-                    "NON_DATABASE_SERVICE": {
+                    "SERVICE": {
                         "AUTO_TAGS": [
                             "environment:sockshop-dev"
                         ]
@@ -167,7 +167,7 @@
                 "managementZone": null
             },
             "filterConfig": {
-                "type": "NON_DATABASE_SERVICE",
+                "type": "SERVICE",
                 "customName": "Sockshop Staging services",
                 "defaultName": "Sockshop Staging services",
                 "chartConfig": {
@@ -176,7 +176,7 @@
                     "resultMetadata": {}
                 },
                 "filtersPerEntityType": {
-                    "NON_DATABASE_SERVICE": {
+                    "SERVICE": {
                         "AUTO_TAGS": [
                             "environment:sockshop-staging"
                         ]
@@ -200,7 +200,7 @@
                 "managementZone": null
             },
             "filterConfig": {
-                "type": "NON_DATABASE_SERVICE",
+                "type": "SERVICE",
                 "customName": "Sockshop Production services",
                 "defaultName": "Sockshop Production services",
                 "chartConfig": {
@@ -209,7 +209,7 @@
                     "resultMetadata": {}
                 },
                 "filtersPerEntityType": {
-                    "NON_DATABASE_SERVICE": {
+                    "SERVICE": {
                         "AUTO_TAGS": [
                             "environment:sockshop-production"
                         ]
@@ -233,7 +233,7 @@
                 "managementZone": null
             },
             "filterConfig": {
-                "type": "NON_DATABASE_SERVICE",
+                "type": "SERVICE",
                 "customName": " Sockshop",
                 "defaultName": " Sockshop",
                 "chartConfig": {
@@ -242,7 +242,7 @@
                     "resultMetadata": {}
                 },
                 "filtersPerEntityType": {
-                    "NON_DATABASE_SERVICE": {
+                    "SERVICE": {
                         "AUTO_TAGS": [
                             "[Environment]application:sockshop"
                         ]
