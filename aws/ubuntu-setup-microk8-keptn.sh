@@ -72,8 +72,6 @@ chown ubuntu:ubuntu -R /home/ubuntu/kubernetes/
 git clone --branch 0.6.1 https://github.com/keptn/examples.git /home/ubuntu/examples --single-branch
 chown ubuntu:ubuntu -R /home/ubuntu/examples/
 
-
-
 printf "\n\n***** Create Istio NS and route traffic to istio ingress-gateway ****\n"
 { sudo -H -u ubuntu bash -c 'kubectl create ns istio-system' ;\
 sudo -H -u ubuntu bash -c 'cd /home/ubuntu/kubernetes/keptn/setup && sh route_istio.sh' ;} >> $LOGFILE 2>&1
@@ -101,11 +99,18 @@ chmod +x getHelm.sh ;\
 ./getHelm.sh -v v2.12.3 ;\
 helm init ;}   >> $LOGFILE 2>&1
 
+{  printf "\n\n*****Configure Public Domain for Microk8s  ***** \n" ;\
+export PUBLIC_IP=$(curl -s ifconfig.me) ;\
+PUBLIC_IP_AS_DOM=$(echo $PUBLIC_IP | sed 's~\.~-~g') ;\
+export DOMAIN="${PUBLIC_IP_AS_DOM}.nip.io" ;\
+printf "Public DNS: $DOMAIN"
+sudo -H -u ubuntu bash -c "kubectl create configmap keptn-domain --from-literal=domain=$DOMAIN" ;} >> $LOGFILE 2>&1
+
 { printf "\n\n***** Waiting for pods to start.... we sleep for 1 minute before the installation of Keptn *****\n" ;\
 sleep 1m ;} >> $LOGFILE 2>&1
 
 { printf "\n\n***** Kick installation of Keptn *****\n" ;\
-sudo -H -u ubuntu bash -c 'echo 'y' | keptn install --platform=kubernetes --istio-install-option=Overwrite --gateway=LoadBalancer --keptn-installer-image=shinojosa/keptninstaller:0.2' ;} >> $LOGFILE 2>&1
+sudo -H -u ubuntu bash -c 'echo 'y' | keptn install --platform=kubernetes --istio-install-option=Overwrite --gateway=LoadBalancer --keptn-installer-image=shinojosa/keptninstaller:6.1.customdomain' ;} >> $LOGFILE 2>&1
 
 
 { printf "\n\n***** Waiting 1 minute for keptn to initialize. Then we recycle the NGINX pods  *****\n" ;\
@@ -122,16 +127,17 @@ sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_
 service sshd restart ;} >> $LOGFILE 2>&1
 
 
-
 # Now lets install Dynatrace
 # Create secret
 # Deploy Dynatrace service
 # Deploy SLI Service 
-{ printf "\n\n***** Installing Dynatrace on the Cluster *****\n\n" ;\
+# Deploy Operator via Keptn 
+
+{ printf "\n\n***** Installing and configuring Dynatrace on the Cluster *****\n\n" ;\
 sudo -H -u ubuntu bash -c "kubectl -n keptn create secret generic dynatrace --from-literal=\"DT_TENANT=$TENANT\" --from-literal=\"DT_API_TOKEN=$APITOKEN\"  --from-literal=\"DT_PAAS_TOKEN=$PAASTOKEN\"" ;\
 sudo -H -u ubuntu bash -c "kubectl apply -f https://raw.githubusercontent.com/keptn-contrib/dynatrace-service/0.6.1/deploy/manifests/dynatrace-service/dynatrace-service.yaml" ;\
-sudo -H -u ubuntu bash -c "kubectl apply -f https://raw.githubusercontent.com/keptn-contrib/dynatrace-sli-service/0.3.0/deploy/service.yaml" ;} >> $LOGFILE 2>&1
-
+sudo -H -u ubuntu bash -c "kubectl apply -f https://raw.githubusercontent.com/keptn-contrib/dynatrace-sli-service/0.3.0/deploy/service.yaml" ;\
+sudo -H -u ubuntu bash -c "keptn configure monitoring dynatrace" ;} >> $LOGFILE 2>&1
 
 # Deploy Bridge EAP
 { printf "\n\n***** Deploy Bridge EAP and Expose via VS  *****\n\n" ;\
