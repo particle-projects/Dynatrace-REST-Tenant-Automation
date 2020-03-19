@@ -7,7 +7,7 @@
         "activityBarBadge.foreground": "#13bb37",
         "statusBar.background": "#2a0d4e",
         "statusBarItem.remoteBackground": "#0a5f02a2",
-        */
         "editor.background": "#302d38" 
+        */
     }
 }
