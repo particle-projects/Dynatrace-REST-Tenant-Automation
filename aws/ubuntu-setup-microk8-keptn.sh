@@ -3,11 +3,16 @@
 ## These script will install the following components:
 ## Microkubernetes
 
+
+# Log duration
+SECONDS=0
+
 ## Set TENANT and API TOKEN
 export TENANT=
 export PAASTOKEN=
 export APITOKEN=
 LOGFILE='/tmp/install.txt'
+
 
 ##Create installer Logfile
 printf "\n\n***** Init Installation ***\n" >> $LOGFILE 2>&1 
@@ -57,7 +62,7 @@ snap alias microk8s.kubectl kubectl
 #Start Micro Enable Default Modules as Ubuntu
 # Passing the commands to ubuntu since it has microk8s in its path and also does not have password enabled otherwise the install will fail
 { echo "\n\n***** Starting microk8s *****\n" ;\
-sudo -H -u ubuntu bash -c 'microk8s.start && microk8s.enable dns storage ingress dashboard' ;} >> $LOGFILE 2>&1
+sudo -H -u ubuntu bash -c 'microk8s.start && microk8s.enable dns storage ingress istio dashboard' ;} >> $LOGFILE 2>&1
 
 # Download YAML files from Github and unpack them
 git clone https://github.com/sergiohinojosa/kubernetes-deepdive /home/ubuntu/kubernetes  
@@ -105,6 +110,9 @@ export DOMAIN="${PUBLIC_IP_AS_DOM}.nip.io" ;\
 printf "Public DNS: $DOMAIN"
 sudo -H -u ubuntu bash -c "kubectl create configmap keptn-domain --from-literal=domain=$DOMAIN" ;} >> $LOGFILE 2>&1
 
+##### Manuall ab hier!!
+
+
 { printf "\n\n***** Kick installation of Keptn *****\n" ;\
 sudo -H -u ubuntu bash -c 'echo 'y' | keptn install --platform=kubernetes --istio-install-option=Overwrite --gateway=LoadBalancer --keptn-installer-image=shinojosa/keptninstaller:6.1.customdomain' ;} >> $LOGFILE 2>&1
 
@@ -139,12 +147,6 @@ sudo -H -u ubuntu bash -c "kubectl apply -f https://raw.githubusercontent.com/ke
 sudo -H -u ubuntu bash -c "kubectl apply -f https://raw.githubusercontent.com/keptn-contrib/dynatrace-sli-service/0.3.0/deploy/service.yaml" ;\
 sudo -H -u ubuntu bash -c "keptn configure monitoring dynatrace" ;} >> $LOGFILE 2>&1
 
-# Deploy Bridge EAP
-# { printf "\n\n***** Deploy Bridge EAP and Expose via VS  *****\n\n" ;\
-#sudo -H -u ubuntu bash -c 'kubectl -n keptn set image deployment/bridge bridge=keptn/bridge2:20200308.0859 --record' ;\
-#sudo -H -u ubuntu bash -c 'kubectl -n keptn set image deployment/configuration-service configuration-service=keptn/configuration-service:20200308.0859 --record' ;\
-#sudo -H -u ubuntu bash -c 'kubectl -n keptn-datastore set image deployment/mongodb-datastore mongodb-datastore=keptn/mongodb-datastore:20200308.0859 --record' ;} >> $LOGFILE 2>&1
-
 # Expose bridge via VS /home/ubuntu/kubernetes/keptn/
 { printf "\n\n*****  Expose Bridge via VS  *****\n\n" ;\
 DOMAIN=$(sudo -H -u ubuntu bash -c "kubectl get cm -n keptn keptn-domain -ojsonpath={.data.app_domain}") ;\
@@ -155,7 +157,20 @@ sudo -H -u ubuntu bash -c "kubectl apply -f /home/ubuntu/kubernetes/keptn/expose
 { printf "\n\n*****  Deploy Unleash-Server  *****\n\n" ;\
 sudo -H -u ubuntu bash -c "cd /home/ubuntu/examples/unleash-server/ && sh /home/ubuntu/kubernetes/keptn/setup/deploy_unleashserver.sh" ;} >> $LOGFILE 2>&1
 
-# Onboard Services? 
-# To be sure restart datastore?? 
-#kubectl delete po -n keptn-datastore --all
-printf "\n\n***** Installation complete :) *****\n" >> $LOGFILE 2>&1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Installation finish, print time.
+DURATION=$SECONDS
+printf "\n\n***** Installation complete :) *****\nIt took $(($DURATION / 60)) minutes and $(($DURATION % 60)) seconds " >> $LOGFILE 2>&1
