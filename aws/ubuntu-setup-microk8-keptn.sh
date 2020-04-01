@@ -14,7 +14,11 @@ LOGFILE='/tmp/install.txt'
 
 ##Create installer Logfile
 printf "\n\n***** Init Installation ***\n" >> $LOGFILE 2>&1 
-{ date ; apt update; whoami ; printf "Setting up microk8s (SingleNode K8s Dev Cluster) with Keptn and the OneAgent\nTenant: $TENANT \nApi-Token: $APITOKEN \nPaaS-Token: $PAASTOKEN \n\n" ;} >> $LOGFILE ; chmod 777 $LOGFILE
+
+# clean protocol
+PROTOCOL="https://";DT_TENANT=${TENANT#"$PROTOCOL"} ; printf "This is the Tenant:$DT_TENANT"  ;\
+
+{ date ; apt update; whoami ; printf "Setting up microk8s (SingleNode K8s Dev Cluster) with Keptn and the OneAgent\nTenant: $DT_TENANT \nApi-Token: $APITOKEN \nPaaS-Token: $PAASTOKEN \n\n" ;} >> $LOGFILE ; chmod 777 $LOGFILE
 
 printf "\n\n***** Update and install docker and JQ***\n" >> $LOGFILE 2>&1 
 { apt install docker.io -y ;\ 
@@ -84,11 +88,11 @@ git clone https://github.com/sergiohinojosa/kubernetes-deepdive /home/ubuntu/too
 chown ubuntu:ubuntu -R /home/ubuntu/
 
 {  printf "\n\n***** Save Dynatrace credentials *****\n" ;\
-sudo -H -u ubuntu bash -c "cd /home/ubuntu/keptn-workshop/setup/dynatrace/ ; bash defineDynatraceCredentials.sh \"$TENANT\" \"$PAASTOKEN\" \"$APITOKEN\"" ;} >> $LOGFILE 2>&1
+sudo -H -u ubuntu bash -c "cd /home/ubuntu/keptn-workshop/setup/dynatrace/ ; bash save-credentials.sh \"$DT_TENANT\" \"$PAASTOKEN\" \"$APITOKEN\"" ;} >> $LOGFILE 2>&1
 
 ## TODO: Enhacement - Deploy the AG on a PoD?
 {  printf "\n\n***** Installation of Active Gate *****\n" ;\
-wget -nv -O activegate.sh "$TENANT/api/v1/deployment/installer/gateway/unix/latest?Api-Token=$PAASTOKEN&arch=x86&flavor=default" ;\
+wget -nv -O activegate.sh "https://$DT_TENANT/api/v1/deployment/installer/gateway/unix/latest?Api-Token=$PAASTOKEN&arch=x86&flavor=default" ;\
 sh activegate.sh ;} >> $LOGFILE 2>&1 
 
 ## TODO: Enhacement - Modify with wait and check status of istio
@@ -152,8 +156,7 @@ sleep 1m ;} >> $LOGFILE 2>&1
 
 # Install OA
 { printf "\n\n***** Installing and configuring Dynatrace on the Cluster *****\n\n" ;\
-PROTOCOL="https://";CLEAN_URL=${TENANT#"$PROTOCOL"} ; printf "This is the Tenant:$CLEAN_URL"  ;\
-sudo -H -u ubuntu bash -c "kubectl -n keptn create secret generic dynatrace --from-literal=\"DT_TENANT=$CLEAN_URL\" --from-literal=\"DT_API_TOKEN=$APITOKEN\"  --from-literal=\"DT_PAAS_TOKEN=$PAASTOKEN\"" ;\
+sudo -H -u ubuntu bash -c "kubectl -n keptn create secret generic dynatrace --from-literal=\"DT_TENANT=$DT_TENANT\" --from-literal=\"DT_API_TOKEN=$APITOKEN\"  --from-literal=\"DT_PAAS_TOKEN=$PAASTOKEN\"" ;\
 sudo -H -u ubuntu bash -c "kubectl apply -f https://raw.githubusercontent.com/keptn-contrib/dynatrace-service/0.6.1/deploy/manifests/dynatrace-service/dynatrace-service.yaml" ;\
 sudo -H -u ubuntu bash -c "kubectl apply -f https://raw.githubusercontent.com/keptn-contrib/dynatrace-sli-service/0.3.0/deploy/service.yaml" ;\
 printf "\n wait for Webhook to be available.. sleep 20 sec" ; sleep 20s ;\
@@ -168,8 +171,11 @@ sudo -H -u ubuntu bash -c "cd /home/ubuntu/keptn-workshop/setup/expose-bridge &&
 { printf "\n\n*****  Deploy Unleash-Server  *****\n\n" ;\
 sudo -H -u ubuntu bash -c "cd /home/ubuntu/examples/unleash-server/ && bash /home/ubuntu/keptn-workshop/setup/deploy_unleashserver.sh" ;} >> $LOGFILE 2>&1
 
+# Configure Kubernetes Monitoring
+{ printf "\n\n*****  Configure Kubernetes Monitoring  *****\n\n" ;\
+sudo -H -u ubuntu bash -c "cd /home/ubuntu/keptn-workshop/setup/dynatrace && bash configure-k8.sh" ;} >> $LOGFILE 2>&1
 
-# TODO: Add - Configure AG K8 monitoring via REST
+
 { printf "\n\n*****Allow -rwx for the user and group (dynatrace) for all files in the home directory ***** \n" ;\
 chmod -R 774 /home/ubuntu/* ;} >> $LOGFILE 2>&1
 
@@ -182,3 +188,10 @@ service sshd restart ;} >> $LOGFILE 2>&1
 # Installation finish, print time.
 DURATION=$SECONDS
 printf "\n\n***** Installation complete :) *****\nIt took $(($DURATION / 60)) minutes and $(($DURATION % 60)) seconds " >> $LOGFILE 2>&1
+
+# Log duration
+SECONDS=0
+# Onboard Carts Application
+sudo -H -u ubuntu bash -c "cd /home/ubuntu/examples/onboarding-carts/ && bash /home/ubuntu/keptn-workshop/setup/deploy_carts.sh" ;} >> $LOGFILE 2>&1
+DURATION=$SECONDS
+printf "\n\n***** OnBoarding complete :) *****\nIt took $(($DURATION / 60)) minutes and $(($DURATION % 60)) seconds " >> $LOGFILE 2>&1
