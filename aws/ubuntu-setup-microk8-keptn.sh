@@ -162,8 +162,9 @@ sudo -H -u ubuntu bash -c "kubectl apply -f https://raw.githubusercontent.com/ke
 printf "\n wait for Webhook to be available.. sleep 20 sec" ; sleep 20s ;\
 sudo -H -u ubuntu bash -c "keptn configure monitoring dynatrace" ;} >> $LOGFILE 2>&1
 
-# TODO: MOVE - Expose bridge via VS
-{ printf "\n\n*****  Expose Bridge via VS  *****\n\n" ;\
+# Expose bridge via VS
+{ printf "\n\n*****  Expose Bridge via VS and update to EAP   *****\n\n" ;\
+sudo -H -u ubuntu bash -c "kubectl -n keptn set image deployment/bridge bridge=keptn/bridge2:20200326.0744 --record" ;\
 DOMAIN=$(sudo -H -u ubuntu bash -c "kubectl get cm -n keptn keptn-domain -ojsonpath={.data.app_domain}") ;\
 sudo -H -u ubuntu bash -c "cd /home/ubuntu/keptn-workshop/setup/expose-bridge && bash expose-bridge.sh \"$DOMAIN\"" ;}  >> $LOGFILE 2>&1
 
