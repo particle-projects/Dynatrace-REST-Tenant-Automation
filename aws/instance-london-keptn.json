@@ -1,0 +1,55 @@
+{
+	"aws_region": "eu-west-2",
+	"instanceDetails": {
+		"userData": "ubuntu-setup-microk8-keptn.sh",
+		"imageId": "ami-006a0174c6c25ac06",
+		"keyName": "bc19-lon.pem",
+		"instanceType": "t2.xlarge",
+		"securityGroups": [
+			"launch-wizard-3"
+		],
+		"securityGroupIds": [
+			"launch-wizard-3"
+		],
+		"blockDeviceMappings": [
+			{
+				"DeviceName": "/dev/sda1",
+				"Ebs": {
+					"VolumeSize": 30,
+					"DeleteOnTermination": true
+				}
+			}
+		],
+		"tagSpecifications": [
+			{
+				"ResourceType": "instance",
+				"Tags": [
+					{
+						"Key": "Name",
+						"Value": ""
+					},
+					{
+						"Key": "Workshop",
+						"Value": "Dynatrace Keptn"
+					},
+					{
+						"Key": "tenantUrl",
+						"Value": ""
+					},
+					{
+						"Key": "paasToken",
+						"Value": ""
+					},
+					{
+						"Key": "Attendee",
+						"Value": ""
+					},
+					{
+						"Key": "email",
+						"Value": ""
+					}
+				]
+			}
+		]
+	}
+}
