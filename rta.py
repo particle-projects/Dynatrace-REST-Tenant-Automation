@@ -803,6 +803,22 @@ def fetch_dns_ec2_instance(data):
     # Load ec2 instance
     instanceId = data['instanceId']
     instance = ec2.Instance(instanceId)
+    try:
+        instance.public_dns_name
+    except Exception as e:
+        if 'InvalidInstanceID.NotFound' in e.response['Error']['Code']:
+            try:
+                time.sleep(2)
+                logging.warning(action + ':\t' + data[key_email] + ': InstanceId: ' + instanceId +
+                        ' it looks like instanceId does not exist, lets try again')
+                instance = ec2.Instance(instanceId)
+                instance.public_dns_name
+            except Exception as e2:
+                if "does not exist" in e2.message:
+                    logging.error(action + ':\t' + data[key_email] + ': InstanceId: ' + instanceId +
+                        ' aws says it still does not exist, quiting searching for it.')
+                    return False
+
 
     # Just check if the public DNS/IP is there.
     if instance.public_dns_name:
