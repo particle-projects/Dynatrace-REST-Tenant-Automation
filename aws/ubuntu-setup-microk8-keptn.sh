@@ -194,5 +194,8 @@ printf "\n\n***** Installation complete :) *****\nIt took $(($DURATION / 60)) mi
 SECONDS=0
 # Onboard Carts Application
 sudo -H -u ubuntu bash -c "cd /home/ubuntu/examples/onboarding-carts/ && bash /home/ubuntu/keptn-workshop/setup/onboard_carts.sh && bash /home/ubuntu/keptn-workshop/setup/deploy_carts_0.sh" >> $LOGFILE 2>&1
+
+# generate some load
+sudo -H -u ubuntu bash -c "kubectl create deploy cartsloadgen --image=shinojosa/cartsloadgen:keptn" >> $LOGFILE 2>&1
 DURATION=$SECONDS
 printf "\n\n***** OnBoarding complete :) *****\nIt took $(($DURATION / 60)) minutes and $(($DURATION % 60)) seconds " >> $LOGFILE 2>&1

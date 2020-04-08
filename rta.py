@@ -456,6 +456,7 @@ def delete_user_group(data):
 
 def environment_create_dashboards(data):
 
+    """
     # Set up the Dashboard
     post_data = copy.copy(SKEL_TXT_DASHBOARD)
     # Replace in Textfile
@@ -471,23 +472,25 @@ def environment_create_dashboards(data):
 
     # At last the Home Dashboard?
     response = do_tenant_post(API_EP_TENANT_DASHBOARDS, data, post_data)
-
+    validate_set_action_status(response, data, 'create_dashboards')
+    """
+    
+    # TODO Refactor to functionIptoNipio
     publicIp = data.get(key_publicIpAddress).replace('.', '-')
     domain = publicIp + '.nip.io'
-
+    # TODO Refactor and place replacement in a json format in a directory.
     values_to_replace = {'domain.placeholder': domain, 'user.placeholder': 'dynatrace',
                          'collaboration.placeholder': 'keptn-rocks.3-10-234-30.nip.io'}
 
     APP_DASHBOARDS = copy_array_and_replace_key_values_in_dict(
         SKEL_TXT_APP_DASHBOARDS, values_to_replace)
-        
+
     # Post Dashboards
     responses = do_tenant_post_list(
         API_EP_TENANT_DASHBOARDS, data, APP_DASHBOARDS)
 
     logging.info('Dashboards:\t' +
                  data[key_email] + ':' + str(responses))
-    validate_set_action_status(response, data, 'create_dashboards')
 
     return
 
@@ -1128,7 +1131,7 @@ def save_results(file):
 
 def do_dev():
 
-    data = CSV_DATA['keptntest@dynatrace.com']
+    data = CSV_DATA['keptnsmaller@dynatrace.com']
     environment_create_dashboards(data)
 
     return
