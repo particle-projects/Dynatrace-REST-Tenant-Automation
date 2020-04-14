@@ -10,15 +10,15 @@ SECONDS=0
 export TENANT=
 export PAASTOKEN=
 export APITOKEN=
-LOGFILE='/tmp/install.txt'
+LOGFILE='/tmp/install.log'
 
 ##Create installer Logfile
-printf "\n\n***** Init Installation ***\n" >> $LOGFILE 2>&1 
+printf "\n\n***** Init Installation ****\n" >> $LOGFILE 2>&1 
 
 # clean protocol
 PROTOCOL="https://";DT_TENANT=${TENANT#"$PROTOCOL"} ; printf "This is the Tenant:$DT_TENANT"  ;\
 
-{ date ; apt update; whoami ; printf "Setting up microk8s (SingleNode K8s Dev Cluster) with Keptn and the OneAgent\nTenant: $DT_TENANT \nApi-Token: $APITOKEN \nPaaS-Token: $PAASTOKEN \n\n" ;} >> $LOGFILE ; chmod 777 $LOGFILE
+{ date ; apt update; whoami ; printf "\n\n********** Setting up microk8s (SingleNode K8s Dev Cluster) with Keptn and the OneAgent **********\n\nTenant: $DT_TENANT \nApi-Token: $APITOKEN \nPaaS-Token: $PAASTOKEN \n\n" ;} >> $LOGFILE ; chmod 777 $LOGFILE
 
 printf "\n\n***** Update and install docker and JQ***\n" >> $LOGFILE 2>&1 
 { apt install docker.io -y ;\ 
@@ -190,6 +190,8 @@ service sshd restart ;} >> $LOGFILE 2>&1
 DURATION=$SECONDS
 printf "\n\n***** Installation complete :) *****\nIt took $(($DURATION / 60)) minutes and $(($DURATION % 60)) seconds " >> $LOGFILE 2>&1
 
+
+#TODO Reset a keptn pod, for the pushing of events to work.
 # Log duration
 SECONDS=0
 # Onboard Carts Application

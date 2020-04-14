@@ -4,7 +4,7 @@
 		"userData": "ubuntu-setup-microk8-keptn.sh",
 		"imageId": "ami-006a0174c6c25ac06",
 		"keyName": "bc19-lon.pem",
-		"instanceType": "t2.xlarge",
+		"instanceType": "t2.2xlarge",
 		"securityGroups": [
 			"launch-wizard-3"
 		],
