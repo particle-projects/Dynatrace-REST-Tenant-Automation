@@ -61,7 +61,7 @@ alias pg='ps -aux | grep' " > /root/.bash_aliases
 
 # Copy Aliases
 cp /root/.bash_aliases /home/ubuntu/.bash_aliases
-cp /root/.bash_aliases /home/ubuntu/.bash_aliases
+cp /root/.bash_aliases /home/dynatrace/.bash_aliases
 
 # Add alias to Kubectl (Bash completion for kubectl is already enabled)
 snap alias microk8s.kubectl kubectl 
@@ -84,6 +84,7 @@ git clone --branch 0.6.1 https://github.com/keptn/examples.git /home/ubuntu/exam
 # TODO: Refactor - Dont clone this repo, KISS.
 # Download YAML files from Github and unpack them
 git clone https://github.com/sergiohinojosa/kubernetes-deepdive /home/ubuntu/toolbox  
+
 # Change owner of cloned folders
 chown ubuntu:ubuntu -R /home/ubuntu/
 
@@ -101,12 +102,12 @@ sleep 20s ;} >> $LOGFILE 2>&1
 
 # Installation of istio 1.5.1
 {  printf "\n\n*****Install istio 1.5 into /opt and add it to user/local/bin ***** \n" ;\
-
 curl -L https://istio.io/downloadIstio | ISTIO_VERSION=1.5.1 sh - ;\
 mv istio-1.5.1 /opt/istio-1.5.1 ;\
 chmod +x -R /opt/istio-1.5.1/ ;\
 ln -s /opt/istio-1.5.1/bin/istioctl /usr/local/bin/istioctl ;\
 sudo -H -u ubuntu bash -c "echo 'y' | istioctl manifest apply" ;} >> $LOGFILE 2>&1
+
 
 # Installation of Helm Client
 {  printf "\n\n***** Downloading HELM *****\n" ; wget -O getHelm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get ;\
@@ -119,7 +120,6 @@ helm init ;}   >> $LOGFILE 2>&1
 tar -xvf keptn.tar ;\
 chmod +x keptn ;\
 mv keptn /usr/local/bin/keptn ;}   >> $LOGFILE 2>&1
-
 
 # TODO:  Enhacement - Validation CertManager is ready 
 printf "\n\n***** Install CertManager ****\n"
@@ -189,7 +189,6 @@ service sshd restart ;} >> $LOGFILE 2>&1
 # Installation finish, print time.
 DURATION=$SECONDS
 printf "\n\n***** Installation complete :) *****\nIt took $(($DURATION / 60)) minutes and $(($DURATION % 60)) seconds " >> $LOGFILE 2>&1
-
 
 #TODO Reset a keptn pod, for the pushing of events to work.
 # Log duration

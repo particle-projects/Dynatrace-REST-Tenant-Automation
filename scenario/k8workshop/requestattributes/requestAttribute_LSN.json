@@ -1,0 +1,26 @@
+{
+    "name": "LSN",
+    "enabled": true,
+    "dataType": "STRING",
+    "dataSources": [
+        {
+            "enabled": true,
+            "source": "REQUEST_HEADER",
+            "valueProcessing": {
+                "splitAt": "",
+                "trim": false,
+                "extractSubstring": {
+                    "position": "BETWEEN",
+                    "delimiter": "LSN=",
+                    "endDelimiter": ";"
+                }
+            },
+            "parameterName": "x-dynatrace-test",
+            "capturingAndStorageLocation": "CAPTURE_AND_STORE_ON_SERVER"
+        }
+    ],
+    "normalization": "ORIGINAL",
+    "aggregation": "FIRST",
+    "confidential": false,
+    "skipPersonalDataMasking": true
+}

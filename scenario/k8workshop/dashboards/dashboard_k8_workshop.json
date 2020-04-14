@@ -1,0 +1,1157 @@
+{
+    "dashboardMetadata": {
+      "name": "☁ Welcome firstName.key lastName.key to your Kubernetes DeepDive Workshop",
+      "shared": true,
+      "sharingDetails": {
+        "linkShared": true,
+        "published": true
+      },
+      "dashboardFilter": {
+        "timeframe": "",
+        "managementZone": null
+      }
+    },
+    "tiles": [
+      {
+        "name": "Markdown",
+        "tileType": "MARKDOWN",
+        "configured": true,
+        "bounds": {
+          "top": 0,
+          "left": 456,
+          "width": 646,
+          "height": 38
+        },
+        "tileFilter": {
+          "timeframe": null,
+          "managementZone": null
+        },
+        "markdown": "[🌐 KeptnInABox](https://nipioDomain.key)  -   [🥽 Pipeline Overview](http://nipioDomain.key/pipeline)  -  [🌉 Keptn Bridge](https://bridge.keptn.nipioDomain.key) - [👱‍♀️ Davis Assistant](https://assistant.dynatrace.com) - ☄ [unleash server](https://unleash.unleash-dev.nipioDomain.key)"
+      },
+      {
+        "name": "",
+        "tileType": "CUSTOM_CHARTING",
+        "configured": true,
+        "bounds": {
+          "top": 684,
+          "left": 1368,
+          "width": 304,
+          "height": 152
+        },
+        "tileFilter": {
+          "timeframe": null,
+          "managementZone": null
+        },
+        "filterConfig": {
+          "type": "MIXED",
+          "customName": "Memory usage",
+          "defaultName": "Custom chart",
+          "chartConfig": {
+            "legendShown": true,
+            "type": "PIE",
+            "series": [
+              {
+                "metric": "builtin:containers.memory_usage2",
+                "aggregation": "AVG",
+                "percentile": null,
+                "type": "LINE",
+                "entityType": "MONITORED_ENTITY˟DOCKER_CONTAINER_GROUP_INSTANCE",
+                "dimensions": [
+                  {
+                    "id": "0",
+                    "name": "Container",
+                    "values": [],
+                    "entityDimension": true
+                  },
+                  {
+                    "id": "1",
+                    "name": "container_id",
+                    "values": [],
+                    "entityDimension": false
+                  }
+                ],
+                "sortAscending": false,
+                "sortColumn": true,
+                "aggregationRate": "TOTAL"
+              }
+            ],
+            "resultMetadata": {}
+          },
+          "filtersPerEntityType": {}
+        }
+      },
+      {
+        "name": "Problems",
+        "tileType": "OPEN_PROBLEMS",
+        "configured": true,
+        "bounds": {
+          "top": 380,
+          "left": 1520,
+          "width": 152,
+          "height": 152
+        },
+        "tileFilter": {
+          "timeframe": null,
+          "managementZone": null
+        }
+      },
+      {
+        "name": "Smartscape",
+        "tileType": "PURE_MODEL",
+        "configured": true,
+        "bounds": {
+          "top": 228,
+          "left": 1368,
+          "width": 304,
+          "height": 152
+        },
+        "tileFilter": {
+          "timeframe": null,
+          "managementZone": null
+        }
+      },
+      {
+        "name": "Markdown",
+        "tileType": "MARKDOWN",
+        "configured": true,
+        "bounds": {
+          "top": 38,
+          "left": 0,
+          "width": 456,
+          "height": 38
+        },
+        "tileFilter": {
+          "timeframe": null,
+          "managementZone": null
+        },
+        "markdown": "Stages: [🛒Carts Development](https://carts.sockshop-dev.nipioDomain.key/)"
+      },
+      {
+        "name": "",
+        "tileType": "SERVICES",
+        "configured": true,
+        "bounds": {
+          "top": 76,
+          "left": 0,
+          "width": 152,
+          "height": 152
+        },
+        "tileFilter": {
+          "timeframe": null,
+          "managementZone": null
+        },
+        "filterConfig": {
+          "type": "SERVICE",
+          "customName": "Sockshop Development services",
+          "defaultName": "Sockshop Development services",
+          "chartConfig": {
+            "legendShown": true,
+            "type": "TIMESERIES",
+            "series": [],
+            "resultMetadata": {}
+          },
+          "filtersPerEntityType": {
+            "SERVICE": {
+              "AUTO_TAGS": [
+                "keptn_stage:dev"
+              ]
+            }
+          }
+        },
+        "chartVisible": true
+      },
+      {
+        "name": "",
+        "tileType": "SERVICES",
+        "configured": true,
+        "bounds": {
+          "top": 76,
+          "left": 456,
+          "width": 152,
+          "height": 152
+        },
+        "tileFilter": {
+          "timeframe": null,
+          "managementZone": null
+        },
+        "filterConfig": {
+          "type": "SERVICE",
+          "customName": "Sockshop Staging services",
+          "defaultName": "Sockshop Staging services",
+          "chartConfig": {
+            "legendShown": true,
+            "type": "TIMESERIES",
+            "series": [],
+            "resultMetadata": {}
+          },
+          "filtersPerEntityType": {
+            "SERVICE": {
+              "AUTO_TAGS": [
+                "keptn_stage:staging"
+              ]
+            }
+          }
+        },
+        "chartVisible": true
+      },
+      {
+        "name": "",
+        "tileType": "SERVICES",
+        "configured": true,
+        "bounds": {
+          "top": 76,
+          "left": 912,
+          "width": 152,
+          "height": 152
+        },
+        "tileFilter": {
+          "timeframe": null,
+          "managementZone": null
+        },
+        "filterConfig": {
+          "type": "SERVICE",
+          "customName": "Sockshop Production services",
+          "defaultName": "Sockshop Production services",
+          "chartConfig": {
+            "legendShown": true,
+            "type": "TIMESERIES",
+            "series": [],
+            "resultMetadata": {}
+          },
+          "filtersPerEntityType": {
+            "SERVICE": {
+              "AUTO_TAGS": [
+                "keptn_stage:production"
+              ]
+            }
+          }
+        },
+        "chartVisible": true
+      },
+      {
+        "name": "",
+        "tileType": "SERVICES",
+        "configured": true,
+        "bounds": {
+          "top": 380,
+          "left": 1368,
+          "width": 152,
+          "height": 152
+        },
+        "tileFilter": {
+          "timeframe": null,
+          "managementZone": null
+        },
+        "filterConfig": {
+          "type": "SERVICE",
+          "customName": " Sockshop",
+          "defaultName": " Sockshop",
+          "chartConfig": {
+            "legendShown": true,
+            "type": "TIMESERIES",
+            "series": [],
+            "resultMetadata": {}
+          },
+          "filtersPerEntityType": {
+            "SERVICE": {
+                "AUTO_TAGS": [
+                  "keptn_project:sockshop"
+                ]
+              }
+          }
+        },
+        "chartVisible": true
+      },
+      {
+        "name": "Custom chart",
+        "tileType": "CUSTOM_CHARTING",
+        "configured": true,
+        "bounds": {
+          "top": 228,
+          "left": 0,
+          "width": 456,
+          "height": 228
+        },
+        "tileFilter": {
+          "timeframe": null,
+          "managementZone": null
+        },
+        "filterConfig": {
+          "type": "MIXED",
+          "customName": "Response time",
+          "defaultName": "Custom chart",
+          "chartConfig": {
+            "legendShown": true,
+            "type": "TIMESERIES",
+            "series": [
+              {
+                "metric": "builtin:service.response.time",
+                "aggregation": "AVG",
+                "percentile": null,
+                "type": "LINE",
+                "entityType": "SERVICE",
+                "dimensions": [
+                  {
+                    "id": "0",
+                    "name": "Service",
+                    "values": [],
+                    "entityDimension": true
+                  }
+                ],
+                "sortAscending": false,
+                "sortColumn": true,
+                "aggregationRate": "TOTAL"
+              }
+            ],
+            "resultMetadata": {}
+          },
+          "filtersPerEntityType": {
+            "SERVICE": {
+              "AUTO_TAGS": [
+                "keptn_stage:dev"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "name": "Custom chart",
+        "tileType": "CUSTOM_CHARTING",
+        "configured": true,
+        "bounds": {
+          "top": 228,
+          "left": 912,
+          "width": 456,
+          "height": 228
+        },
+        "tileFilter": {
+          "timeframe": null,
+          "managementZone": null
+        },
+        "filterConfig": {
+          "type": "MIXED",
+          "customName": "Response time",
+          "defaultName": "Custom chart",
+          "chartConfig": {
+            "legendShown": true,
+            "type": "TIMESERIES",
+            "series": [
+              {
+                "metric": "builtin:service.response.time",
+                "aggregation": "AVG",
+                "percentile": null,
+                "type": "LINE",
+                "entityType": "SERVICE",
+                "dimensions": [
+                  {
+                    "id": "0",
+                    "name": "Service",
+                    "values": [],
+                    "entityDimension": true
+                  }
+                ],
+                "sortAscending": false,
+                "sortColumn": true,
+                "aggregationRate": "TOTAL"
+              }
+            ],
+            "resultMetadata": {}
+          },
+          "filtersPerEntityType": {
+            "SERVICE": {
+              "AUTO_TAGS": [
+                "keptn_stage:production"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "name": "Custom chart",
+        "tileType": "CUSTOM_CHARTING",
+        "configured": true,
+        "bounds": {
+          "top": 76,
+          "left": 760,
+          "width": 152,
+          "height": 152
+        },
+        "tileFilter": {
+          "timeframe": null,
+          "managementZone": null
+        },
+        "filterConfig": {
+          "type": "MIXED",
+          "customName": "Failures",
+          "defaultName": "Custom chart",
+          "chartConfig": {
+            "legendShown": true,
+            "type": "SINGLE_VALUE",
+            "series": [
+              {
+                "metric": "builtin:service.errors.total.rate",
+                "aggregation": "AVG",
+                "percentile": null,
+                "type": "LINE",
+                "entityType": "SERVICE",
+                "dimensions": [
+                  {
+                    "id": "0",
+                    "name": "Service",
+                    "values": [],
+                    "entityDimension": true
+                  }
+                ],
+                "sortAscending": false,
+                "sortColumn": true,
+                "aggregationRate": "TOTAL"
+              }
+            ],
+            "resultMetadata": {}
+          },
+          "filtersPerEntityType": {
+            "SERVICE": {
+              "AUTO_TAGS": [
+                "keptn_stage:staging"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "name": "Custom chart",
+        "tileType": "CUSTOM_CHARTING",
+        "configured": true,
+        "bounds": {
+          "top": 76,
+          "left": 1216,
+          "width": 152,
+          "height": 152
+        },
+        "tileFilter": {
+          "timeframe": null,
+          "managementZone": null
+        },
+        "filterConfig": {
+          "type": "MIXED",
+          "customName": "Failures",
+          "defaultName": "Custom chart",
+          "chartConfig": {
+            "legendShown": true,
+            "type": "SINGLE_VALUE",
+            "series": [
+              {
+                "metric": "builtin:service.errors.total.rate",
+                "aggregation": "AVG",
+                "percentile": null,
+                "type": "LINE",
+                "entityType": "SERVICE",
+                "dimensions": [
+                  {
+                    "id": "0",
+                    "name": "Service",
+                    "values": [],
+                    "entityDimension": true
+                  }
+                ],
+                "sortAscending": false,
+                "sortColumn": true,
+                "aggregationRate": "TOTAL"
+              }
+            ],
+            "resultMetadata": {}
+          },
+          "filtersPerEntityType": {
+            "SERVICE": {
+              "AUTO_TAGS": [
+                "keptn_stage:production"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "name": "Custom chart",
+        "tileType": "CUSTOM_CHARTING",
+        "configured": true,
+        "bounds": {
+          "top": 76,
+          "left": 304,
+          "width": 152,
+          "height": 152
+        },
+        "tileFilter": {
+          "timeframe": null,
+          "managementZone": null
+        },
+        "filterConfig": {
+          "type": "MIXED",
+          "customName": "Failures",
+          "defaultName": "Custom chart",
+          "chartConfig": {
+            "legendShown": true,
+            "type": "SINGLE_VALUE",
+            "series": [
+              {
+                "metric": "builtin:service.errors.total.rate",
+                "aggregation": "AVG",
+                "percentile": null,
+                "type": "LINE",
+                "entityType": "SERVICE",
+                "dimensions": [
+                  {
+                    "id": "0",
+                    "name": "Service",
+                    "values": [],
+                    "entityDimension": true
+                  }
+                ],
+                "sortAscending": false,
+                "sortColumn": true,
+                "aggregationRate": "TOTAL"
+              }
+            ],
+            "resultMetadata": {}
+          },
+          "filtersPerEntityType": {
+            "SERVICE": {
+              "AUTO_TAGS": [
+                "keptn_stage:dev"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "name": "Custom chart",
+        "tileType": "CUSTOM_CHARTING",
+        "configured": true,
+        "bounds": {
+          "top": 76,
+          "left": 1064,
+          "width": 152,
+          "height": 152
+        },
+        "tileFilter": {
+          "timeframe": null,
+          "managementZone": null
+        },
+        "filterConfig": {
+          "type": "MIXED",
+          "customName": "Response Time",
+          "defaultName": "Custom chart",
+          "chartConfig": {
+            "legendShown": true,
+            "type": "SINGLE_VALUE",
+            "series": [
+              {
+                "metric": "builtin:service.response.time",
+                "aggregation": "AVG",
+                "percentile": null,
+                "type": "LINE",
+                "entityType": "SERVICE",
+                "dimensions": [
+                  {
+                    "id": "0",
+                    "name": "Service",
+                    "values": [],
+                    "entityDimension": true
+                  }
+                ],
+                "sortAscending": false,
+                "sortColumn": true,
+                "aggregationRate": "TOTAL"
+              }
+            ],
+            "resultMetadata": {}
+          },
+          "filtersPerEntityType": {
+            "SERVICE": {
+              "AUTO_TAGS": [
+                "keptn_stage:production"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "name": "Custom chart",
+        "tileType": "CUSTOM_CHARTING",
+        "configured": true,
+        "bounds": {
+          "top": 76,
+          "left": 152,
+          "width": 152,
+          "height": 152
+        },
+        "tileFilter": {
+          "timeframe": null,
+          "managementZone": null
+        },
+        "filterConfig": {
+          "type": "MIXED",
+          "customName": "Response Time",
+          "defaultName": "Custom chart",
+          "chartConfig": {
+            "legendShown": true,
+            "type": "SINGLE_VALUE",
+            "series": [
+              {
+                "metric": "builtin:service.response.time",
+                "aggregation": "AVG",
+                "percentile": null,
+                "type": "LINE",
+                "entityType": "SERVICE",
+                "dimensions": [
+                  {
+                    "id": "0",
+                    "name": "Service",
+                    "values": [],
+                    "entityDimension": true
+                  }
+                ],
+                "sortAscending": false,
+                "sortColumn": true,
+                "aggregationRate": "TOTAL"
+              }
+            ],
+            "resultMetadata": {}
+          },
+          "filtersPerEntityType": {
+            "SERVICE": {
+              "AUTO_TAGS": [
+                "keptn_stage:dev"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "name": "Custom chart",
+        "tileType": "CUSTOM_CHARTING",
+        "configured": true,
+        "bounds": {
+          "top": 76,
+          "left": 608,
+          "width": 152,
+          "height": 152
+        },
+        "tileFilter": {
+          "timeframe": null,
+          "managementZone": null
+        },
+        "filterConfig": {
+          "type": "MIXED",
+          "customName": "Response Time",
+          "defaultName": "Custom chart",
+          "chartConfig": {
+            "legendShown": true,
+            "type": "SINGLE_VALUE",
+            "series": [
+              {
+                "metric": "builtin:service.response.time",
+                "aggregation": "AVG",
+                "percentile": null,
+                "type": "LINE",
+                "entityType": "SERVICE",
+                "dimensions": [
+                  {
+                    "id": "0",
+                    "name": "Service",
+                    "values": [],
+                    "entityDimension": true
+                  }
+                ],
+                "sortAscending": false,
+                "sortColumn": true,
+                "aggregationRate": "TOTAL"
+              }
+            ],
+            "resultMetadata": {}
+          },
+          "filtersPerEntityType": {
+            "SERVICE": {
+              "AUTO_TAGS": [
+                "keptn_stage:staging"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "name": "Markdown",
+        "tileType": "MARKDOWN",
+        "configured": true,
+        "bounds": {
+          "top": 38,
+          "left": 912,
+          "width": 304,
+          "height": 38
+        },
+        "tileFilter": {
+          "timeframe": null,
+          "managementZone": null
+        },
+        "markdown": "[🛒Carts Production](https://carts.sockshop-production.nipioDomain.key)\n"
+      },
+      {
+        "name": "Markdown",
+        "tileType": "MARKDOWN",
+        "configured": true,
+        "bounds": {
+          "top": 38,
+          "left": 456,
+          "width": 342,
+          "height": 38
+        },
+        "tileFilter": {
+          "timeframe": null,
+          "managementZone": null
+        },
+        "markdown": "[🛒Carts Staging](https://carts.sockshop-staging.nipioDomain.key)\n"
+      },
+      {
+        "name": "Network status",
+        "tileType": "NETWORK_MEDIUM",
+        "configured": true,
+        "bounds": {
+          "top": 532,
+          "left": 1368,
+          "width": 304,
+          "height": 152
+        },
+        "tileFilter": {
+          "timeframe": null,
+          "managementZone": null
+        }
+      },
+      {
+        "name": "Custom chart",
+        "tileType": "CUSTOM_CHARTING",
+        "configured": true,
+        "bounds": {
+          "top": 456,
+          "left": 912,
+          "width": 456,
+          "height": 228
+        },
+        "tileFilter": {
+          "timeframe": null,
+          "managementZone": null
+        },
+        "filterConfig": {
+          "type": "MIXED",
+          "customName": "Request count",
+          "defaultName": "Custom chart",
+          "chartConfig": {
+            "legendShown": true,
+            "type": "TIMESERIES",
+            "series": [
+              {
+                "metric": "builtin:service.requestCount.total",
+                "aggregation": "NONE",
+                "percentile": null,
+                "type": "BAR",
+                "entityType": "SERVICE",
+                "dimensions": [
+                  {
+                    "id": "0",
+                    "name": "Service",
+                    "values": [],
+                    "entityDimension": true
+                  }
+                ],
+                "sortAscending": false,
+                "sortColumn": true,
+                "aggregationRate": "TOTAL"
+              }
+            ],
+            "resultMetadata": {}
+          },
+          "filtersPerEntityType": {
+            "SERVICE": {
+              "AUTO_TAGS": [
+                "keptn_stage:production"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "name": "Custom chart",
+        "tileType": "CUSTOM_CHARTING",
+        "configured": true,
+        "bounds": {
+          "top": 456,
+          "left": 0,
+          "width": 456,
+          "height": 228
+        },
+        "tileFilter": {
+          "timeframe": null,
+          "managementZone": null
+        },
+        "filterConfig": {
+          "type": "MIXED",
+          "customName": "Request count",
+          "defaultName": "Custom chart",
+          "chartConfig": {
+            "legendShown": true,
+            "type": "TIMESERIES",
+            "series": [
+              {
+                "metric": "builtin:service.requestCount.total",
+                "aggregation": "NONE",
+                "percentile": null,
+                "type": "BAR",
+                "entityType": "SERVICE",
+                "dimensions": [
+                  {
+                    "id": "0",
+                    "name": "Service",
+                    "values": [],
+                    "entityDimension": true
+                  }
+                ],
+                "sortAscending": false,
+                "sortColumn": true,
+                "aggregationRate": "TOTAL"
+              }
+            ],
+            "resultMetadata": {}
+          },
+          "filtersPerEntityType": {
+            "SERVICE": {
+              "AUTO_TAGS": [
+                "keptn_stage:dev"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "name": "Custom chart",
+        "tileType": "CUSTOM_CHARTING",
+        "configured": true,
+        "bounds": {
+          "top": 684,
+          "left": 0,
+          "width": 456,
+          "height": 152
+        },
+        "tileFilter": {
+          "timeframe": null,
+          "managementZone": null
+        },
+        "filterConfig": {
+          "type": "MIXED",
+          "customName": "Failures",
+          "defaultName": "Custom chart",
+          "chartConfig": {
+            "legendShown": true,
+            "type": "TIMESERIES",
+            "series": [
+              {
+                "metric": "builtin:service.errors.total.rate",
+                "aggregation": "AVG",
+                "percentile": null,
+                "type": "BAR",
+                "entityType": "SERVICE",
+                "dimensions": [
+                  {
+                    "id": "0",
+                    "name": "Service",
+                    "values": [],
+                    "entityDimension": true
+                  }
+                ],
+                "sortAscending": false,
+                "sortColumn": true,
+                "aggregationRate": "TOTAL"
+              }
+            ],
+            "resultMetadata": {}
+          },
+          "filtersPerEntityType": {
+            "SERVICE": {
+              "AUTO_TAGS": [
+                "keptn_stage:dev"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "name": "Custom chart",
+        "tileType": "CUSTOM_CHARTING",
+        "configured": true,
+        "bounds": {
+          "top": 684,
+          "left": 456,
+          "width": 456,
+          "height": 152
+        },
+        "tileFilter": {
+          "timeframe": null,
+          "managementZone": null
+        },
+        "filterConfig": {
+          "type": "MIXED",
+          "customName": "Failures",
+          "defaultName": "Custom chart",
+          "chartConfig": {
+            "legendShown": true,
+            "type": "TIMESERIES",
+            "series": [
+              {
+                "metric": "builtin:service.errors.total.rate",
+                "aggregation": "AVG",
+                "percentile": null,
+                "type": "BAR",
+                "entityType": "SERVICE",
+                "dimensions": [
+                  {
+                    "id": "0",
+                    "name": "Service",
+                    "values": [],
+                    "entityDimension": true
+                  }
+                ],
+                "sortAscending": false,
+                "sortColumn": true,
+                "aggregationRate": "TOTAL"
+              }
+            ],
+            "resultMetadata": {}
+          },
+          "filtersPerEntityType": {
+            "SERVICE": {
+              "AUTO_TAGS": [
+                "keptn_stage:staging"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "name": "Custom chart",
+        "tileType": "CUSTOM_CHARTING",
+        "configured": true,
+        "bounds": {
+          "top": 684,
+          "left": 912,
+          "width": 456,
+          "height": 152
+        },
+        "tileFilter": {
+          "timeframe": null,
+          "managementZone": null
+        },
+        "filterConfig": {
+          "type": "MIXED",
+          "customName": "Failures",
+          "defaultName": "Custom chart",
+          "chartConfig": {
+            "legendShown": true,
+            "type": "TIMESERIES",
+            "series": [
+              {
+                "metric": "builtin:service.errors.total.rate",
+                "aggregation": "AVG",
+                "percentile": null,
+                "type": "BAR",
+                "entityType": "SERVICE",
+                "dimensions": [
+                  {
+                    "id": "0",
+                    "name": "Service",
+                    "values": [],
+                    "entityDimension": true
+                  }
+                ],
+                "sortAscending": false,
+                "sortColumn": true,
+                "aggregationRate": "TOTAL"
+              }
+            ],
+            "resultMetadata": {}
+          },
+          "filtersPerEntityType": {
+            "SERVICE": {
+              "AUTO_TAGS": [
+                "keptn_stage:production"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "name": "Markdown",
+        "tileType": "MARKDOWN",
+        "configured": true,
+        "bounds": {
+          "top": 0,
+          "left": 0,
+          "width": 418,
+          "height": 38
+        },
+        "tileFilter": {
+          "timeframe": null,
+          "managementZone": null
+        },
+        "markdown": "[📗Keptn.sh](https://keptn.sh/) \n      [📘ACM](https://www.dynatrace.com/solutions/autonomous-cloud-management/) \n        [📙ACM GitHub](https://github.com/acm-workshops)[⤴ GitHub Project Upstream](https://github.com/keptn-acm/sockshop) "
+      },
+      {
+        "name": "Markdown",
+        "tileType": "MARKDOWN",
+        "configured": true,
+        "bounds": {
+          "top": 0,
+          "left": 1102,
+          "width": 266,
+          "height": 38
+        },
+        "tileFilter": {
+          "timeframe": null,
+          "managementZone": null
+        },
+        "markdown": ""
+      },
+      {
+        "name": "Markdown",
+        "tileType": "MARKDOWN",
+        "configured": true,
+        "bounds": {
+          "top": 38,
+          "left": 1216,
+          "width": 152,
+          "height": 38
+        },
+        "tileFilter": {
+          "timeframe": null,
+          "managementZone": null
+        },
+        "markdown": "📞👨‍🔧[LiveHelp](livehelp.placeholder)"
+      },
+      {
+        "name": "Markdown",
+        "tileType": "MARKDOWN",
+        "configured": true,
+        "bounds": {
+          "top": 0,
+          "left": 1368,
+          "width": 304,
+          "height": 228
+        },
+        "tileFilter": {
+          "timeframe": null,
+          "managementZone": null
+        },
+        "markdown": "Best Practices with Microservices\n\n- [Service Naming Rules](#settings/servicenamingsettings;gf=all)\n-  [ProcessGroup Naming Rules](#settings/pgnamingsettings;gf=all)\n\n\nQuick Integration\n\n-  [API Token](#settings/integration/apikeys;gf=all)\n- [PaaS Token](#settings/integration/paastokens;gf=all)\n- [Problem notifications](#settings/integration/notification;gf=all)\n\n"
+      },
+      {
+        "name": "Custom chart",
+        "tileType": "CUSTOM_CHARTING",
+        "configured": true,
+        "bounds": {
+          "top": 228,
+          "left": 456,
+          "width": 456,
+          "height": 228
+        },
+        "tileFilter": {
+          "timeframe": null,
+          "managementZone": null
+        },
+        "filterConfig": {
+          "type": "MIXED",
+          "customName": "Response time",
+          "defaultName": "Custom chart",
+          "chartConfig": {
+            "legendShown": true,
+            "type": "TIMESERIES",
+            "series": [
+              {
+                "metric": "builtin:service.response.time",
+                "aggregation": "AVG",
+                "percentile": null,
+                "type": "LINE",
+                "entityType": "SERVICE",
+                "dimensions": [
+                  {
+                    "id": "0",
+                    "name": "Service",
+                    "values": [],
+                    "entityDimension": true
+                  }
+                ],
+                "sortAscending": false,
+                "sortColumn": true,
+                "aggregationRate": "TOTAL"
+              }
+            ],
+            "resultMetadata": {}
+          },
+          "filtersPerEntityType": {
+            "SERVICE": {
+              "AUTO_TAGS": [
+                "keptn_stage:staging"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "name": "Custom chart",
+        "tileType": "CUSTOM_CHARTING",
+        "configured": true,
+        "bounds": {
+          "top": 456,
+          "left": 456,
+          "width": 456,
+          "height": 228
+        },
+        "tileFilter": {
+          "timeframe": null,
+          "managementZone": null
+        },
+        "filterConfig": {
+          "type": "MIXED",
+          "customName": "Request count",
+          "defaultName": "Custom chart",
+          "chartConfig": {
+            "legendShown": true,
+            "type": "TIMESERIES",
+            "series": [
+              {
+                "metric": "builtin:service.requestCount.total",
+                "aggregation": "NONE",
+                "percentile": null,
+                "type": "BAR",
+                "entityType": "SERVICE",
+                "dimensions": [
+                  {
+                    "id": "0",
+                    "name": "Service",
+                    "values": [],
+                    "entityDimension": true
+                  }
+                ],
+                "sortAscending": false,
+                "sortColumn": true,
+                "aggregationRate": "TOTAL"
+              }
+            ],
+            "resultMetadata": {}
+          },
+          "filtersPerEntityType": {
+            "SERVICE": {
+              "AUTO_TAGS": [
+                "keptn_stage:staging"
+              ]
+            }
+          }
+        }
+      }
+    ]
+  }
