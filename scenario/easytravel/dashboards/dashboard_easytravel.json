@@ -1,6 +1,6 @@
 {
   "dashboardMetadata": {
-    "name": "🩺💻 Hello firstName lastName! Welcome to the Dynatrace Workshop 🔬",
+    "name": "🩺💻 Hello firstName.key lastName.key! Welcome to the Dynatrace Workshop 🔬",
     "shared": true,
     "sharingDetails": {
       "linkShared": true,
@@ -388,7 +388,7 @@
         "timeframe": null,
         "managementZone": null
       },
-      "markdown": "Booking Portals: [👴 EasyTravel Classic](http://publicIpAddress:8080) | [✈ EasyTravel Angular](http://publicIpAddress)"
+      "markdown": "Booking Portals: [👴 EasyTravel Classic](http://nipioDomain.key:8080) | [✈ EasyTravel Angular](http://nipioDomain.key)"
     },
     {
       "name": "Application health",
@@ -534,7 +534,7 @@
         "timeframe": null,
         "managementZone": null
       },
-      "markdown": "- [👨‍💻 EasyTravel Admin](http://publicIpAddress:8094)\n- [📗 Dynatrace University](https://university.dynatrace.com/)\n- [🤘 Perform GitHub Repository](https://github.com/Dynatrace/perform-2020-hotday/)\n"
+      "markdown": "- [👨‍💻 EasyTravel Admin](http://nipioDomain.key:8094)\n- [📗 Dynatrace University](https://university.dynatrace.com/)\n- [🤘 Perform GitHub Repository](https://github.com/Dynatrace/perform-2020-hotday/)\n"
     },
     {
       "name": "Markdown",
@@ -550,7 +550,7 @@
         "timeframe": null,
         "managementZone": null
       },
-      "markdown": "💻*How to connect to your AWS EC2* \n\n`ssh dtu.training@publicIpAddress`\n\nPassword🔑: `@perform2020`"
+      "markdown": "💻*How to connect to your AWS EC2* \n\n`ssh sshUser.key@nipioDomain.key`\n\nPassword🔑: `sshPassword.key`"
   },
     {
       "name": "World map",
@@ -598,7 +598,7 @@
         "timeframe": null,
         "managementZone": null
       },
-      "markdown": "[🙋‍♂️ LiveHelp 📞](http://livehelp-perform-rocks-34-221-7-176.nip.io/p/perform2020)"
+      "markdown": "[🙋‍♂️ LiveHelp 📞](livehelp.placeholder)"
     },
     {
       "name": "Markdown",

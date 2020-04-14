@@ -36,6 +36,7 @@ key_email = 'email'
 key_id = 'id'
 key_publicDnsName = 'publicDnsName'
 key_publicIpAddress = 'publicIpAddress'
+key_nipioDomain = 'nipioDomain'
 key_isClusterAdminGroup = 'isClusterAdminGroup'
 key_sshUser = 'sshUser'
 key_sshPassword = 'sshPassword'
@@ -100,6 +101,9 @@ check all checkboxes and action_create a new token.
 '''
 CMC_TOKEN = config['cmc']['cmc_token']
 
+# The defined scenario
+SCENARIO = config['scenario']
+SKEL_SCENARIO = 'scenario/' + SCENARIO + '/'
 
 # Aws information
 AWS_CONFIG_FILE = config['aws']['aws_dir'] + '/' + config['aws']['aws_config']
@@ -110,41 +114,39 @@ AWS_USERDATA_FILE = config['aws']['aws_dir'] + \
 
 SSH_FILE = config['ssh']['ssh_dir'] + '/' + config['ssh']['cmd_file']
 
-SKEL_TENANT = json.load(open('skel/tenant.json', 'r'))
-# TODO Has been moved to /applications/
-SKEL_TXT_DASHBOARD = (open('skel/dashboard.json', 'r', encoding='utf8')).read()
-# TODO enable Synthetic Monitors?
-SKEL_TXT_MONITOR = (open('skel/monitor.json', 'r', encoding='utf8')).read()
-#SKEL_DEFAULTAPP = json.load(open('skel/defaultapp.json', 'r'))
-SKEL_GROUP = json.load(open('skel/group.json', 'r'))
-SKEL_USER = json.load(open('skel/user.json', 'r'))
-SKEL_TOKEN = json.load(open('skel/allinonetoken.json', 'r'))
+# General Tenant configuration
+SKEL_TENANT = json.load(open('scenario/tenant.json', 'r'))
+SKEL_GROUP = json.load(open('scenario/group.json', 'r'))
+SKEL_USER = json.load(open('scenario/user.json', 'r'))
+SKEL_TOKEN = json.load(open('scenario/allinonetoken.json', 'r'))
 
-# TODO Has been moved to /applications/
-# TODO add logic for dynamic apps
-SKEL_APPLICATION1 = json.load(open('skel/easytravel/application-1.json', 'r'))
-SKEL_APPLICATION2 = json.load(open('skel/easytravel/application-2.json', 'r'))
 
-SKEL_TXT_APP_DEFINITIONS = lib.helper.load_jsons_as_text(
-    'skel/keptn/apprules')
+# Environment will be setted up dynamically with the JSON files found in the folders.
+APP_APPLICATIONS = lib.helper.load_jsons_in_dic(
+    SKEL_SCENARIO + 'applications')
 
-APP_REQUESTATTRIBUTES = lib.helper.load_jsons(
-    'skel/keptn/requestattributes')
+SKEL_TXT_APP_DEFINITIONS = lib.helper.load_jsons_dic_as_text(
+    SKEL_SCENARIO + 'apprules')
 
-APP_AUTOTAGGING = lib.helper.load_jsons(
-    'skel/keptn/autotagging')
+SKEL_TXT_APP_DASHBOARDS = lib.helper.load_jsons_dic_as_text(
+    SKEL_SCENARIO + 'dashboards')
 
-SKEL_TXT_APP_DASHBOARDS = lib.helper.load_jsons_as_text(
-    'skel/keptn/dashboards')
+APP_DASHBOARD_REPLACEMENTS = lib.helper.load_replacement_file(
+    SKEL_SCENARIO + 'dashboards')
 
-APP_MANAGEMENTZONES = lib.helper.load_jsons(
-    'skel/keptn/managementzones')
+APP_REQUESTATTRIBUTES = lib.helper.load_jsons_in_dic(
+    SKEL_SCENARIO + 'requestattributes')
 
-APP_FREQUENTISSUE = lib.helper.load_jsons(
-    'skel/keptn/frequentissue')
+APP_AUTOTAGGING = lib.helper.load_jsons_in_dic(SKEL_SCENARIO + 'autotagging')
 
-APP_CUSTOMSERVICES = lib.helper.load_jsons(
-    'skel/keptn/customservices')
+APP_MANAGEMENTZONES = lib.helper.load_jsons_in_dic(
+    SKEL_SCENARIO + 'managementzones')
+
+APP_FREQUENTISSUE = lib.helper.load_jsons_in_dic(
+    SKEL_SCENARIO + 'frequentissue')
+
+APP_CUSTOMSERVICES = lib.helper.load_jsons_in_dic(
+    SKEL_SCENARIO + 'customservices')
 
 SKEL_AWS_USERDATA = (open(AWS_USERDATA_FILE, 'r')).read()
 
@@ -231,16 +233,16 @@ def do_tenant_put(endpoint, data, put_data):
 
 
 def do_tenant_post_list(endpoint, data, post_data_list):
-    responses = []
-    for post_data in post_data_list:
-        responses.append(do_tenant_post(endpoint, data, post_data))
+    responses = {}
+    for key, post_data in post_data_list.items():
+        responses[key] = do_tenant_post(endpoint, data, post_data)
     return responses
 
 
 def do_tenant_put_list(endpoint, data, put_data_list):
-    responses = []
-    for put_data in put_data_list:
-        responses.append(do_tenant_put(endpoint, data, put_data))
+    responses = {}
+    for key, put_data in put_data_list.items():
+        responses[key] = do_tenant_put(endpoint, data, put_data)
     return responses
 
 
@@ -460,31 +462,7 @@ def delete_user_group(data):
 
 def environment_create_dashboards(data):
 
-    """
-    # Set up the Dashboard
-    post_data = copy.copy(SKEL_TXT_DASHBOARD)
-    # Replace in Textfile
-    post_data = post_data.replace(key_firstName, str(data.get(key_firstName)))
-    post_data = post_data.replace(key_lastName, str(data.get(key_lastName)))
-    post_data = post_data.replace(
-        key_publicDnsName, str(data.get(key_publicDnsName)))
-    post_data = post_data.replace(
-        key_publicIpAddress, str(data.get(key_publicIpAddress)))
-
-    # Convert to JSON
-    post_data = json.loads(post_data)
-
-    # At last the Home Dashboard?
-    response = do_tenant_post(API_EP_TENANT_DASHBOARDS, data, post_data)
-    validate_set_action_status(response, data, 'create_dashboards')
-    """
-    
-    # TODO Refactor to functionIptoNipio
-    publicIp = data.get(key_publicIpAddress).replace('.', '-')
-    domain = publicIp + '.nip.io'
-    # TODO Refactor and place replacement in a json format in a directory.
-    values_to_replace = {'domain.placeholder': domain, 'user.placeholder': 'dynatrace',
-                         'collaboration.placeholder': 'keptn-rocks.3-10-234-30.nip.io'}
+    values_to_replace = get_values_to_replace(data, APP_DASHBOARD_REPLACEMENTS)
 
     APP_DASHBOARDS = copy_array_and_replace_key_values_in_dict(
         SKEL_TXT_APP_DASHBOARDS, values_to_replace)
@@ -499,42 +477,51 @@ def environment_create_dashboards(data):
     return
 
 
-def set_up_environment(data):
-    if not ACTION_SET_UP_ENV:
-        return True
+def get_values_to_replace(data, key_values_to_replace_definition):
 
-    # TODO REally neeed?
+    values_to_replace = {}
+    for k, v in key_values_to_replace_definition.items():
+        if '.key' in k:
+            # We replace the value with the key in DATA (if found)
+            values_to_replace[k] = str(data.get(v))
+        else:
+            # We take the values as they are
+            values_to_replace[k] = v
+
+    return values_to_replace
+
+
+def environment_create_applications(data):
     """
-    # Change name My WebApplication to CathAll for NonConfiguredApps
-    response = do_tenant_put(API_EP_TENANT_DEFAULTAPP, data, SKEL_DEFAULTAPP)
-    validate_set_action_status(response, data, 'rename_defaultapp')
+    This function will create tjhe applications inside the applications folder. The response contains the Application ID of each application. Ann Application needs applicationRules so the user sessions can be mapped to this application.
+    The ID of the application will be mapped to the rules. The applicationId equals the 'application'.json file name
     """
 
-    """ This is not needed for Keptn """
-    """
-    app1_key = 'application-1'
-    app2_key = 'application-2'
-    # Create EasyTravel Classic
-    response = do_tenant_post(API_EP_TENANT_APP, data, SKEL_APPLICATION2)
-    validate_set_action_status(
-        response, data, app2_key, json.loads(response.text)['id'])
+    responses = do_tenant_post_list(
+        API_EP_TENANT_APP, data, APP_APPLICATIONS)
+    logging.info('Applications:\t' + data[key_email] + ':' + str(responses))
 
-    # Add App DetectionRules
-    values_to_replace = {app1_key: str(
-        data.get(app1_key)), app2_key: str(data.get(app2_key))}
+    # Map the ApplicationId in the detectionrules
+    values_to_replace = {}
+    for key, response in responses.items():
+        values_to_replace[key] = str(json.loads(response.text)['id'])
+
     APP_DEFINITIONS = copy_array_and_replace_key_values_in_dict(
         SKEL_TXT_APP_DEFINITIONS, values_to_replace)
-
-    # Create EasyTravel Angular
-    response = do_tenant_post(API_EP_TENANT_APP, data, SKEL_APPLICATION1)
-    validate_set_action_status(
-        response, data, app1_key, json.loads(response.text)['id'])
 
     responses = do_tenant_post_list(
         API_EP_TENANT_APPDETECTION_RULES, data, APP_DEFINITIONS)
     logging.info('AppDetectionRules:\t' +
                  data[key_email] + ':' + str(responses))
-    """
+
+    return
+
+
+def set_up_environment(data):
+    if not ACTION_SET_UP_ENV:
+        return True
+
+    environment_create_applications(data)
 
     # Add RequestAttributes
     responses = do_tenant_post_list(
@@ -569,30 +556,30 @@ def set_up_environment(data):
     # Create Dashboard
     environment_create_dashboards(data)
 
-    """"
+    # Add Custom Services
+    responses = do_tenant_post_list(
+        API_EP_CUSTOMSERVICES_JAVA, data, APP_CUSTOMSERVICES)
+    logging.info('CustomJava services:\t' +
+                 data[key_email] + ':' + str(responses))
+
+    """
+    # TODO Add synthetic test Dynamic like Dashboards
     # Add Synthetic test. Synthetic-Location ID is dependant on Cluster Location.
-    post_data = copy.copy(SKEL_TXT_MONITOR)
-    post_data = post_data.replace(
-        key_publicDnsName, str(data.get(key_publicDnsName)))
-    post_data = json.loads(post_data)
-    response = do_tenant_post(API_EP_TENANT_MONITOR, data, post_data)
-    validate_set_action_status(response, data, 'create_monitor')
     """
     return True
 
 
-def copy_array_and_replace_key_values_in_dict(json_array, replacement_dictionary):
+def copy_array_and_replace_key_values_in_dict(json_dictionary, replacement_dictionary):
     """ Function to copy an array of JSON files loaded as text, do a replacement from a dictionary (replacing the keys for the values)
     and loading it back as an JSON Object
     """
-    NEW_JSON_ARRAY = []
-    for jsonAsString in json_array:
+    NEW_JSON_DIC = {}
+    for key, jsonAsString in json_dictionary.items():
         j = copy.copy(jsonAsString)
         for k, v in replacement_dictionary.items():
             j = j.replace(k, v)
-        NEW_JSON_ARRAY.append(json.loads(j))
-
-    return NEW_JSON_ARRAY
+        NEW_JSON_DIC[key] = json.loads(j)
+    return NEW_JSON_DIC
 
 
 def get_groupname(data):
@@ -799,6 +786,11 @@ def easytravel_plugin(data, plugin, enable):
     return validate_set_action_status(response, data, action, enable)
 
 
+def getNipIoDomain(publicIpAsString):
+    publicIpDashes = publicIpAsString.replace('.', '-')
+    return publicIpDashes + '.nip.io'
+
+
 def fetch_dns_ec2_instance(data):
     if not ACTION_FETCH_EC2INSTANCE:
         return True
@@ -817,20 +809,21 @@ def fetch_dns_ec2_instance(data):
             try:
                 time.sleep(2)
                 logging.warning(action + ':\t' + data[key_email] + ': InstanceId: ' + instanceId +
-                        ' it looks like instanceId does not exist, lets try again')
+                                ' it looks like instanceId does not exist, lets try again')
                 instance = ec2.Instance(instanceId)
                 instance.public_dns_name
             except Exception as e2:
                 if "does not exist" in e2.message:
                     logging.error(action + ':\t' + data[key_email] + ': InstanceId: ' + instanceId +
-                        ' aws says it still does not exist, quiting searching for it.')
+                                  ' aws says it still does not exist, quiting searching for it.')
                     return False
-
 
     # Just check if the public DNS/IP is there.
     if instance.public_dns_name:
         data[key_publicDnsName] = instance.public_dns_name
         data[key_publicIpAddress] = instance.public_ip_address
+        data[key_nipioDomain] = getNipIoDomain(str(instance.public_ip_address))
+
         logging.info(action + ':\t' + data[key_email] + ': InstanceId: ' +
                      instanceId + ' :' + instance.public_dns_name)
         return True
@@ -851,6 +844,8 @@ def fetch_dns_ec2_instance(data):
             if instance.public_dns_name:
                 data[key_publicDnsName] = instance.public_dns_name
                 data[key_publicIpAddress] = instance.public_ip_address
+                data[key_nipioDomain] = getNipIoDomain(
+                    str(instance.public_ip_address))
                 logging.info(
                     action + ':\t' + data[key_email] + ': InstanceId: ' + instanceId + ' : ' + instance.public_dns_name)
                 return True
@@ -863,6 +858,8 @@ def fetch_dns_ec2_instance(data):
         if instance.public_dns_name:
             data[key_publicDnsName] = instance.public_dns_name
             data[key_publicIpAddress] = instance.public_ip_address
+            data[key_nipioDomain] = getNipIoDomain(
+                str(instance.public_ip_address))
             logging.info(action + ':\t' + data[key_email] + ': Running InstanceId:' +
                          instanceId + ' : ' + instance.public_dns_name)
             return True
@@ -919,10 +916,10 @@ def create_ec2_instance(data):
 
     i = AWS_CONFIG['instanceDetails']
     blockDeviceMappings = i['blockDeviceMappings']
-    # TODO Replace Tags
+    # Replace Tags
     tagSpecifications = i['tagSpecifications']
     toReplace = {"Name": name, key_tenantUrl: tenantUrl,
-                 key_paasToken: paasToken, key_email: email}
+                 key_paasToken: paasToken, key_apiToken: apiToken, "attendee": name , key_email: email}
     customize_tags(tagSpecifications[0]['Tags'], toReplace)
 
     securityGroupIds = i['securityGroupIds']
@@ -964,10 +961,11 @@ def create_ec2_instance(data):
 
 
 def customize_tags(tags, toReplace):
+    k_key = 'Key'
+    v_key = 'Value'
     for t in tags:
-        # TODO Replace Dic
-        if t['Key'] in 'Name':
-            t['Value'] = toReplace['Name']
+        if t[k_key] in toReplace.keys():
+            t[v_key] = toReplace.get(t.get(k_key))
     return
 
 
@@ -1154,8 +1152,9 @@ def save_results(file):
 
 def do_dev():
 
-    data = CSV_DATA['keptnsmaller@dynatrace.com']
-    environment_create_dashboards(data)
+    data = CSV_DATA['easytravel@dynatrace.com']
+    # set_up_environment(data)
+    create_ec2_instance(data)
 
     return
     data = CSV_DATA['sergio@dynatrace.com']

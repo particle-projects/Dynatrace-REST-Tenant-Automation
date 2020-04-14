@@ -1,0 +1,8 @@
+{
+  "firstName.key": "firstName",
+  "lastName.key": "lastName",
+  "nipioDomain.key": "nipioDomain",
+  "sshUser.key": "sshUser",
+  "sshPassword.key": "sshPassword",
+  "livehelp.placeholder": "https://etherpad.org/"
+}

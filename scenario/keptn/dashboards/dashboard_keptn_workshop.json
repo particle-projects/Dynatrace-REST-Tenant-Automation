@@ -1,6 +1,6 @@
 {
     "dashboardMetadata": {
-      "name": "☁ Autonomous Cloud Management Concepts with Keptn",
+      "name": "☁ Autonomous Cloud Management Concepts with Keptn - firstName.key lastName.key",
       "shared": true,
       "sharingDetails": {
         "linkShared": true,
@@ -26,7 +26,7 @@
           "timeframe": null,
           "managementZone": null
         },
-        "markdown": "[🌐 KeptnInABox](https://domain.placeholder)  -   [🥽 Pipeline Overview](http://domain.placeholder/pipeline)  -  [🌉 Keptn Bridge](https://bridge.keptn.domain.placeholder) - [👱‍♀️ Davis Assistant](https://assistant.dynatrace.com) - ☄ [unleash server](https://unleash.unleash-dev.domain.placeholder)"
+        "markdown": "[🌐 KeptnInABox](https://nipioDomain.key)  -   [🥽 Pipeline Overview](http://nipioDomain.key/pipeline)  -  [🌉 Keptn Bridge](https://bridge.keptn.nipioDomain.key) - [👱‍♀️ Davis Assistant](https://assistant.dynatrace.com) - ☄ [unleash server](https://unleash.unleash-dev.nipioDomain.key)"
       },
       {
         "name": "",
@@ -124,7 +124,7 @@
           "timeframe": null,
           "managementZone": null
         },
-        "markdown": "Stages: [🛒Carts Development](https://carts.sockshop-dev.domain.placeholder/)"
+        "markdown": "Stages: [🛒Carts Development](https://carts.sockshop-dev.nipioDomain.key/)"
       },
       {
         "name": "",
@@ -692,7 +692,7 @@
           "timeframe": null,
           "managementZone": null
         },
-        "markdown": "[🛒Carts Production](https://carts.sockshop-production.domain.placeholder)\n"
+        "markdown": "[🛒Carts Production](https://carts.sockshop-production.nipioDomain.key)\n"
       },
       {
         "name": "Markdown",
@@ -708,7 +708,7 @@
           "timeframe": null,
           "managementZone": null
         },
-        "markdown": "[🛒Carts Staging](https://carts.sockshop-staging.domain.placeholder)\n"
+        "markdown": "[🛒Carts Staging](https://carts.sockshop-staging.nipioDomain.key)\n"
       },
       {
         "name": "Network status",
@@ -1031,7 +1031,7 @@
           "timeframe": null,
           "managementZone": null
         },
-        "markdown": "📞👨‍🔧[LiveHelp](https://keptn-rocks.collaboration.placeholder/p/acm)"
+        "markdown": "📞👨‍🔧[LiveHelp](livehelp.placeholder)"
       },
       {
         "name": "Markdown",

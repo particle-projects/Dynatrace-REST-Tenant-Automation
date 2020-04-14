@@ -7,13 +7,14 @@
 	"csv_file": "attendees.csv",
 	"log_dir": "log",
 	"log_file": "rta.log",
+	"scenario": "easytravel",
 	"ssh": {
 		"ssh_dir": "ssh",
 		"cmd_file": "cmd.sh"
 	},
 	"aws": {
 		"aws_dir": "aws",
-		"aws_config": "instance.json"
+		"aws_config": "instance-london-easytravel.json"
 	},
 	"action_test": {
 		"tenant_api": true,

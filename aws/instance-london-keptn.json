@@ -41,7 +41,11 @@
 						"Value": ""
 					},
 					{
-						"Key": "Attendee",
+						"Key": "apiToken",
+						"Value": ""
+					},
+					{
+						"Key": "attendee",
 						"Value": ""
 					},
 					{

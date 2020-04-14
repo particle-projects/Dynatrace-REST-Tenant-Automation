@@ -18,23 +18,37 @@ def load_ssh_file(shell_file):
                     cmds.append(cmd)
     return cmds
 
-def str2bool(v):
-  return v.strip().lower() in ("yes", "true", "t", "1")
 
-def load_jsons_as_text(path):
-    JSONS = load_jsons(path, True)
+def str2bool(v):
+    return v.strip().lower() in ("yes", "true", "t", "1")
+
+
+def load_replacement_file(path):
+    replacementFile = {}
+    dic_result = load_jsons_in_dic(path, loadAsText=False, fileType='.replacement')
+    # We return one replacement value (there should be only one)
+    for v in dic_result.values():
+        replacementFile = v
+    return replacementFile
+
+def load_jsons_dic_as_text(path):
+    JSONS = load_jsons_in_dic(path, True)
     return JSONS
 
 
-def load_jsons(path, loadAsText=False):
-    jsonsList = os.listdir(path)
-    JSONS = []
-    for j in jsonsList:
-        if '.json' in j:
-            filePath = path + '/' + j
-            if loadAsText:
-                json_txt = (open(filePath, 'r', encoding='utf8')).read()
-                JSONS.append(json_txt)
-            else:
-                JSONS.append(json.load(open(filePath, 'r')))
+def load_jsons_in_dic(path, loadAsText=False, fileType='.json'):
+    # Validate if directory exists, otherwise return empty array
+    JSONS = {}
+    if os.path.exists(path):
+        jsonsList = os.listdir(path)
+        for j in jsonsList:
+            if fileType in j:
+                fileNameAsKey = j.replace(fileType, '')
+                filePath = path + '/' + j
+                if loadAsText:
+                    json_txt = (open(filePath, 'r', encoding='utf8')).read()
+                    JSONS[fileNameAsKey] = json_txt
+                else:
+                    json_raw = json.load(open(filePath, 'r'))
+                    JSONS[fileNameAsKey] = json_raw
     return JSONS
