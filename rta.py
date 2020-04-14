@@ -111,13 +111,17 @@ AWS_USERDATA_FILE = config['aws']['aws_dir'] + \
 SSH_FILE = config['ssh']['ssh_dir'] + '/' + config['ssh']['cmd_file']
 
 SKEL_TENANT = json.load(open('skel/tenant.json', 'r'))
+# TODO Has been moved to /applications/
 SKEL_TXT_DASHBOARD = (open('skel/dashboard.json', 'r', encoding='utf8')).read()
+# TODO enable Synthetic Monitors?
 SKEL_TXT_MONITOR = (open('skel/monitor.json', 'r', encoding='utf8')).read()
-SKEL_DEFAULTAPP = json.load(open('skel/defaultapp.json', 'r'))
+#SKEL_DEFAULTAPP = json.load(open('skel/defaultapp.json', 'r'))
 SKEL_GROUP = json.load(open('skel/group.json', 'r'))
 SKEL_USER = json.load(open('skel/user.json', 'r'))
 SKEL_TOKEN = json.load(open('skel/allinonetoken.json', 'r'))
 
+# TODO Has been moved to /applications/
+# TODO add logic for dynamic apps
 SKEL_APPLICATION1 = json.load(open('skel/easytravel/application-1.json', 'r'))
 SKEL_APPLICATION2 = json.load(open('skel/easytravel/application-2.json', 'r'))
 
@@ -499,9 +503,12 @@ def set_up_environment(data):
     if not ACTION_SET_UP_ENV:
         return True
 
+    # TODO REally neeed?
+    """
     # Change name My WebApplication to CathAll for NonConfiguredApps
     response = do_tenant_put(API_EP_TENANT_DEFAULTAPP, data, SKEL_DEFAULTAPP)
     validate_set_action_status(response, data, 'rename_defaultapp')
+    """
 
     """ This is not needed for Keptn """
     """
