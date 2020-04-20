@@ -669,6 +669,21 @@ def customize_ec2_user_data(tenantUrl, paasToken, apiToken):
     return user_data
 
 
+def test_ssl_connection(data):
+
+    nipIoDomain = data[key_nipioDomain]
+    try:
+        response = requests.get(
+            "https://api.kubernetes." + nipIoDomain, verify=True, timeout=5)
+        logging.info('SSL OK: ' + nipIoDomain )
+    except:
+        e = sys.exc_info()[0]
+        logging.info('SSL NOK: ' + nipIoDomain  + ' ' +str(e))
+        response = {}
+    return response
+
+
+
 def test_ssh_connection(data):
     if not ACTION_TEST_SSH_CONNECTION:
         return True
@@ -1152,9 +1167,20 @@ def save_results(file):
 
 def do_dev():
 
-    data = CSV_DATA['easytravel@dynatrace.com']
+    #data = CSV_DATA['certiticate']
     # set_up_environment(data)
-    create_ec2_instance(data)
+    # create_ec2_instance(data)
+    #test_ssl_connection(data)
+
+    #return
+    
+    # Iteration
+    for id in CSV_DATA:
+        data = CSV_DATA[id]
+        #if skip_in_data(data):
+        #    continue
+        # do something
+        test_ssl_connection(data)
 
     return
     data = CSV_DATA['sergio@dynatrace.com']

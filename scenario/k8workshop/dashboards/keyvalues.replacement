@@ -2,7 +2,8 @@
   "firstName.key": "firstName",
   "lastName.key": "lastName",
   "nipioDomain.key": "nipioDomain",
-  "sshUser.key": "sshUser",
-  "sshPassword.key": "sshPassword",
-  "livehelp.placeholder": "https://keptn-rocks.collaborationurl/p/acm"
+  "sshUser.placeholder": "dynatrace",
+  "sshPassword.placeholder": "dynatrace",
+  "master.placeholder": "teacher-ip.nip.io",
+  "collaboration.placeholder": "http://livehelp.teacher-ip.nip.io/p/k8deepdive"
 }

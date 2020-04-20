@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 ## Commands for Ubuntu Server 16.04 LTS (HVM), SSD Volume Type - ami-0cbe2951c7cd54704
 ## These script will install the following components:
 ## Microkubernetes
@@ -88,8 +88,8 @@ wget -nv -O activegate.sh "https://$DT_TENANT/api/v1/deployment/installer/gatewa
 sh activegate.sh ;} >> $LOGFILE 2>&1 
 
 ## TODO: Enhacement - Modify with wait and check status of istio
-{ printf "\n\n***** Waiting for pods to start.... we sleep for 30 sec  *****\n" ;\
-sleep 30s ;} >> $LOGFILE 2>&1
+{ printf "\n\n***** Waiting for pods to start.... we sleep for 1m  *****\n" ;\
+sleep 1m ;} >> $LOGFILE 2>&1
 
 # Installation of istio 1.5.1
 {  printf "\n\n*****Install istio 1.5 into /opt and add it to user/local/bin ***** \n" ;\
@@ -108,24 +108,26 @@ helm init ;}   >> $LOGFILE 2>&1
 
 printf "\n\n***** Install CertManager ****\n"
 { sudo -H -u ubuntu bash -c 'kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/v0.14.0/cert-manager.yaml' ;\
-printf '\nWe wait for 40 sec for certmgr to deploy\n';\
-sleep 40s ;} >> $LOGFILE 2>&1
+printf '\nWe wait for 1m  for certmgr to deploy\n';\
+sleep 1m ;} >> $LOGFILE 2>&1
 
 # Getting the public DOMAIN
+{ printf "\n\n***** Getting the public DOMAIN ****\n" ;\
 export PUBLIC_IP=$(curl -s ifconfig.me) ;\
 PUBLIC_IP_AS_DOM=$(echo $PUBLIC_IP | sed 's~\.~-~g') ;\
 export DOMAIN="${PUBLIC_IP_AS_DOM}.nip.io" ;\
-printf "Public DNS: $DOMAIN"
+printf "Public DNS: $DOMAIN" ;} >> $LOGFILE 2>&1
 
 printf "\n\n***** Route Traffic to IstioGateway and Create SSL certificates for Istio Endpoints ****\n"
-{ sudo -H -u ubuntu bash -c "cd /home/ubuntu/workshop/istio/setup && sh expose-ssl-istio.sh \"$DOMAIN\"" ;} >> $LOGFILE 2>&1
+{ sudo -H -u ubuntu bash -c "cd /home/ubuntu/workshop/istio/setup && sh expose-istio.sh \"$DOMAIN\"" ;} >> $LOGFILE 2>&1
 
 # Route K8 Dashboard 
 {  printf "\n\n*****Allow access to K8 Dashboard withouth login ***** \n" ;\
  sudo -H -u ubuntu bash -c "cd /home/ubuntu/workshop/k8-services && bash expose-k8-services.sh \"$DOMAIN\"" ;} >> $LOGFILE 2>&1
 
-{ printf "\n\n*****Allow -rwx for the user and group (dynatrace) for all files in the home directory ***** \n" ;\
-chmod -R 774 /home/ubuntu/* ;} >> $LOGFILE 2>&1
+{ printf "\n\n*****Allow -rwx for the user and group (dynatrace) for all files in the home directory, make owner dynatrace to workshop directory ***** \n" ;\
+chmod -R 774 /home/ubuntu/* ;\
+chown -R dynatrace:dynatrace /home/ubuntu/workshop/ ;} >> $LOGFILE 2>&1
 
 # Allow unencrypted password via SSH for login
 # Restart the SSHD Service
