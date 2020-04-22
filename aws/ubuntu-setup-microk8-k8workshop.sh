@@ -1,4 +1,3 @@
-
 #!/bin/bash -x
 ## Commands for Ubuntu Server 18.04 LTS (HVM), SSD Volume Type - ami-0cbe2951c7cd54704
 ## These script will install the following components:
