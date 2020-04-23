@@ -1,6 +1,6 @@
 {
     "dashboardMetadata": {
-      "name": "☁ Autonomous Cloud Management Concepts with Keptn - firstName.key lastName.key",
+      "name": "☁ Autonomous Cloud Concepts with Keptn - firstName.key lastName.key",
       "shared": true,
       "sharingDetails": {
         "linkShared": true,
@@ -18,25 +18,25 @@
         "configured": true,
         "bounds": {
           "top": 0,
-          "left": 456,
-          "width": 646,
+          "left": 228,
+          "width": 684,
           "height": 38
         },
         "tileFilter": {
           "timeframe": null,
           "managementZone": null
         },
-        "markdown": "[🌐 KeptnInABox](https://nipioDomain.key)  -   [🥽 Pipeline Overview](http://nipioDomain.key/pipeline)  -  [🌉 Keptn Bridge](https://bridge.keptn.nipioDomain.key) - [👱‍♀️ Davis Assistant](https://assistant.dynatrace.com) - ☄ [unleash server](https://unleash.unleash-dev.nipioDomain.key)"
+        "markdown": "[🌐 KeptnInABox](http://nipioDomain.key)  -   [🥽 Pipeline Overview](http://nipioDomain.key/pipeline)  -  [🌉 Keptn Bridge](http://bridge.keptn.nipioDomain.key) - [👱‍♀️ Davis Assistant](https://assistant.dynatrace.com) - ☄ [unleash server](http://unleash.unleash-dev.nipioDomain.key)"
       },
       {
         "name": "",
         "tileType": "CUSTOM_CHARTING",
         "configured": true,
         "bounds": {
-          "top": 684,
+          "top": 190,
           "left": 1368,
           "width": 304,
-          "height": 152
+          "height": 266
         },
         "tileFilter": {
           "timeframe": null,
@@ -44,28 +44,28 @@
         },
         "filterConfig": {
           "type": "MIXED",
-          "customName": "Memory usage",
+          "customName": "🏎Running PoDs",
           "defaultName": "Custom chart",
           "chartConfig": {
             "legendShown": true,
-            "type": "PIE",
+            "type": "TOP_LIST",
             "series": [
               {
-                "metric": "builtin:containers.memory_usage2",
+                "metric": "builtin:cloud.kubernetes.namespace.runningPods",
                 "aggregation": "AVG",
                 "percentile": null,
                 "type": "LINE",
-                "entityType": "MONITORED_ENTITY˟DOCKER_CONTAINER_GROUP_INSTANCE",
+                "entityType": "CLOUD_APPLICATION_NAMESPACE",
                 "dimensions": [
                   {
                     "id": "0",
-                    "name": "Container",
+                    "name": "Cloud application namespace",
                     "values": [],
                     "entityDimension": true
                   },
                   {
                     "id": "1",
-                    "name": "container_id",
+                    "name": "Deployment type",
                     "values": [],
                     "entityDimension": false
                   }
@@ -78,36 +78,6 @@
             "resultMetadata": {}
           },
           "filtersPerEntityType": {}
-        }
-      },
-      {
-        "name": "Problems",
-        "tileType": "OPEN_PROBLEMS",
-        "configured": true,
-        "bounds": {
-          "top": 380,
-          "left": 1520,
-          "width": 152,
-          "height": 152
-        },
-        "tileFilter": {
-          "timeframe": null,
-          "managementZone": null
-        }
-      },
-      {
-        "name": "Smartscape",
-        "tileType": "PURE_MODEL",
-        "configured": true,
-        "bounds": {
-          "top": 228,
-          "left": 1368,
-          "width": 304,
-          "height": 152
-        },
-        "tileFilter": {
-          "timeframe": null,
-          "managementZone": null
         }
       },
       {
@@ -124,7 +94,7 @@
           "timeframe": null,
           "managementZone": null
         },
-        "markdown": "Stages: [🛒Carts Development](https://carts.sockshop-dev.nipioDomain.key/)"
+        "markdown": "Stages: [🛒Carts Development](http://carts.sockshop-dev.nipioDomain.key/)"
       },
       {
         "name": "",
@@ -224,40 +194,6 @@
                 "keptn_stage:production"
               ]
             }
-          }
-        },
-        "chartVisible": true
-      },
-      {
-        "name": "",
-        "tileType": "SERVICES",
-        "configured": true,
-        "bounds": {
-          "top": 380,
-          "left": 1368,
-          "width": 152,
-          "height": 152
-        },
-        "tileFilter": {
-          "timeframe": null,
-          "managementZone": null
-        },
-        "filterConfig": {
-          "type": "SERVICE",
-          "customName": " Sockshop",
-          "defaultName": " Sockshop",
-          "chartConfig": {
-            "legendShown": true,
-            "type": "TIMESERIES",
-            "series": [],
-            "resultMetadata": {}
-          },
-          "filtersPerEntityType": {
-            "SERVICE": {
-                "AUTO_TAGS": [
-                  "keptn_project:sockshop"
-                ]
-              }
           }
         },
         "chartVisible": true
@@ -692,7 +628,7 @@
           "timeframe": null,
           "managementZone": null
         },
-        "markdown": "[🛒Carts Production](https://carts.sockshop-production.nipioDomain.key)\n"
+        "markdown": "[🛒Carts Production](http://carts.sockshop-production.nipioDomain.key)\n"
       },
       {
         "name": "Markdown",
@@ -701,29 +637,14 @@
         "bounds": {
           "top": 38,
           "left": 456,
-          "width": 342,
+          "width": 304,
           "height": 38
         },
         "tileFilter": {
           "timeframe": null,
           "managementZone": null
         },
-        "markdown": "[🛒Carts Staging](https://carts.sockshop-staging.nipioDomain.key)\n"
-      },
-      {
-        "name": "Network status",
-        "tileType": "NETWORK_MEDIUM",
-        "configured": true,
-        "bounds": {
-          "top": 532,
-          "left": 1368,
-          "width": 304,
-          "height": 152
-        },
-        "tileFilter": {
-          "timeframe": null,
-          "managementZone": null
-        }
+        "markdown": "[🛒Carts Staging](http://carts.sockshop-staging.nipioDomain.key)\n"
       },
       {
         "name": "Custom chart",
@@ -992,14 +913,14 @@
         "bounds": {
           "top": 0,
           "left": 0,
-          "width": 418,
+          "width": 228,
           "height": 38
         },
         "tileFilter": {
           "timeframe": null,
           "managementZone": null
         },
-        "markdown": "[📗Keptn.sh](https://keptn.sh/) \n      [📘ACM](https://www.dynatrace.com/solutions/autonomous-cloud-management/) \n        [📙ACM GitHub](https://github.com/acm-workshops)[⤴ GitHub Project Upstream](https://github.com/keptn-acm/sockshop) "
+        "markdown": "[📊](#dashboards) \n [📗Keptn.sh](https://keptn.sh/) \n   [🌐ACM](https://www.dynatrace.com/solutions/autonomous-cloud-management/) "
       },
       {
         "name": "Markdown",
@@ -1007,15 +928,15 @@
         "configured": true,
         "bounds": {
           "top": 0,
-          "left": 1102,
-          "width": 266,
+          "left": 912,
+          "width": 456,
           "height": 38
         },
         "tileFilter": {
           "timeframe": null,
           "managementZone": null
         },
-        "markdown": ""
+        "markdown": "💻 SSH access: sshUser.placeholder@nipioDomain.key 🔑=sshPassword.placeholder"
       },
       {
         "name": "Markdown",
@@ -1041,7 +962,7 @@
           "top": 0,
           "left": 1368,
           "width": 304,
-          "height": 228
+          "height": 190
         },
         "tileFilter": {
           "timeframe": null,
@@ -1151,6 +1072,98 @@
               ]
             }
           }
+        }
+      },
+      {
+        "name": "",
+        "tileType": "CUSTOM_CHARTING",
+        "configured": true,
+        "bounds": {
+          "top": 456,
+          "left": 1368,
+          "width": 304,
+          "height": 190
+        },
+        "tileFilter": {
+          "timeframe": null,
+          "managementZone": null
+        },
+        "filterConfig": {
+          "type": "MIXED",
+          "customName": "🧙‍♂️Desired PoDs",
+          "defaultName": "Custom chart",
+          "chartConfig": {
+            "legendShown": true,
+            "type": "TIMESERIES",
+            "series": [
+              {
+                "metric": "builtin:cloud.kubernetes.workload.desiredPods",
+                "aggregation": "AVG",
+                "percentile": null,
+                "type": "BAR",
+                "entityType": "CLOUD_APPLICATION",
+                "dimensions": [
+                  {
+                    "id": "0",
+                    "name": "Cloud application",
+                    "values": [],
+                    "entityDimension": true
+                  }
+                ],
+                "sortAscending": false,
+                "sortColumn": true,
+                "aggregationRate": "TOTAL"
+              }
+            ],
+            "resultMetadata": {}
+          },
+          "filtersPerEntityType": {}
+        }
+      },
+      {
+        "name": "",
+        "tileType": "CUSTOM_CHARTING",
+        "configured": true,
+        "bounds": {
+          "top": 646,
+          "left": 1368,
+          "width": 304,
+          "height": 190
+        },
+        "tileFilter": {
+          "timeframe": null,
+          "managementZone": null
+        },
+        "filterConfig": {
+          "type": "MIXED",
+          "customName": "🏎Running PoDs",
+          "defaultName": "Custom chart",
+          "chartConfig": {
+            "legendShown": true,
+            "type": "TIMESERIES",
+            "series": [
+              {
+                "metric": "builtin:cloud.kubernetes.workload.runningPods",
+                "aggregation": "AVG",
+                "percentile": null,
+                "type": "BAR",
+                "entityType": "CLOUD_APPLICATION",
+                "dimensions": [
+                  {
+                    "id": "0",
+                    "name": "Cloud application",
+                    "values": [],
+                    "entityDimension": true
+                  }
+                ],
+                "sortAscending": false,
+                "sortColumn": true,
+                "aggregationRate": "TOTAL"
+              }
+            ],
+            "resultMetadata": {}
+          },
+          "filtersPerEntityType": {}
         }
       }
     ]

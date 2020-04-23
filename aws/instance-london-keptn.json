@@ -1,7 +1,7 @@
 {
 	"aws_region": "eu-west-2",
 	"instanceDetails": {
-		"userData": "ubuntu-setup-microk8-keptn.sh",
+		"userData": "keptn-in-a-box.sh",
 		"imageId": "ami-006a0174c6c25ac06",
 		"keyName": "bc19-lon.pem",
 		"instanceType": "t2.2xlarge",
