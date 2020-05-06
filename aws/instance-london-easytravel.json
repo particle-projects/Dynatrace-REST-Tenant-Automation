@@ -37,14 +37,6 @@
 						"Value": ""
 					},
 					{
-						"Key": "paasToken",
-						"Value": ""
-					},
-					{
-						"Key": "apiToken",
-						"Value": ""
-					},
-					{
 						"Key": "attendee",
 						"Value": ""
 					},

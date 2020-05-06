@@ -10,12 +10,13 @@ import re
 import sys
 import time
 import traceback
-import paramiko
-import lib.helper
 
 import boto3
+import paramiko
 import requests
 from botocore.exceptions import ClientError
+
+import lib.helper
 
 """
 Declaration of static Variables
@@ -934,7 +935,7 @@ def create_ec2_instance(data):
     # Replace Tags
     tagSpecifications = i['tagSpecifications']
     toReplace = {"Name": name, key_tenantUrl: tenantUrl,
-                 key_paasToken: paasToken, key_apiToken: apiToken, "attendee": name , key_email: email}
+                  "attendee": name , key_email: email}
     customize_tags(tagSpecifications[0]['Tags'], toReplace)
 
     securityGroupIds = i['securityGroupIds']

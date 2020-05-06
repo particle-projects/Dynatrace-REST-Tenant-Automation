@@ -2,7 +2,9 @@
 	"aws_region": "eu-west-2",
 	"instanceDetails": {
 		"userData": "keptn-in-a-box.sh",
-		"imageId": "ami-006a0174c6c25ac06",
+		"imageId": "ami-0917237b4e71c5759",
+		"_comment_ubuntu20": "ami-0917237b4e71c5759",
+		"_comment_ubuntu18": "ami-006a0174c6c25ac06",
 		"keyName": "bc19-lon.pem",
 		"instanceType": "t2.2xlarge",
 		"securityGroups": [
@@ -15,7 +17,7 @@
 			{
 				"DeviceName": "/dev/sda1",
 				"Ebs": {
-					"VolumeSize": 30,
+					"VolumeSize": 20,
 					"DeleteOnTermination": true
 				}
 			}
@@ -34,14 +36,6 @@
 					},
 					{
 						"Key": "tenantUrl",
-						"Value": ""
-					},
-					{
-						"Key": "paasToken",
-						"Value": ""
-					},
-					{
-						"Key": "apiToken",
 						"Value": ""
 					},
 					{
