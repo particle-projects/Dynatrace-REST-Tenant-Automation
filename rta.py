@@ -676,13 +676,12 @@ def test_ssl_connection(data):
     try:
         response = requests.get(
             "https://api.kubernetes." + nipIoDomain, verify=True, timeout=5)
-        logging.info('SSL OK: ' + nipIoDomain )
+        logging.info('SSL OK: ' + nipIoDomain)
     except:
         e = sys.exc_info()[0]
-        logging.info('SSL NOK: ' + nipIoDomain  + ' ' +str(e))
+        logging.info('SSL NOK: ' + nipIoDomain + ' ' + str(e))
         response = {}
     return response
-
 
 
 def test_ssh_connection(data):
@@ -935,7 +934,7 @@ def create_ec2_instance(data):
     # Replace Tags
     tagSpecifications = i['tagSpecifications']
     toReplace = {"Name": name, key_tenantUrl: tenantUrl,
-                  "attendee": name , key_email: email}
+                 "attendee": name, key_email: email}
     customize_tags(tagSpecifications[0]['Tags'], toReplace)
 
     securityGroupIds = i['securityGroupIds']
@@ -1171,14 +1170,14 @@ def do_dev():
     #data = CSV_DATA['certiticate']
     # set_up_environment(data)
     # create_ec2_instance(data)
-    #test_ssl_connection(data)
+    # test_ssl_connection(data)
 
-    #return
-    
+    # return
+
     # Iteration
     for id in CSV_DATA:
         data = CSV_DATA[id]
-        #if skip_in_data(data):
+        # if skip_in_data(data):
         #    continue
         # do something
         test_ssl_connection(data)
