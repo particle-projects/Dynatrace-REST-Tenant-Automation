@@ -8,3 +8,6 @@ docker pull shinojosa/bankjob:perform2020, False
 docker stop bankjob, False
 docker rm bankjob, False
 docker run -d --name bankjob shinojosa/bankjob:perform2020, False
+
+## Restart easytravel as root
+# killall java ;  docker start bankjob ; USER=ubuntu; su -c "sh /home/$USER/easytravel-2.0.0-x64/weblauncher/weblauncher.sh > /tmp/weblauncher.log 2>&1 &" $USER

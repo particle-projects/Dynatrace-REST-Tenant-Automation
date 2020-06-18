@@ -2,7 +2,7 @@
 	"aws_region": "eu-west-2",
 	"instanceDetails": {
 		"userData": "ubuntu-setup-easytravel.sh",
-		"imageId": "ami-0fab23d0250b9a47e",
+		"imageId": "ami-0917237b4e71c5759",
 		"keyName": "bc19-lon.pem",
 		"instanceType": "t2.large",
 		"securityGroups": [

@@ -4,62 +4,175 @@
 # - OneAgent
 # - Docker
 # - BankJobs shinojosa/bankjob:v0.2 from DockerHub
-# - Chromium for the Load generation of the EasyTravel Angular Shop 
+# - Chromium for the Load generation of the EasyTravel Angular Shop
 # - EasyTravel, Legacy 8080,8079 / Angular 9080 and 80 / WebLauncher 8094 / EasyTravel REST 8091 1697
 
 ## Set TENANT and API TOKEN
-export TENANT=
-export PAASTOKEN=
-LOGFILE='/tmp/install.txt'
+# ---- Define Dynatrace Environment ----
+# Sample: https://{your-domain}/e/{your-environment-id} for managed or https://{your-environment-id}.live.dynatrace.com for SaaS
+TENANT=
+PAASTOKEN=
+APITOKEN=
 
-##Create installer Logfile
-printf "\n\n***** Init Installation ***\n" >> $LOGFILE 2>&1 
-{ date ; apt update; whoami ; echo Setting up ec2 for tenant: $TENANT with Api-Token: $PAASTOKEN ; } >> $LOGFILE ; chmod 777 $LOGFILE
+# ==================================================
+#      ----- Variables Definitions -----           #
+# ==================================================
+LOGFILE='/tmp/install.log'
+touch $LOGFILE
+chmod 775 $LOGFILE
+pipe_log=true
 
+USER="ubuntu"
 
-printf "\n\n***** add DTU training user ***\n" >> $LOGFILE 2>&1 
-# Create user Dynatrace, we specify bash login, home directory, password and add him to the sudoers
-useradd -s /bin/bash -d /home/dtu.training/ -m -G sudo -p $(openssl passwd -1 @perform2020) dtu.training
+# ---- Workshop User  ----
+# The flag 'create_workshop_user'=true is per default set to false. If it's set to to it'll clone the home directory from USER and allow SSH login with the given text password )
+NEWUSER="dynatrace"
+NEWPWD="dynatrace"
 
-## Update and install docker
-printf "\n\n***** Update and install docker***\n" >> $LOGFILE 2>&1 
-{ apt install docker.io -y ;\
- service docker start ;\
- usermod -a -G docker dtu.training ;} >> $LOGFILE 2>&1
+## ----  Write all output to the logfile ----
+if [ "$pipe_log" = true ]; then
+  echo "Piping all output to logfile $LOGFILE"
+  echo "Type 'less +F $LOGFILE' for viewing the output of installation on realtime"
+  echo "If you did not send the job to the background, type \"CTRL + Z\" and \"bg\""
+  echo "CTRL + Z (for pausing this job)"
+  echo "then"
+  echo "bg (for resuming back this job and send it to the background)"
+  # Saves file descriptors so they can be restored to whatever they were before redirection or used
+  # themselves to output to whatever they were before the following redirect.
+  exec 3>&1 4>&2
+  # Restore file descriptors for particular signals. Not generally necessary since they should be restored when the sub-shell exits.
+  trap 'exec 2>&4 1>&3' 0 1 2 3
+  # Redirect stdout to file log.out then redirect stderr to stdout. Note that the order is important when you
+  # want them going to the same file. stdout must be redirected before stderr is redirected to stdout.
+  exec 1>$LOGFILE 2>&1
+else
+  echo "Not piping stdout stderr to the logfile, writing the installation to the console"
+fi
 
-# Add ProTip alias
-printf "\n\n***** ProTip Alias***\n" >> $LOGFILE 2>&1 
-echo "
-# Alias for ease of use of the CLI
-alias hg='history | grep' 
-alias h='history' 
-alias vaml='vi -c \"set syntax:yaml\" -' 
-alias vson='vi -c \"set syntax:json\" -' 
-alias pg='ps -aux | grep' " > /root/.bash_aliases
+# Comfortable function for setting the sudo user.
+if [ -n "${SUDO_USER}" ]; then
+  USER=$SUDO_USER
+fi
+echo "running sudo commands as $USER"
 
-# Copy Aliases
-cp /root/.bash_aliases /home/dtu.training/.bash_aliases
+# ======================================================================
+#          ------- Util Functions -------                              #
+#  A set of util functions for logging, validating and                 #
+#  executing commands.                                                 #
+# ======================================================================
+thickline="======================================================================"
+halfline="============"
+thinline="______________________________________________________________________"
 
-## Installation of Chromium on the system
-printf "\n\n***** Installation of Chromium on the system ***\n" >> $LOGFILE 2>&1 
-apt install chromium-browser -y >>  $LOGFILE 2>&1
+setBashas() {
+  # Wrapper for runnig commands for the real owner and not as root
+  alias bashas="sudo -H -u ${USER} bash -c"
+  # Expand aliases for non-interactive shell
+  shopt -s expand_aliases
+}
 
-## Installation of OneAgent
-printf "\n\n***** Installation of the OneAgent***\n" >> $LOGFILE 2>&1 
-{ wget -nv -O oneagent.sh "$TENANT/api/v1/deployment/installer/agent/unix/default/latest?Api-Token=$PAASTOKEN&arch=x86&flavor=default" ;\
- sh oneagent.sh APP_LOG_CONTENT_ACCESS=1 INFRA_ONLY=0 ;}  >> $LOGFILE 2>&1 
+# FUNCTIONS DECLARATIONS
+timestamp() {
+  date +"[%Y-%m-%d %H:%M:%S]"
+}
 
+printInfo() {
+  echo "[EasyTravel-Installation|INFO] $(timestamp) |>->-> $1 <-<-<|"
+}
 
- ## Get Bankjobs and run them
-printf "\n\n***** Pulling Bankjobs and running them***\n" >> $LOGFILE 2>&1 
-docker run -d --name bankjob shinojosa/bankjob:perform2020 >> $LOGFILE 2>&1
+printInfoSection() {
+  echo "[EasyTravel-Installation|INFO] $(timestamp) |$thickline"
+  echo "[EasyTravel-Installation|INFO] $(timestamp) |$halfline $1 $halfline"
+  echo "[EasyTravel-Installation|INFO] $(timestamp) |$thinline"
+}
 
+printError() {
+  echo "[EasyTravel-Installation|ERROR] $(timestamp) |x-x-> $1 <-x-x|"
+}
 
-# NGINX ReverseProxy for AngularShop mapping 9080 to 80 avoid problems for other ports.
-printf "\n\n***** Configuring reverse proxy***\n" >> $LOGFILE 2>&1 
-export PUBLIC_IP=`hostname -i | awk '{ print $1'}`
-mkdir /home/dtu.training/nginx
-echo "upstream angular {
+validateSudo() {
+  if [[ $EUID -ne 0 ]]; then
+    printError "EasyTravel-Installation must be run with sudo rights. Exiting installation"
+    exit 1
+  fi
+  printInfo "EasyTravel-Installation installing with sudo rights:ok"
+}
+
+dynatracePrintValidateCredentials() {
+  printInfoSection "Printing Dynatrace Credentials"
+  if [ -n "${TENANT}" ]; then
+    printInfo "Shuffle the variables for name convention with Keptn & Dynatrace"
+    PROTOCOL="https://"
+    DT_TENANT=${TENANT#"$PROTOCOL"}
+    printInfo "Cleaned tenant=$DT_TENANT"
+    DT_API_TOKEN=$APITOKEN
+    DT_PAAS_TOKEN=$PAASTOKEN
+    printInfo "-------------------------------"
+    printInfo "Dynatrace Tenant: $DT_TENANT"
+    printInfo "Dynatrace API Token: $DT_API_TOKEN"
+    printInfo "Dynatrace PaaS Token: $DT_PAAS_TOKEN"
+  else
+    printInfoSection "Dynatrace Variables not set, Dynatrace wont be installed"
+  fi
+}
+
+utilsInstall() {
+  printInfoSection "Updating Ubuntu apt registry"
+  apt update
+  printInfoSection "Installing Docker, Chromium, J Query"
+  printInfo "Install J Query"
+  apt install jq -y
+  printInfo "Install Docker"
+  apt install docker.io -y
+  service docker start
+  usermod -a -G docker $USER
+  printInfo "Installation of Chromium on the system "
+  apt install chromium-browser -y
+  printInfo "Installation of lates Java  "
+  apt install -y default-jdk
+}
+
+setupProAliases() {
+  printInfoSection "Adding Bash and Kubectl Pro CLI aliases to .bash_aliases for user ubuntu and root "
+  echo "
+      # Alias for ease of use of the CLI
+      alias las='ls -las' 
+      alias hg='history | grep' 
+      alias h='history' 
+      alias vaml='vi -c \"set syntax:yaml\" -' 
+      alias vson='vi -c \"set syntax:json\" -' 
+      alias pg='ps -aux | grep' " >/root/.bash_aliases
+  homedir=$(eval echo ~$USER)
+  cp /root/.bash_aliases $homedir/.bash_aliases
+}
+
+installDynatrace() {
+  if [ -n "${TENANT}" ]; then
+    printInfoSection "Installation of OneAgent"
+    wget -nv -O oneagent.sh "$TENANT/api/v1/deployment/installer/agent/unix/default/latest?Api-Token=$PAASTOKEN&arch=x86&flavor=default"
+    sh oneagent.sh APP_LOG_CONTENT_ACCESS=1 INFRA_ONLY=0
+  fi
+}
+
+createWorkshopUser() {
+  printInfoSection "Creating Workshop User from user($USER) into($NEWUSER)"
+  homedirectory=$(eval echo ~$USER)
+  cp -R $homedirectory /home/$NEWUSER
+  useradd -s /bin/bash -d /home/$NEWUSER -m -G sudo -p $(openssl passwd -1 $NEWPWD) $NEWUSER
+  usermod -a -G docker $NEWUSER
+  usermod -a -G microk8s $NEWUSER
+  printInfo "Warning: allowing SSH passwordAuthentication into the sshd_config"
+  sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
+  service sshd restart
+}
+
+installBankjobs() {
+  printInfoSection "Pulling Bankjobs and running them"
+  docker run -d --name bankjob shinojosa/bankjob:perform2020
+  printInfoSection "Configuring reverse proxy‚"
+  export PUBLIC_IP=$(hostname -i | awk '{ print $1'})
+  mkdir /home/$USER/nginx
+  echo "upstream angular {
   server	$PUBLIC_IP:9080;
 } 
 server {
@@ -68,51 +181,74 @@ server {
   location / {
     proxy_pass	http://angular;
     }
-}" > /home/dtu.training/nginx/angular.conf
-docker run -p 80:80 -v /home/dtu.training/nginx:/etc/nginx/conf.d/:ro -d --name reverseproxy nginx:1.15
+}" >/home/$USER/nginx/angular.conf
+  docker run -p 80:80 -v /home/$USER/nginx:/etc/nginx/conf.d/:ro -d --name reverseproxy nginx:1.15
+}
 
-# Install  default-jre
-printf "\n\n***** JavaRuntime  install ***\n" >> $LOGFILE 2>&1 
-apt install -y openjdk-8-jre-headless >> $LOGFILE 2>&1
+installEasyTravel() {
+  printInfoSection "Download, install and configure EasyTravel"
+  cd /home/$USER
+  wget -nv -O dynatrace-easytravel-linux-x86_64.jar http://dexya6d9gs5s.cloudfront.net/latest/dynatrace-easytravel-linux-x86_64.jar
+  java -jar dynatrace-easytravel-linux-x86_64.jar -y
+  chmod 755 -R easytravel-2.0.0-x64
+  chown $USER:$USER -R easytravel-2.0.0-x64
+  printInfo "Configuring EasyTravel Memory Settings, Angular Shop and Weblauncher."
+  # Configuring EasyTravel Memory Settings, Angular Shop and Weblauncher.
+  sed -i 's/apmServerDefault=Classic/apmServerDefault=APM/g' /home/$USER/easytravel-2.0.0-x64/resources/easyTravelConfig.properties
+  sed -i 's/config.frontendJavaopts=-Xmx160m/config.frontendJavaopts=-Xmx320m/g' /home/$USER/easytravel-2.0.0-x64/resources/easyTravelConfig.properties
+  sed -i 's/config.backendJavaopts=-Xmx64m/config.backendJavaopts=-Xmx320m/g' /home/$USER/easytravel-2.0.0-x64/resources/easyTravelConfig.properties
+  sed -i 's/config.autostart=/config.autostart=Standard with REST Service and Angular2 frontend/g' /home/$USER/easytravel-2.0.0-x64/resources/easyTravelConfig.properties
+  sed -i 's/config.autostartGroup=/config.autostartGroup=UEM/g' /home/$USER/easytravel-2.0.0-x64/resources/easyTravelConfig.properties
+  sed -i 's/config.baseLoadB2BRatio=0.1/config.baseLoadB2BRatio=0/g' /home/$USER/easytravel-2.0.0-x64/resources/easyTravelConfig.properties
+  sed -i 's/config.baseLoadCustomerRatio=0.25/config.baseLoadCustomerRatio=0.1/g' /home/$USER/easytravel-2.0.0-x64/resources/easyTravelConfig.properties
+  sed -i 's/config.baseLoadMobileNativeRatio=0.1/config.baseLoadMobileNativeRatio=0/g' /home/$USER/easytravel-2.0.0-x64/resources/easyTravelConfig.properties
+  sed -i 's/config.baseLoadMobileBrowserRatio=0.25/config.baseLoadMobileBrowserRatio=0/g' /home/$USER/easytravel-2.0.0-x64/resources/easyTravelConfig.properties
+  sed -i 's/config.baseLoadHotDealServiceRatio=0.25/config.baseLoadHotDealServiceRatio=1/g' /home/$USER/easytravel-2.0.0-x64/resources/easyTravelConfig.properties
+  sed -i 's/config.baseLoadIotDevicesRatio=0.1/config.baseLoadIotDevicesRatio=0/g' /home/$USER/easytravel-2.0.0-x64/resources/easyTravelConfig.properties
+  sed -i 's/config.baseLoadHeadlessAngularRatio=0.0/config.baseLoadHeadlessAngularRatio=0.25/g' /home/$USER/easytravel-2.0.0-x64/resources/easyTravelConfig.properties
+  sed -i 's/config.baseLoadHeadlessMobileAngularRatio=0.0/config.baseLoadHeadlessMobileAngularRatio=0.1/g' /home/$USER/easytravel-2.0.0-x64/resources/easyTravelConfig.properties
+  sed -i 's/config.maximumChromeDrivers=10/config.maximumChromeDrivers=3/g' /home/$USER/easytravel-2.0.0-x64/resources/easyTravelConfig.properties
+  sed -i 's/config.maximumChromeDriversMobile=10/config.maximumChromeDriversMobile=3/g' /home/$USER/easytravel-2.0.0-x64/resources/easyTravelConfig.properties
+  sed -i 's/config.reUseChromeDriverFrequency=4/config.reUseChromeDriverFrequency=3/g' /home/$USER/easytravel-2.0.0-x64/resources/easyTravelConfig.properties
+  #sed -i 's/config.angularFrontendPortRangeStart=9080/config.angularFrontendPortRangeStart=80/g' /easytravel-2.0.0-x64/resources/easyTravelConfig.properties
 
-# EasyTravel Angular
-printf "\n\n***** Download, install and configure EasyTravel***\n" >> $LOGFILE 2>&1 
-# Install Easytravel with Angular shop
-{ cd /home/dtu.training ;\
- wget -nv -O dynatrace-easytravel-linux-x86_64.jar http://dexya6d9gs5s.cloudfront.net/latest/dynatrace-easytravel-linux-x86_64.jar ;\
- java -jar dynatrace-easytravel-linux-x86_64.jar -y ;\
- chmod 755 -R  easytravel-2.0.0-x64 ;\
- chown dtu.training:dtu.training -R easytravel-2.0.0-x64 ; }  >> $LOGFILE 2>&1 
+  # Fix finding the Java package
+  sed -i "s/JAVA_BIN=..\\/jre\\/bin\\/java/JAVA_BIN=\\/usr\\/bin\\/java/g" /home/$USER/easytravel-2.0.0-x64/weblauncher/weblauncher.sh
 
-# Configuring EasyTravel Memory Settings, Angular Shop and Weblauncher. 
-sed -i 's/apmServerDefault=Classic/apmServerDefault=APM/g' /home/dtu.training/easytravel-2.0.0-x64/resources/easyTravelConfig.properties
-sed -i 's/config.frontendJavaopts=-Xmx160m/config.frontendJavaopts=-Xmx320m/g' /home/dtu.training/easytravel-2.0.0-x64/resources/easyTravelConfig.properties
-sed -i 's/config.backendJavaopts=-Xmx64m/config.backendJavaopts=-Xmx320m/g' /home/dtu.training/easytravel-2.0.0-x64/resources/easyTravelConfig.properties
-sed -i 's/config.autostart=/config.autostart=Standard with REST Service and Angular2 frontend/g' /home/dtu.training/easytravel-2.0.0-x64/resources/easyTravelConfig.properties
-sed -i 's/config.autostartGroup=/config.autostartGroup=UEM/g' /home/dtu.training/easytravel-2.0.0-x64/resources/easyTravelConfig.properties
-sed -i 's/config.baseLoadB2BRatio=0.1/config.baseLoadB2BRatio=0/g' /home/dtu.training/easytravel-2.0.0-x64/resources/easyTravelConfig.properties
-sed -i 's/config.baseLoadCustomerRatio=0.25/config.baseLoadCustomerRatio=0.1/g' /home/dtu.training/easytravel-2.0.0-x64/resources/easyTravelConfig.properties
-sed -i 's/config.baseLoadMobileNativeRatio=0.1/config.baseLoadMobileNativeRatio=0/g' /home/dtu.training/easytravel-2.0.0-x64/resources/easyTravelConfig.properties
-sed -i 's/config.baseLoadMobileBrowserRatio=0.25/config.baseLoadMobileBrowserRatio=0/g' /home/dtu.training/easytravel-2.0.0-x64/resources/easyTravelConfig.properties
-sed -i 's/config.baseLoadHotDealServiceRatio=0.25/config.baseLoadHotDealServiceRatio=1/g' /home/dtu.training/easytravel-2.0.0-x64/resources/easyTravelConfig.properties
-sed -i 's/config.baseLoadIotDevicesRatio=0.1/config.baseLoadIotDevicesRatio=0/g' /home/dtu.training/easytravel-2.0.0-x64/resources/easyTravelConfig.properties
-sed -i 's/config.baseLoadHeadlessAngularRatio=0.0/config.baseLoadHeadlessAngularRatio=0.25/g' /home/dtu.training/easytravel-2.0.0-x64/resources/easyTravelConfig.properties
-sed -i 's/config.baseLoadHeadlessMobileAngularRatio=0.0/config.baseLoadHeadlessMobileAngularRatio=0.1/g' /home/dtu.training/easytravel-2.0.0-x64/resources/easyTravelConfig.properties
-sed -i 's/config.maximumChromeDrivers=10/config.maximumChromeDrivers=3/g' /home/dtu.training/easytravel-2.0.0-x64/resources/easyTravelConfig.properties
-sed -i 's/config.maximumChromeDriversMobile=10/config.maximumChromeDriversMobile=3/g' /home/dtu.training/easytravel-2.0.0-x64/resources/easyTravelConfig.properties
-sed -i 's/config.reUseChromeDriverFrequency=4/config.reUseChromeDriverFrequency=3/g' /home/dtu.training/easytravel-2.0.0-x64/resources/easyTravelConfig.properties
-#sed -i 's/config.angularFrontendPortRangeStart=9080/config.angularFrontendPortRangeStart=80/g' /easytravel-2.0.0-x64/resources/easyTravelConfig.properties
+  su -c "sh /home/$USER/easytravel-2.0.0-x64/weblauncher/weblauncher.sh > /tmp/weblauncher.log 2>&1 &" $USER
 
-# Fix finding the Java package
-sed -i "s/JAVA_BIN=..\\/jre\\/bin\\/java/JAVA_BIN=\\/usr\\/bin\\/java/g" /home/dtu.training/easytravel-2.0.0-x64/weblauncher/weblauncher.sh
+  [[ -f /tmp/weblauncher.log ]] && echo "***EasyTravel launched**" || echo "***Problem launching EasyTravel **"
+  date
+  echo "installation done"
 
-su -c "sh /home/dtu.training/easytravel-2.0.0-x64/weblauncher/weblauncher.sh > /tmp/weblauncher.log 2>&1 &" dtu.training 
+}
 
-{ [[ -f  /tmp/weblauncher.log ]] && echo "***EasyTravel launched**" || echo "***Problem launching EasyTravel **" ; } >> $LOGFILE 2>&1
-{ date ; echo "installation done" ;} >> $LOGFILE 2>&1 
+printInstalltime() {
+  DURATION=$SECONDS
+  printInfoSection "Installation complete :)"
+  printInfo "It took $(($DURATION / 60)) minutes and $(($DURATION % 60)) seconds"
+}
 
-# Allow unencrypted password via SSH for login
-sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
+doInstallation() {
+  SECONDS=0
+  echo ""
+  printInfoSection "Init Installation at $(date) by user $(whoami)"
+  printInfo "Setting up and configuring EasyTravel"
+  echo ""
+  validateSudo
+  setBashas
 
-# Restart ssh service
-service sshd restart
+  # Installation Modules
+  dynatracePrintValidateCredentials
+
+  utilsInstall
+  installDynatrace
+  installBankjobs
+  installEasyTravel
+  printInstalltime
+}
+
+# ==================================================
+#  ----- Call the Installation Function -----      #
+# ==================================================
+doInstallation
