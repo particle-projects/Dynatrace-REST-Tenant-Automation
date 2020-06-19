@@ -1,5 +1,5 @@
 #!/bin/bash
-## Commands for Ubuntu Server 18.04 LTS (HVM), SSD Volume Type - ami-06d51e91cea0dac8d
+## Commands for Ubuntu Server 20.04 LTS (HVM), SSD Volume Type - ami-06d51e91cea0dac8d
 ## These script will install the following components:
 # - OneAgent
 # - Docker
