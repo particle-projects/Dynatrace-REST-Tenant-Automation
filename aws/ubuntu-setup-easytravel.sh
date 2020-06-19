@@ -128,6 +128,8 @@ utilsInstall() {
   usermod -a -G docker $USER
   printInfo "Installation of Chromium on the system "
   apt install chromium-browser -y
+  printInfo "Installation of Libraries for the Angular Loadtest to work on the system "
+  apt-get install libgtk-3-0 libxss1 libasound2
   printInfo "Installation of lates Java  "
   apt install -y default-jdk
 }
