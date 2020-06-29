@@ -174,6 +174,7 @@ installBankjobs() {
   printInfoSection "Configuring reverse proxy‚"
   export PUBLIC_IP=$(hostname -i | awk '{ print $1'})
   mkdir /home/$USER/nginx
+  # 
   echo "upstream angular {
   server	$PUBLIC_IP:9080;
 } 
@@ -182,6 +183,7 @@ server {
   server_name	localhost;
   location / {
     proxy_pass	http://angular;
+    proxy_pass_request_headers  on;
     }
 }" >/home/$USER/nginx/angular.conf
   docker run -p 80:80 -v /home/$USER/nginx:/etc/nginx/conf.d/:ro -d --name reverseproxy nginx:1.15
